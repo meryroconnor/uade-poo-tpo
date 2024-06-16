@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="view.FrmPrincipal">
+  <grid id="27dc6" binding="panelPrincipal" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="d2d87" binding="panelLabel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints border-constraint="North"/>
+        <properties>
+          <preferredSize width="600" height="40"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="2b3c5" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <alignmentX value="0.1"/>
+              <autoscrolls value="false"/>
+              <focusable value="false"/>
+              <font name="JetBrains Mono" size="26" style="1"/>
+              <icon value="view/resources/menu-app.svg.png"/>
+              <text value="Menu de Gestión"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="bb248" binding="panelMenu" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="9c71f" class="javax.swing.JButton" binding="UsuariosButton">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="4" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="view/resources/person-fill-gear.svg.png"/>
+              <text value="Administrar Usuarios"/>
+            </properties>
+          </component>
+          <component id="fe524" class="javax.swing.JButton" binding="SucursalesButton">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="4" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="view/resources/building-fill-gear.svg.png"/>
+              <text value="Administrar Sucursales"/>
+              <verticalAlignment value="0"/>
+            </properties>
+          </component>
+          <component id="861eb" class="javax.swing.JButton" binding="PacientesButton">
+            <constraints>
+              <grid row="1" column="0" row-span="2" col-span="1" vsize-policy="4" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <icon value="view/resources/fingerprint.svg.png"/>
+              <text value="Administrar Pacientes"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>
