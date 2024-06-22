@@ -22,8 +22,8 @@ public class Peticion {
         return resultados;
     }
 
-    public void addResultado(float valorResultado, String descripcionResultado) {
-        this.resultados.add(new Resultado(valorResultado, descripcionResultado));
+    public void addResultado(float valorResultado, String descripcionResultado, Practica practica) {
+        this.resultados.add(new Resultado(valorResultado, descripcionResultado, practica));
     }
 
     public List<Practica> getPracticas() {

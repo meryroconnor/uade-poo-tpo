@@ -104,6 +104,41 @@ public class ControladorAtencion {
         return sucursalRandom;
     }
 
+    // Método para listar las peticiones con resultados críticos
+    public List<Integer> listarPeticionesConResultadoCritico() {
+        List<Integer> peticionesCriticas = new ArrayList<>();
+        for (Peticion peticion : peticiones) {
+            for (Resultado resultado : peticion.getResultados()) {
+                if (resultado.isResultadoCritico()){
+                    peticionesCriticas.add(peticion.getPeticionID());
+                }
+            }
+        }
+        return peticionesCriticas;
+    }
+
+    public void showResultados(int peticionID) {
+        Peticion peticionBuscada = null;
+        for (Peticion peticion : peticiones) {
+            if (peticion.getPeticionID() == peticionID) {
+                peticionBuscada = peticion;
+                for (Resultado resultado: peticion.getResultados()){
+                    System.out.println("RESULTADOS PETICION #"+ peticionID);
+                    if(resultado.isResultadoReservado()){
+                        System.out.println("Practica #" +resultado.getPractica().getCodigoPractica() + "= RETIRAR POR SUCURSAL");
+                    } else {
+                        System.out.println("Practica #" +resultado.getPractica().getCodigoPractica()+ "=" + resultado.getDescripcionResultado() + resultado.getValorResultado());
+                    }
+                    break;
+                }
+            }
+        }
+        if (peticionBuscada == null) {
+            System.out.println("La peticion solicitada no existe.");
+        }
+
+    }
+
     // Método para obtener la lista de sucursales (opcional)
     public List<Sucursal> getSucursales() {
         return sucursales;
