@@ -1,6 +1,7 @@
 package Laboratorio;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ControladorPaciente {
@@ -23,8 +24,8 @@ public class ControladorPaciente {
     }
 
     // Método para crear un nuevo Paciente
-    public Paciente createPaciente(String nombreApellido) {
-        Paciente paciente = new Paciente(nextPacienteID++, nombreApellido);
+    public Paciente createPaciente(String nombreApellido, String sexo, String DNI, String email) {
+        Paciente paciente = new Paciente(nextPacienteID++, nombreApellido,sexo, DNI, email);
         pacientes.add(paciente);
         return paciente;
     }
@@ -61,6 +62,18 @@ public class ControladorPaciente {
     // Método para obtener la lista de pacientes (opcional)
     public List<Paciente> getPacientes() {
         return pacientes;
+    }
+
+    //Buscar paciente
+    public List<Paciente> buscarPaciente(String pacienteID, String dni) {
+        List<Paciente> resultados = new ArrayList<>();
+        for (Paciente paciente : pacientes) {
+            if ((pacienteID != null && !pacienteID.isEmpty() && paciente.getPacienteID() == Integer.parseInt(pacienteID)) ||
+                    (dni != null && !dni.isEmpty() && paciente.getDNI().equals(dni))) {
+                resultados.add(paciente);
+            }
+        }
+        return resultados;
     }
 }
 

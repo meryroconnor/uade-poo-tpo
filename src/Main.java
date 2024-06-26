@@ -15,8 +15,8 @@ public class Main {
         Sucursal sucursal2 = controladorAtencion.createSucursal("Sucursal Norte", 2);
 
         // Crear pacientes
-        Paciente paciente1 = controladorPaciente.createPaciente("Juan Perez");
-        Paciente paciente2 = controladorPaciente.createPaciente("Maria Gomez");
+        Paciente paciente1 = controladorPaciente.createPaciente("Juan Perez", "M", "39644881",  "jperez@gmail.com");
+        Paciente paciente2 = controladorPaciente.createPaciente("Maria Gomez", "F", "39655771", "mgomez@gmail.com");
 
         // Crear peticiones y asociarlas a sucursales y pacientes
         Peticion peticion1 = controladorAtencion.createPeticion();

@@ -1,17 +1,27 @@
 package Laboratorio;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Paciente {
     private int pacienteID;
     private String nombreApellido;
+    private String DNI;
+    private String sexo;
+    private Date fechaNacimiento;
+    private String email;
+    private ObraSocial obraSocial;
     private List<Peticion> peticiones;
 
     // Constructor con modificador de acceso 'protected' para que solo el controlador pueda instanciarlo
-    protected Paciente(int pacienteID, String nombreApellido) {
+    protected Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
+        this.sexo = sexo;
+        this.DNI = DNI;
+        //this.fechaNacimiento=fechaNacimiento;
+        this.email= email;
         this.peticiones = new ArrayList<>();
     }
 
@@ -21,6 +31,30 @@ public class Paciente {
 
     public String getNombreApellido() {
         return nombreApellido;
+    }
+
+    public String getDNI() {
+        return DNI;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setObraSocial(ObraSocial obraSocial) {
+        this.obraSocial = obraSocial;
+    }
+
+    public ObraSocial getObraSocial() {
+        return obraSocial;
     }
 
     public List<Peticion> getPeticiones() {
