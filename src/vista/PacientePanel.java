@@ -57,15 +57,8 @@ public class PacientePanel extends JPanel {
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String dni = dniField.getText();
-                String pacienteID = pacienteField.getText();
-                String obraSocial = (String) osComboBox.getSelectedItem();
-                String osID = osIDField.getText();
-                outputArea.append("Agregar Paciente:\n");
-                outputArea.append("DNI: " + dni + "\n");
-                outputArea.append("Paciente ID: " + pacienteID + "\n");
-                outputArea.append("Obra Social: " + obraSocial + "\n");
-                outputArea.append("Obra Social ID: " + osID + "\n\n");
+                PacienteDialog dialog = new PacienteDialog(JOptionPane.getFrameForComponent(PacientePanel.this));
+                dialog.setVisible(true);
             }
         });
 
