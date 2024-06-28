@@ -17,19 +17,11 @@ public class MainFrame extends JFrame {
 
         // Agregar paneles
         tabbedPane.add("Pacientes", new PacientePanel());
-        tabbedPane.add("Peticiones", new PeticionPanel());
-        tabbedPane.add("Resultados", new ResultadoPanel());
+        tabbedPane.add("Sucursales", new SucursalesPanel());
+        tabbedPane.add("Laboratorio", new ResultadoPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MainFrame frame = new MainFrame();
-            frame.setVisible(true);
-        });
-    }
-
 
 }
 
