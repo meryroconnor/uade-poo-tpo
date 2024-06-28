@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
         // Agregar paneles
         tabbedPane.add("Pacientes", new PacientePanel());
         tabbedPane.add("Sucursales", new SucursalesPanel());
-        tabbedPane.add("Laboratorio", new ResultadoPanel());
+        tabbedPane.add("Laboratorio", new LabPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
     }

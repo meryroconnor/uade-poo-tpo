@@ -49,11 +49,8 @@ public class SucursalesPanel extends JPanel {
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String sucursalID = sucursalField.getText();
-                String sucursal = (String) osComboBox.getSelectedItem();
-                outputArea.append("Agregar Sucursal:\n");
-                outputArea.append("Sucursal ID: " + sucursalID + "\n");
-                outputArea.append("Obra Social: " + sucursal + "\n\n");
+                SucursalDialog dialog = new SucursalDialog(JOptionPane.getFrameForComponent(SucursalesPanel.this));
+                dialog.setVisible(true);
             }
         });
 

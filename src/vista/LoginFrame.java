@@ -1,5 +1,6 @@
 package vista;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,6 +12,11 @@ public class LoginFrame extends JFrame{
     private LoginFrame self;
 
     public LoginFrame(){
+        try {
+            UIManager.setLookAndFeel(UIManager.getLookAndFeel()); // obtengo visuales del SO
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
         setTitle("Labs S.A. Login");
 
         setContentPane(pnlPrincipal);
@@ -19,7 +25,10 @@ public class LoginFrame extends JFrame{
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+
         setLocationRelativeTo(null);
+        ingresarButton.setForeground(new Color(0, 141, 213));
+
 
         this.validarInputs();
         self = this;

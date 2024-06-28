@@ -4,21 +4,21 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class PacienteDialog extends JDialog {
-    private JTextField dniField, nombreField, emailField, fechaNacimientoField, nroAfiliadoField;
-    private JComboBox<String> sexoComboBox, obraSocialComboBox;
+public class SucursalDialog extends JDialog {
+    private JTextField nombreField, responsableField;
+
     private JButton guardarButton, cancelButton;
 
-    public PacienteDialog(Frame owner) {
-        super(owner, "Agregar Paciente", true);
+    public SucursalDialog(Frame owner) {
+        super(owner, "Agregar Sucursal", true);
         setLayout(new BorderLayout());
-        setSize(350, 450);
+        setSize(350, 230);
 
         // Panel de título
         JPanel titlePanel = new JPanel();
         titlePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JLabel titleLabel = new JLabel("Registro de Usuario");
+        JLabel titleLabel = new JLabel("Registro de Sucursal");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Configura la fuente del título
         titlePanel.add(titleLabel);
         add(titlePanel, BorderLayout.NORTH);
@@ -27,34 +27,16 @@ public class PacienteDialog extends JDialog {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new GridLayout(0, 2, 10, 10)); // 10 pixels of gap between columns and rows
         contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Margins around the whole content panel
-
-        contentPanel.add(new JLabel("DNI:"));
-        dniField = new JTextField();
-        contentPanel.add(dniField);
+        
 
         contentPanel.add(new JLabel("Nombre:"));
         nombreField = new JTextField();
         contentPanel.add(nombreField);
 
-        contentPanel.add(new JLabel("Email:"));
-        emailField = new JTextField();
-        contentPanel.add(emailField);
+        contentPanel.add(new JLabel("Responsable:"));
+        responsableField = new JTextField();
+        contentPanel.add(responsableField);
 
-        contentPanel.add(new JLabel("Fecha de Nacimiento:"));
-        fechaNacimientoField = new JTextField();
-        contentPanel.add(fechaNacimientoField);
-
-        contentPanel.add(new JLabel("Sexo:"));
-        sexoComboBox = new JComboBox<>(new String[]{"F", "M"});
-        contentPanel.add(sexoComboBox);
-
-        contentPanel.add(new JLabel("Obra Social:"));
-        obraSocialComboBox = new JComboBox<>(new String[]{"osde", "swiss medical"});
-        contentPanel.add(obraSocialComboBox);
-
-        contentPanel.add(new JLabel("Nro Afiliado:"));
-        nroAfiliadoField = new JTextField();
-        contentPanel.add(nroAfiliadoField);
 
         add(contentPanel, BorderLayout.CENTER);
 
@@ -64,7 +46,7 @@ public class PacienteDialog extends JDialog {
         guardarButton = new JButton("Guardar");
         guardarButton.setForeground(new Color(0, 141, 213));
         guardarButton.addActionListener(e -> {
-            // Aquí iría la lógica para guardar los datos del paciente
+            // Aquí iría la lógica para guardar los datos del Sucursal
             dispose();
         });
         buttonPanel.add(guardarButton);
@@ -78,5 +60,3 @@ public class PacienteDialog extends JDialog {
         setLocationRelativeTo(owner);
     }
 }
-
-
