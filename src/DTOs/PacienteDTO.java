@@ -18,7 +18,7 @@ public class PacienteDTO {
     private List<Peticion> peticiones;
 
 
-    protected PacienteDTO(int pacienteID, String nombreApellido, String sexo, String DNI, String email) {
+    public PacienteDTO(int pacienteID, String nombreApellido, String sexo, String DNI, String email) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
         this.sexo = sexo;

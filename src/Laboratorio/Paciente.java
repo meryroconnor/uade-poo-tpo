@@ -1,5 +1,7 @@
 package Laboratorio;
 
+import DTOs.PacienteDTO;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,6 +74,11 @@ public class Paciente {
             }
         }
         return false;
+    }
+
+    public PacienteDTO toDTO(Paciente paciente) {
+        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email);
+        return pacienteDTO;
     }
 }
 
