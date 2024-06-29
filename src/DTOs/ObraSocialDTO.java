@@ -8,4 +8,8 @@ public class ObraSocialDTO {
         this.obraSocial = obraSocial;
         this.numeroAfiliado = numeroAfiliado;
     }
+
+    public int getNumeroAfiliado() {
+        return numeroAfiliado;
+    }
 }
