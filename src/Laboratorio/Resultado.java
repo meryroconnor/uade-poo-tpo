@@ -5,7 +5,7 @@ public class Resultado {
     private String descripcionResultado;
     private Practica practica;
 
-    protected Resultado(float valorResultado, String descripcionResultado, Practica practica) {
+    public Resultado(float valorResultado, String descripcionResultado, Practica practica) {
         this.valorResultado = valorResultado;
         this.descripcionResultado = descripcionResultado;
         this.practica= practica;

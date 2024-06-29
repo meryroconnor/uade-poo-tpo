@@ -5,7 +5,7 @@ public class Practica {
     private IndiceReservado indiceReservado;
     private IndiceCritico indiceCritico;
 
-    protected Practica(int codigoPractica, String valorCritico, Float lLimitCritico,Float hLCritico, String valorReservado, Float lLimitReservado, Float hLReservado) {
+    public Practica(int codigoPractica, String valorCritico, Float lLimitCritico,Float hLCritico, String valorReservado, Float lLimitReservado, Float hLReservado) {
         this.codigoPractica = codigoPractica;
         this.indiceCritico = new IndiceCritico(valorCritico, lLimitCritico, hLCritico);
         this.indiceReservado = new IndiceReservado(valorReservado, lLimitReservado, hLReservado);

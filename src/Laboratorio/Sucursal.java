@@ -9,7 +9,7 @@ public class Sucursal {
     private int responsableMatricula;
     private List<Peticion> peticiones;
 
-    protected Sucursal(int sucursalID, String direccion, int responsableMatricula) {
+    public Sucursal(int sucursalID, String direccion, int responsableMatricula) {
         this.sucursalID = sucursalID;
         this.direccion = direccion;
         this.responsableMatricula = responsableMatricula;

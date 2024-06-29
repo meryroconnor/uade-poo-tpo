@@ -1,6 +1,5 @@
 package controlador;
 
-import Laboratorio.ControladorPaciente;
 import Laboratorio.ObraSocial;
 import Laboratorio.Paciente;
 
@@ -37,7 +36,6 @@ public class ControladorVista {
         for (Paciente p : pacientes) {
             resultado.append("ID: ").append(p.getPacienteID()).append(", Nombre: ").append(p.getNombreApellido())
                     .append(", DNI: ").append(p.getDNI()).append(", Sexo: ").append(p.getSexo())
-                    .append(", Fecha de Nacimiento: ").append(sdf.format(p.getFechaNacimiento()))
                     .append(", Email: ").append(p.getEmail()).append(", Obra Social: ").append(p.getObraSocial().getObraSocial())
                     .append(", Número de Afiliado: ").append(p.getObraSocial().getNumeroAfiliado()).append("\n");
         }

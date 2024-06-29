@@ -1,7 +1,6 @@
 package Laboratorio;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Paciente {
@@ -9,18 +8,16 @@ public class Paciente {
     private String nombreApellido;
     private String DNI;
     private String sexo;
-    private Date fechaNacimiento;
     private String email;
     private ObraSocial obraSocial;
     private List<Peticion> peticiones;
 
     // Constructor con modificador de acceso 'protected' para que solo el controlador pueda instanciarlo
-    protected Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email) {
+    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
         this.sexo = sexo;
         this.DNI = DNI;
-        //this.fechaNacimiento=fechaNacimiento;
         this.email= email;
         this.peticiones = new ArrayList<>();
     }
@@ -39,10 +36,6 @@ public class Paciente {
 
     public String getSexo() {
         return sexo;
-    }
-
-    public Date getFechaNacimiento() {
-        return fechaNacimiento;
     }
 
     public String getEmail() {
