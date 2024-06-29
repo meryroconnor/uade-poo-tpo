@@ -1,5 +1,6 @@
 package Laboratorio;
 
+import DTOs.PeticionDTO;
 import DTOs.SucursalDTO;
 
 import java.util.ArrayList;
@@ -48,7 +49,13 @@ public class Sucursal {
     }
 
     public SucursalDTO toDTO(){
-        SucursalDTO sucursalDTO = new SucursalDTO(this.sucursalID, this.direccion, this.responsableMatricula, this.peticiones);
+        List<PeticionDTO> peticionesDTO = new ArrayList<>();
+
+        for(Peticion peticion : this.peticiones){
+            peticionesDTO.add(peticion.toDTO());
+        }
+
+        SucursalDTO sucursalDTO = new SucursalDTO(this.sucursalID, this.direccion, this.responsableMatricula, peticionesDTO);
         return sucursalDTO;
     }
 }

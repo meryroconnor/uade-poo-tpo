@@ -1,5 +1,8 @@
 package Laboratorio;
 
+import DTOs.PeticionDTO;
+import DTOs.SucursalDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,17 +31,17 @@ public class ControladorAtencion {
     }
 
     // Método para crear una nueva Peticion
-    public Peticion createPeticion() {
+    public PeticionDTO createPeticion() {
         Peticion peticion = new Peticion(nextPeticionID++);
         peticiones.add(peticion);
-        return peticion;
+        return peticion.toDTO();
     }
 
     // Método para crear una nueva Sucursal
-    public Sucursal createSucursal(String direccion, int responsable) {
+    public SucursalDTO createSucursal(String direccion, int responsable) {
         Sucursal sucursal = new Sucursal(nextSucursalID++, direccion, responsable);
         sucursales.add(sucursal);
-        return sucursal;
+        return sucursal.toDTO();
     }
 
     // Método para eliminar una sucursal por su ID
@@ -73,11 +76,11 @@ public class ControladorAtencion {
     }
 
     // Método para obtener las peticiones activas de una sucursal
-    private List<Peticion> getPeticionesActivas(Sucursal sucursal) {
-        List<Peticion> peticionesActivas = new ArrayList<>();
+    private List<PeticionDTO> getPeticionesActivas(Sucursal sucursal) {
+        List<PeticionDTO> peticionesActivas = new ArrayList<>();
         for (Peticion peticion : sucursal.getPeticiones()) {
             if (peticion.tieneResultados()) {
-                peticionesActivas.add(peticion);
+                peticionesActivas.add(peticion.toDTO());
             }
         }
         return peticionesActivas;
@@ -95,13 +98,13 @@ public class ControladorAtencion {
     }
 
     // Método para obtener una sucursal aleatoria diferente de la que se va a eliminar
-    private Sucursal getRandomSucursal(Sucursal excludeSucursal) {
+    private SucursalDTO getRandomSucursal(Sucursal excludeSucursal) {
         Random random = new Random();
         Sucursal sucursalRandom;
         do {
             sucursalRandom = sucursales.get(random.nextInt(sucursales.size()));
         } while (sucursalRandom.equals(excludeSucursal));
-        return sucursalRandom;
+        return sucursalRandom.toDTO();
     }
 
     // Método para listar las peticiones con resultados críticos

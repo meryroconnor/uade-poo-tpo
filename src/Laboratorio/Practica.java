@@ -1,6 +1,7 @@
 package Laboratorio;
 
-import DTOs.PracticaDTO;
+import DTOs.*; // replace con DTOs.PracticaDTO (solucionar el bug del import erroneo)
+
 
 public class Practica {
     private int codigoPractica;
@@ -26,7 +27,7 @@ public class Practica {
     }
 
     public PracticaDTO toDTO(){
-        PracticaDTO practicaDTO = new PracticaDTO(this.codigoPractica, this.indiceReservado, this.indiceCritico);
+        PracticaDTO practicaDTO = new PracticaDTO(this.codigoPractica, this.indiceReservado.toDTO(), this.indiceCritico.toDTO());
         return practicaDTO;
     }
 }
