@@ -1,5 +1,7 @@
 package Laboratorio;
 
+import DTOs.PracticaDTO;
+
 public class Practica {
     private int codigoPractica;
     private IndiceReservado indiceReservado;
@@ -23,13 +25,9 @@ public class Practica {
         return indiceCritico;
     }
 
-    @Override
-    public String toString() {
-        return "Practica{" +
-                "codigoPractica=" + codigoPractica +
-                ", indiceReservado=" + indiceReservado +
-                ", indiceCritico=" + indiceCritico +
-                '}';
+    public PracticaDTO toDTO(){
+        PracticaDTO practicaDTO = new PracticaDTO(this.codigoPractica, this.indiceReservado, this.indiceCritico);
+        return practicaDTO;
     }
 }
 

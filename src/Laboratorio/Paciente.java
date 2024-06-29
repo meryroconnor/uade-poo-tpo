@@ -76,10 +76,13 @@ public class Paciente {
         return false;
     }
 
-    public PacienteDTO toDTO(Paciente paciente) {
-        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email);
+    public PacienteDTO toDTO() {
+        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email, this.peticiones);
         return pacienteDTO;
     }
 }
+
+
+
 
 

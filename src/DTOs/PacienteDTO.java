@@ -18,13 +18,13 @@ public class PacienteDTO {
     private List<Peticion> peticiones;
 
 
-    public PacienteDTO(int pacienteID, String nombreApellido, String sexo, String DNI, String email) {
+    public PacienteDTO(int pacienteID, String nombreApellido, String sexo, String DNI, String email, List<Peticion> peticiones) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
         this.sexo = sexo;
         this.DNI = DNI;
         //this.fechaNacimiento=fechaNacimiento;
         this.email= email;
-        this.peticiones = new ArrayList<>();
+        this.peticiones = peticiones;
     }
 }
