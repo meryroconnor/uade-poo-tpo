@@ -10,5 +10,16 @@ public class IndiceCriticoDTO {
         this.lowLimit = lowLimit;
         this.highLimit = highLimit;
     }
-    // branch visual log update
+
+    public String getValue() {
+        return value;
+    }
+
+    public Float getLowLimit() {
+        return lowLimit;
+    }
+
+    public Float getHighLimit() {
+        return highLimit;
+    }
 }

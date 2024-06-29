@@ -1,7 +1,5 @@
 package DTOs;
 
-import Laboratorio.IndiceReservado;
-
 public class IndiceReservadoDTO {
     private String value;
     private Float lowLimit;
@@ -11,5 +9,17 @@ public class IndiceReservadoDTO {
         this.value = value;
         this.lowLimit = lowLimit;
         this.highLimit = highLimit;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public Float getLowLimit() {
+        return lowLimit;
+    }
+
+    public Float getHighLimit() {
+        return highLimit;
     }
 }

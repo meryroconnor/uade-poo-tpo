@@ -10,5 +10,15 @@ public class PracticaDTO {
         this.indiceReservadoDTO = indiceReservadoDTO;
         this.indiceCriticoDTO = indiceCriticoDTO;
     }
+    public int getCodigoPractica() {
+        return codigoPractica;
+    }
 
+    public IndiceReservadoDTO getIndiceReservadoDTO() {
+        return indiceReservadoDTO;
+    }
+
+    public IndiceCriticoDTO getIndiceCriticoDTO() {
+        return indiceCriticoDTO;
+    }
 }
