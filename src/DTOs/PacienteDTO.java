@@ -23,4 +23,8 @@ public class PacienteDTO {
         this.email= email;
         this.peticionesDTO = peticionesDTO;
     }
+
+    public int getPacienteID() {
+        return pacienteID;
+    }
 }

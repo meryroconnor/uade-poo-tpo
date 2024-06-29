@@ -14,4 +14,8 @@ public class SucursalDTO {
         this.responsableMatricula = responsableMatricula;
         this.peticionesDTO = peticionesDTO;
     }
+
+    public int getSucursalID() {
+        return sucursalID;
+    }
 }
