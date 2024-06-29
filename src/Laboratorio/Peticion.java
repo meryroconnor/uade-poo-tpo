@@ -1,7 +1,7 @@
 package Laboratorio;
 
 import DTOs.PeticionDTO;
-import DTOs.*;
+import DTOs.PracticaDTO;
 import DTOs.ResultadoDTO;
 
 import java.util.ArrayList;
@@ -55,6 +55,7 @@ public class Peticion {
         }
 
         PeticionDTO peticionDTO = new PeticionDTO(this.peticionID, resultadoDTOS, practicaDTOS);
+        return peticionDTO;
     }
 
 

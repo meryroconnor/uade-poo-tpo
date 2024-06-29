@@ -1,6 +1,6 @@
 package Laboratorio;
 
-import DTOs.*; // replace con DTOs.PracticaDTO (solucionar el bug del import erroneo)
+import DTOs.PracticaDTO;
 
 
 public class Practica {
