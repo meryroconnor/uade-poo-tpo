@@ -1,4 +1,8 @@
-import DTOs.*;
+import DTOs.PacienteDTO;
+import DTOs.ObraSocialDTO;
+import DTOs.SucursalDTO;
+import DTOs.PracticaDTO;
+import DTOs.PeticionDTO;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 import controlador.ControladorPractica;
