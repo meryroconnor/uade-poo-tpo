@@ -1,9 +1,14 @@
 package vista;
 
+import DAOs.PacienteDAO;
+import Laboratorio.Paciente;
+import controlador.ControladorPaciente;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class PacientePanel extends JPanel {
 
@@ -17,6 +22,7 @@ public class PacientePanel extends JPanel {
     private JTextArea outputArea;
     private JPanel inputPanel;
     private JPanel sendPanel;
+
 
     public PacientePanel() {
         setLayout(new BorderLayout());
@@ -64,6 +70,20 @@ public class PacientePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 PacienteDialog dialog = new PacienteDialog(JOptionPane.getFrameForComponent(PacientePanel.this));
                 dialog.setVisible(true);
+
+                //agarro los datos
+                String dni = dniField.getText();
+                String pacienteId = pacienteField.getText();
+                String os = (String) osComboBox.getSelectedItem();
+                String osId= osIDField.getText();
+                //String sexo = (String) rolComboBox.getSelectedItem();
+                System.out.println("Datos ingresados:" + ", " + pacienteId + ", " + os + ", " + osId +  ", " + dni);
+
+                ControladorPaciente controlador = ControladorPaciente.getInstance();
+                Paciente paciente= controlador.createPaciente();
+                System.out.println("Paciente creado"+ paciente);
+                PacienteDAO dao= new PacienteDAO();
+                dao.saveAll();
             }
         });
 
@@ -80,6 +100,10 @@ public class PacientePanel extends JPanel {
                 outputArea.append("Paciente ID: " + pacienteID + "\n");
                 outputArea.append("Obra Social: " + obraSocial + "\n");
                 outputArea.append("Obra Social ID: " + osID + "\n\n");
+
+                //Paciente paciente= new Paciente();
+                //paciente.deletePaciente();
+
             }
         });
 
@@ -96,6 +120,11 @@ public class PacientePanel extends JPanel {
                 outputArea.append("Paciente ID: " + pacienteID + "\n");
                 outputArea.append("Obra Social: " + obraSocial + "\n");
                 outputArea.append("Obra Social ID: " + osID + "\n\n");
+
+                //llamo al metodo que valida que exista el paciente
+                ControladorPaciente controlador = ControladorPaciente.getInstance();
+                List<Paciente> pacientes= controlador.buscarPaciente("",dni);
+                //devuelve en DTO
             }
         });
     }

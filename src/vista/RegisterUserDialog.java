@@ -1,11 +1,17 @@
 package vista;
 
+import DAOs.PacienteDAO;
+import Laboratorio.Paciente;
+import controlador.ControladorPaciente;
+import controlador.ControladorVista;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
 
 public class RegisterUserDialog extends JDialog {
-    private JTextField dniField, nombreField, emailField, usernameField, passwordField;
+    private JTextField dniField, nombreField, emailField, usernameField, passwordField, sexoField;
     private JComboBox<String> rolComboBox;
     private JButton guardarButton, cancelButton;
 
@@ -48,6 +54,10 @@ public class RegisterUserDialog extends JDialog {
         rolComboBox = new JComboBox<>(new String[]{"admin", "recepcionista", "laboratorista"});
         contentPanel.add(rolComboBox);
 
+        //contentPanel.add(new JLabel("Sexo:"));
+        //rolComboBox = new JComboBox<>(new String[]{"Femenino", "Masculino"});
+        //contentPanel.add(sexoField);
+
         contentPanel.add(new JLabel("Password:"));
         passwordField = new JTextField();
         contentPanel.add(passwordField);
@@ -61,6 +71,11 @@ public class RegisterUserDialog extends JDialog {
         guardarButton.setForeground(new Color(0, 141, 213));
         guardarButton.addActionListener(e -> {
             // Aquí iría la lógica para guardar los datos del paciente
+            try {
+                validarDatos();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
             dispose();
         });
         buttonPanel.add(guardarButton);
@@ -73,4 +88,47 @@ public class RegisterUserDialog extends JDialog {
 
         setLocationRelativeTo(owner);
     }
+        //EVENTOS
+
+        public void validarDatos() throws Exception {
+
+            //agarro los datos
+            String dni = dniField.getText();
+            String nombre = nombreField.getText();
+            String mail = emailField.getText();
+            String username = usernameField.getText();
+            String rol = (String) rolComboBox.getSelectedItem();
+            String password= passwordField.getText();
+            //String sexo = (String) rolComboBox.getSelectedItem();
+            System.out.println("Datos ingresados:" + dni + ", " + nombre + ", " + mail + ", " + username + ", " + rol + ", " + password);
+
+            //llamo al metodo que valida que exista el paciente
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            //List<Paciente> pacientes; = controladorPaciente.buscarPaciente("",dni);
+            //devuelve en DTO
+
+            List<Paciente> pacientes= (List<Paciente>) controladorPaciente.createPaciente(nombre,"",dni,mail);
+
+            //verifico que no exista y lo creo
+
+            //el dao va en un try and catch
+
+            //if(pacientes.isEmpty()){
+                System.out.println("Paciente creado"+ pacientes);
+                //PacienteDAO dao= new PacienteDAO();
+                //dao.saveAll(pacientes);
+
+
+
+
+
+            //}
+
+
+            //seteo globalmente el usuario y el rol para control de pantallas
+            SingletonSistema.getInstance().setUsername(username);
+            SingletonSistema.getInstance().setRol(rol);
+
+
+        };
 }
