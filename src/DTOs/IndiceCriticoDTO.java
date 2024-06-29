@@ -10,4 +10,5 @@ public class IndiceCriticoDTO {
         this.lowLimit = lowLimit;
         this.highLimit = highLimit;
     }
+    // branch visual log update
 }
