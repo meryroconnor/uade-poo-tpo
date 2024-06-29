@@ -1,4 +1,6 @@
-package Laboratorio;
+package controlador;
+
+import Laboratorio.Practica;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,7 +12,7 @@ public class Peticion {
     private List<Resultado> resultados;
     private List<Practica> practicas;
 
-    protected Peticion(int peticionID) {
+    public Peticion(int peticionID) {
         this.peticionID = peticionID;
         this.resultados = new ArrayList<>();
         this.practicas = new ArrayList<>();

@@ -1,4 +1,8 @@
-package Laboratorio;
+package controlador;
+
+import Laboratorio.Peticion;
+import Laboratorio.Resultado;
+import Laboratorio.Sucursal;
 
 import DTOs.PeticionDTO;
 import DTOs.SucursalDTO;

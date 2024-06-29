@@ -53,6 +53,11 @@ public class PacientePanel extends JPanel {
         outputArea = new JTextArea();
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
 
+        this.asociarEventos();
+
+    }
+
+    private void asociarEventos() {
         // Action listener for "Agregar Paciente" button
         agregarButton.addActionListener(new ActionListener() {
             @Override
@@ -93,8 +98,6 @@ public class PacientePanel extends JPanel {
                 outputArea.append("Obra Social ID: " + osID + "\n\n");
             }
         });
-
-
     }
 }
 

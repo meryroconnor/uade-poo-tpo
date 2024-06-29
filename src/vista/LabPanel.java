@@ -10,9 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LabPanel extends JPanel {
-    private JTextField filterPatientId;
     private JTextField filterRequestId;
-    private JTextField filterBranchId; // Campo para filtrar por sucursal
     private JButton filterButton;
     private JButton getAllButton;
     private JTable table;
@@ -22,16 +20,10 @@ public class LabPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Panel de filtros
-        JPanel filterPanel = new JPanel(new GridLayout(5, 2));
-        filterPanel.add(new JLabel("Filtrar por ID de Paciente:"));
-        filterPatientId = new JTextField();
-        filterPanel.add(filterPatientId);
+        JPanel filterPanel = new JPanel(new GridLayout(4, 2));
         filterPanel.add(new JLabel("Filtrar por ID de Petición:"));
         filterRequestId = new JTextField();
         filterPanel.add(filterRequestId);
-        filterPanel.add(new JLabel("Filtrar por Sucursal:"));
-        filterBranchId = new JTextField();
-        filterPanel.add(filterBranchId);
         filterPanel.add(new JLabel());
         filterButton = new JButton("Filtrar");
         filterPanel.add(filterButton);
@@ -43,7 +35,7 @@ public class LabPanel extends JPanel {
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
-        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Retirar por sucursal", "Sucursal"};
+        String[] columnNames = {"Petición ID", "Práctica", "Resultado", "Retirar por sucursal"};
         Object[][] data = {}; // Data inicial vacía
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
@@ -95,14 +87,12 @@ public class LabPanel extends JPanel {
 
     private void applyFilters() {
         // Implementación del filtrado según los inputs
-        String patientId = filterPatientId.getText().trim();
         String requestId = filterRequestId.getText().trim();
-        String branchId = filterBranchId.getText().trim();
 
         // Aquí deberías reemplazar estos datos con una consulta real
         Object[][] newData = {
-                {requestId, patientId, "Análisis de Sangre", "Normal", "No", branchId},
-                {requestId, patientId, "Rayos X", "Fractura detectada", "Sí", branchId}
+                {requestId, "Análisis de Sangre", "Normal", "No"},
+                {requestId, "Rayos X", "Fractura detectada", "Sí"}
         };
 
         tableModel.setRowCount(0);

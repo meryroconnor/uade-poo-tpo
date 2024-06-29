@@ -1,7 +1,8 @@
-package Laboratorio;
+package controlador;
+
+import Laboratorio.Paciente;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ControladorPaciente {
