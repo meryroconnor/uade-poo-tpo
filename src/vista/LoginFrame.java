@@ -8,6 +8,7 @@ public class LoginFrame extends JFrame{
     private JPanel pnlPrincipal;
     private JTextField inputUsername;
     private JButton ingresarButton;
+    private JButton registrarmeButton;
 
     private LoginFrame self;
 
@@ -31,6 +32,7 @@ public class LoginFrame extends JFrame{
 
 
         this.validarInputs();
+        this.registrarUsuario();
         self = this;
     }
     private void validarInputs(){
@@ -50,6 +52,16 @@ public class LoginFrame extends JFrame{
                     CambiarPantallaAdmin(); //si apretas ingresar te lleva a la pantalla de admin(FrmPrincipal)
                 }
 
+            }
+        });
+    }
+
+    private void registrarUsuario(){
+        registrarmeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RegisterUserDialog dialog = new RegisterUserDialog(JOptionPane.getFrameForComponent(self));
+                dialog.setVisible(true);
             }
         });
     }

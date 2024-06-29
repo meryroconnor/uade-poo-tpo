@@ -45,6 +45,11 @@ public class SucursalesPanel extends JPanel {
         outputArea = new JTextArea();
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
 
+        this.asociarEventos();
+
+    }
+
+    private void asociarEventos() {
         // Action listener for "Agregar Sucursal" button
         agregarButton.addActionListener(new ActionListener() {
             @Override
@@ -77,7 +82,5 @@ public class SucursalesPanel extends JPanel {
                 outputArea.append("Obra Social: " + sucursal + "\n\n");
             }
         });
-
-
     }
 }

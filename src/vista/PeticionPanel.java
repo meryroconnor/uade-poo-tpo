@@ -54,6 +54,21 @@ public class PeticionPanel extends JPanel {
         };
         table = new JTable(tableModel);
 
+
+
+        // Ajustar el color de fondo y el color del texto del encabezado de la tabla
+        JTableHeader header = table.getTableHeader();
+        header.setBackground(Color.darkGray);
+        header.setForeground(Color.white);
+
+        // ScrollPane para la tabla
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.CENTER);
+
+        this.asociarEventos();
+    }
+
+    private void asociarEventos() {
         // Agregar el TableModelListener
         tableModel.addTableModelListener(new TableModelListener() {
             @Override
@@ -69,15 +84,6 @@ public class PeticionPanel extends JPanel {
             }
         });
 
-        // Ajustar el color de fondo y el color del texto del encabezado de la tabla
-        JTableHeader header = table.getTableHeader();
-        header.setBackground(Color.darkGray);
-        header.setForeground(Color.white);
-
-        // ScrollPane para la tabla
-        JScrollPane scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
-
         // Configurar el botón de filtrado
         filterButton.addActionListener(new ActionListener() {
             @Override
@@ -86,6 +92,7 @@ public class PeticionPanel extends JPanel {
             }
         });
     }
+
 
     private void createResult(Object petitionID, Object practiceID, Object result) {
         // Llamar a la lógica de negocio o al controlador para manejar la creación de un nuevo resultado
