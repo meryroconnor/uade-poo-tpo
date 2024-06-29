@@ -80,11 +80,11 @@ public class ControladorAtencion {
     }
 
     // Método para obtener las peticiones activas de una sucursal
-    private List<PeticionDTO> getPeticionesActivas(Sucursal sucursal) {
-        List<PeticionDTO> peticionesActivas = new ArrayList<>();
+    private List<Peticion> getPeticionesActivas(Sucursal sucursal) {
+        List<Peticion> peticionesActivas = new ArrayList<>();
         for (Peticion peticion : sucursal.getPeticiones()) {
             if (peticion.tieneResultados()) {
-                peticionesActivas.add(peticion.toDTO());
+                peticionesActivas.add(peticion);
             }
         }
         return peticionesActivas;
@@ -102,17 +102,17 @@ public class ControladorAtencion {
     }
 
     // Método para obtener una sucursal aleatoria diferente de la que se va a eliminar
-    private SucursalDTO getRandomSucursal(Sucursal excludeSucursal) {
+    private Sucursal getRandomSucursal(Sucursal excludeSucursal) {
         Random random = new Random();
         Sucursal sucursalRandom;
         do {
             sucursalRandom = sucursales.get(random.nextInt(sucursales.size()));
         } while (sucursalRandom.equals(excludeSucursal));
-        return sucursalRandom.toDTO();
+        return sucursalRandom;
     }
 
     // Método para listar las peticiones con resultados críticos
-    public List<Integer> listarPeticionesConResultadoCritico() {
+    public List<Integer> listarPeticionesConResultadoCritico() { //modificar a dto? solo devuelve enteros.
         List<Integer> peticionesCriticas = new ArrayList<>();
         for (Peticion peticion : peticiones) {
             for (Resultado resultado : peticion.getResultados()) {
@@ -147,12 +147,20 @@ public class ControladorAtencion {
     }
 
     // Método para obtener la lista de sucursales (opcional)
-    public List<Sucursal> getSucursales() {
-        return sucursales;
+    public List<SucursalDTO> getSucursales() {
+        List<SucursalDTO> sucursalDTOS = new ArrayList<>();
+        for (Sucursal sucursal : sucursales){
+            sucursalDTOS.add(sucursal.toDTO());
+        }
+        return sucursalDTOS;
     }
 
     // Método para obtener la lista de peticiones (opcional)
-    public List<Peticion> getPeticiones() {
-        return peticiones;
+    public List<PeticionDTO> getPeticiones() {
+        List<PeticionDTO> peticionDTOS = new ArrayList<>();
+        for (Peticion peticion : peticiones){
+            peticionDTOS.add(peticion.toDTO());
+        }
+        return peticionDTOS;
     }
 }

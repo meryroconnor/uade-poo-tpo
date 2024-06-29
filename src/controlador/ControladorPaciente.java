@@ -1,5 +1,6 @@
 package controlador;
 
+import DTOs.PacienteDTO;
 import Laboratorio.Paciente;
 
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ public class ControladorPaciente {
     }
 
     // Método para crear un nuevo Paciente
-    public Paciente createPaciente(String nombreApellido, String sexo, String DNI, String email) {
+    public PacienteDTO createPaciente(String nombreApellido, String sexo, String DNI, String email) {
         Paciente paciente = new Paciente(nextPacienteID++, nombreApellido,sexo, DNI, email);
         pacientes.add(paciente);
-        return paciente;
+        return paciente.toDTO();
     }
 
     // Método para agregar un paciente existente (si se requiere)
@@ -61,20 +62,24 @@ public class ControladorPaciente {
     }
 
     // Método para obtener la lista de pacientes (opcional)
-    public List<Paciente> getPacientes() {
-        return pacientes;
+    public List<PacienteDTO> getPacientes() {
+        List<PacienteDTO> pacienteDTOS = new ArrayList<>();
+        for (Paciente paciente : pacientes){
+            pacienteDTOS.add(paciente.toDTO());
+        }
+        return pacienteDTOS;
     }
 
     //Buscar paciente
-    public List<Paciente> buscarPaciente(String pacienteID, String dni) {
-        List<Paciente> resultados = new ArrayList<>();
+    public List<PacienteDTO> buscarPaciente(String pacienteID, String dni) {
+        List<PacienteDTO> resultadosDTOS = new ArrayList<>();
         for (Paciente paciente : pacientes) {
             if ((pacienteID != null && !pacienteID.isEmpty() && paciente.getPacienteID() == Integer.parseInt(pacienteID)) ||
                     (dni != null && !dni.isEmpty() && paciente.getDNI().equals(dni))) {
-                resultados.add(paciente);
+                resultadosDTOS.add(paciente.toDTO());
             }
         }
-        return resultados;
+        return resultadosDTOS;
     }
 }
 

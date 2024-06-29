@@ -1,5 +1,6 @@
 package controlador;
 
+import DTOs.PracticaDTO;
 import Laboratorio.Practica;
 
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ public class ControladorPractica {
     }
 
     // Método para crear una nueva Practica
-    public Practica createPractica(String valorCritico, Float lLimitCritico,Float hLCritico, String valorReservado, Float lLimitReservado, Float hLReservado) {
+    public PracticaDTO createPractica(String valorCritico, Float lLimitCritico, Float hLCritico, String valorReservado, Float lLimitReservado, Float hLReservado) {
         Practica practica = new Practica(nextCodigoPractica++, valorCritico, lLimitCritico, hLCritico, valorReservado, lLimitReservado, hLReservado);
         practicas.add(practica);
-        return practica;
+        return practica.toDTO();
     }
 
     // Método para agregar un paciente existente (si se requiere)
@@ -37,8 +38,12 @@ public class ControladorPractica {
     }
 
     // Método para obtener la lista de practicas (opcional)
-    public List<Practica> getPracticas() {
-        return practicas;
+    public List<PracticaDTO> getPracticas() {
+        List<PracticaDTO> practicaDTOS = new ArrayList<>();
+        for (Practica practica : practicas){
+            practicaDTOS.add(practica.toDTO());
+        }
+        return practicaDTOS;
     }
 }
 
