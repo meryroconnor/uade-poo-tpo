@@ -1,6 +1,6 @@
 package Laboratorio;
 
-import java.util.ArrayList;
+import DTOs.UserDTO;
 
 public class User {
     private int userID;
@@ -61,5 +61,10 @@ public class User {
         this.password = password;
         this.nombreApellido = nombreApellido;
         this.DNI = DNI;
+    }
+
+    public UserDTO toDTO(){
+        UserDTO userDTO = new UserDTO(this.userID, this.nombreApellido, this.email, this.username, this.password, this.DNI);
+        return  userDTO;
     }
 }
