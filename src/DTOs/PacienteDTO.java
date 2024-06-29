@@ -22,6 +22,9 @@ public class PacienteDTO {
         //this.fechaNacimiento=fechaNacimiento;
         this.email= email;
         this.peticionesDTO = peticionesDTO;
+        if(obraSocialDTO != null){
+            this.obraSocialDTO = obraSocialDTO;
+        }
     }
 
     public int getPacienteID() {
