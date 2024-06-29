@@ -1,7 +1,4 @@
-import DTOs.PacienteDTO;
-import DTOs.PeticionDTO;
-import DTOs.PracticaDTO;
-import DTOs.SucursalDTO;
+import DTOs.*;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 import controlador.ControladorPractica;
@@ -15,13 +12,18 @@ public class Main {
         ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
         ControladorPractica controladorPractica = ControladorPractica.getInstance();
 
+        //Crear Obras Sociales
+        ObraSocialDTO obra1 = controladorPaciente.createObraSocial("Osxe", 5001);
+        ObraSocialDTO obra2 = controladorPaciente.createObraSocial("Osec", 5002);
+
         // Crear sucursales
         SucursalDTO sucursal1 = controladorAtencion.createSucursal("Sucursal Centro", 1);
         SucursalDTO sucursal2 = controladorAtencion.createSucursal("Sucursal Norte", 2);
 
         // Crear pacientes
-        PacienteDTO paciente1 = controladorPaciente.createPaciente("Juan Perez", "M", "39644881",  "jperez@gmail.com");
-        PacienteDTO paciente2 = controladorPaciente.createPaciente("Maria Gomez", "F", "39655771", "mgomez@gmail.com");
+        PacienteDTO paciente1 = controladorPaciente.createPaciente("Juan Perez", "M", "39644881",  "jperez@gmail.com", obra1);
+        PacienteDTO paciente2 = controladorPaciente.createPaciente("Maria Gomez", "F", "39655771", "mgomez@gmail.com", obra2);
+
 
         // Crear peticiones y asociarlas a sucursales y pacientes
         PeticionDTO peticion1 = controladorAtencion.createPeticion();
