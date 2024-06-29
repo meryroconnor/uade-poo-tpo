@@ -1,5 +1,7 @@
 package Laboratorio;
 
+import DTOs.ResultadoDTO;
+
 public class Resultado {
     private float valorResultado;
     private String descripcionResultado;
@@ -51,6 +53,11 @@ public class Resultado {
         boolean isValorReservadoIgual = indiceReservado.getValue() != null && this.getDescripcionResultado().equals(indiceReservado.getValue());
 
         return isValorInRango || isValorReservadoIgual;
+    }
+
+    public ResultadoDTO toDTO(){
+        ResultadoDTO resultadoDTO = new ResultadoDTO(this.valorResultado, this.descripcionResultado, this.practica);
+        return resultadoDTO;
     }
 }
 

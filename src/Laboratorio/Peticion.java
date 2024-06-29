@@ -1,5 +1,7 @@
 package Laboratorio;
 
+import DTOs.PeticionDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,12 @@ public class Peticion {
     public boolean tieneResultados() {
         return !resultados.isEmpty();
     }
+
+    public PeticionDTO toDTO(){
+        PeticionDTO peticionDTO = new PeticionDTO(this.peticionID, this.resultados, this.practicas);
+        return peticionDTO;
+    }
+
 }
 
 
