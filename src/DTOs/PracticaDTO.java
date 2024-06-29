@@ -1,17 +1,14 @@
 package DTOs;
 
-import Laboratorio.IndiceCritico;
-import Laboratorio.IndiceReservado;
-
 public class PracticaDTO {
     private int codigoPractica;
-    private IndiceReservado indiceReservado;
-    private IndiceCritico indiceCritico;
+    private IndiceReservadoDTO indiceReservadoDTO;
+    private IndiceCriticoDTO indiceCriticoDTO;
 
-    public PracticaDTO(int codigoPractica, IndiceReservado indiceReservado, IndiceCritico indiceCritico){
+    public PracticaDTO(int codigoPractica, IndiceReservadoDTO indiceReservadoDTO, IndiceCriticoDTO indiceCriticoDTO){
         this.codigoPractica = codigoPractica;
-        this.indiceReservado = indiceReservado;
-        this.indiceCritico = indiceCritico;
+        this.indiceReservadoDTO = indiceReservadoDTO;
+        this.indiceCriticoDTO = indiceCriticoDTO;
     }
 
 }

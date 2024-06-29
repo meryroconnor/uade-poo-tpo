@@ -1,9 +1,5 @@
 package DTOs;
 
-import Laboratorio.ObraSocial;
-import Laboratorio.Peticion;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,17 +10,17 @@ public class PacienteDTO {
     private String sexo;
     private Date fechaNacimiento;
     private String email;
-    private ObraSocial obraSocial;
-    private List<Peticion> peticiones;
+    private ObraSocialDTO obraSocialDTO;
+    private List<PeticionDTO> peticionesDTO;
 
 
-    public PacienteDTO(int pacienteID, String nombreApellido, String sexo, String DNI, String email, List<Peticion> peticiones) {
+    public PacienteDTO(int pacienteID, String nombreApellido, String sexo, String DNI, String email, List<PeticionDTO> peticionesDTO, ObraSocialDTO obraSocialDTO) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
         this.sexo = sexo;
         this.DNI = DNI;
         //this.fechaNacimiento=fechaNacimiento;
         this.email= email;
-        this.peticiones = peticiones;
+        this.peticionesDTO = peticionesDTO;
     }
 }

@@ -1,6 +1,8 @@
 package Laboratorio;
 
 import DTOs.PeticionDTO;
+import DTOs.*;
+import DTOs.ResultadoDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +43,20 @@ public class Peticion {
     }
 
     public PeticionDTO toDTO(){
-        PeticionDTO peticionDTO = new PeticionDTO(this.peticionID, this.resultados, this.practicas);
-        return peticionDTO;
+        List<ResultadoDTO> resultadoDTOS = new ArrayList<>();
+        List<PracticaDTO> practicaDTOS = new ArrayList<>();
+
+        for(Resultado resultado : this.resultados){
+            resultadoDTOS.add(resultado.toDTO());
+        }
+
+        for (Practica practica : this.practicas){
+            practicaDTOS.add(practica.toDTO());
+        }
+
+        PeticionDTO peticionDTO = new PeticionDTO(this.peticionID, resultadoDTOS, practicaDTOS);
     }
+
 
 }
 

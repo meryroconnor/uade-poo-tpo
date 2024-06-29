@@ -56,7 +56,7 @@ public class Resultado {
     }
 
     public ResultadoDTO toDTO(){
-        ResultadoDTO resultadoDTO = new ResultadoDTO(this.valorResultado, this.descripcionResultado, this.practica);
+        ResultadoDTO resultadoDTO = new ResultadoDTO(this.valorResultado, this.descripcionResultado, this.practica.toDTO());
         return resultadoDTO;
     }
 }
