@@ -1,6 +1,8 @@
 import Laboratorio.*;
+import controlador.ControladorAtencion;
+import controlador.ControladorPaciente;
+import controlador.ControladorPractica;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

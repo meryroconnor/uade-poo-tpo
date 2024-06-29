@@ -7,7 +7,7 @@ public class MainFrame extends JFrame {
 
     private JTabbedPane tabbedPane;
 
-    public MainFrame() {
+    public MainFrame(String rol) {
         setTitle("Gestión de Laboratorio");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -17,9 +17,15 @@ public class MainFrame extends JFrame {
 
         // Agregar paneles
         tabbedPane.add("Pacientes", new PacientePanel());
-        tabbedPane.add("Sucursales", new SucursalesPanel());
         tabbedPane.add("Peticiones", new PeticionPanel());
-        tabbedPane.add("Laboratorio", new LabPanel());
+
+        if (rol == "admin" ) {
+            tabbedPane.add("Sucursales", new SucursalesPanel());
+        }
+
+        if (rol == "admin" || rol == "laboratorista") {
+            tabbedPane.add("Laboratorio", new LabPanel());
+        }
 
         add(tabbedPane, BorderLayout.CENTER);
     }
