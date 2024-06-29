@@ -18,7 +18,7 @@ public class PacienteDialog extends JDialog {
         JPanel titlePanel = new JPanel();
         titlePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JLabel titleLabel = new JLabel("Registro de Usuario");
+        JLabel titleLabel = new JLabel("Registro de Paciente");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Configura la fuente del título
         titlePanel.add(titleLabel);
         add(titlePanel, BorderLayout.NORTH);
@@ -63,19 +63,27 @@ public class PacienteDialog extends JDialog {
         buttonPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         guardarButton = new JButton("Guardar");
         guardarButton.setForeground(new Color(0, 141, 213));
-        guardarButton.addActionListener(e -> {
-            // Aquí iría la lógica para guardar los datos del paciente
-            dispose();
-        });
-        buttonPanel.add(guardarButton);
 
         cancelButton = new JButton("Cancelar");
-        cancelButton.addActionListener(e -> dispose());
+
+        buttonPanel.add(guardarButton);
         buttonPanel.add(cancelButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
         setLocationRelativeTo(owner);
+
+        this.registrarPacienteEventos();
+    }
+
+    private void registrarPacienteEventos() {
+        guardarButton.addActionListener(e -> {
+            // Aquí iría la lógica para guardar los datos del paciente
+            dispose();
+        });
+
+        cancelButton.addActionListener(e -> dispose());
+
     }
 }
 
