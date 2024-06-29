@@ -81,6 +81,18 @@ public class ControladorPaciente {
         }
         return resultadosDTOS;
     }
+
+    protected Paciente findPaciente(int pacienteID){
+        Paciente pacienteEncontrado = null;
+        for (Paciente paciente : pacientes){
+            if (paciente.getPacienteID() == pacienteID){
+                pacienteEncontrado = paciente;
+                break;
+            }
+        }
+        return pacienteEncontrado;
+    }
+
 }
 
 

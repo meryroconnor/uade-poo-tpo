@@ -1,11 +1,10 @@
 package controlador;
 
-import Laboratorio.Peticion;
-import Laboratorio.Resultado;
-import Laboratorio.Sucursal;
-
+import DTOs.PacienteDTO;
 import DTOs.PeticionDTO;
+import DTOs.PracticaDTO;
 import DTOs.SucursalDTO;
+import Laboratorio.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,5 +161,96 @@ public class ControladorAtencion {
             peticionDTOS.add(peticion.toDTO());
         }
         return peticionDTOS;
+    }
+
+    private Peticion findPeticion(int peticionID){
+        Peticion peticionEncontrada = null;
+        for(Peticion peticion : peticiones){
+            if (peticion.getPeticionID() == peticionID){
+                peticionEncontrada = peticion;
+                break;
+            }
+        }
+        return peticionEncontrada;
+    }
+
+    private Practica findPracticaInPeticion(Peticion peticion, int codigoPractica){
+        Practica practicaEncontrada = null;
+        for(Practica practica : peticion.getPracticas()){
+            if (practica.getCodigoPractica() == codigoPractica){
+                practicaEncontrada = practica;
+                break;
+            }
+        }
+        return practicaEncontrada;
+    }
+
+    private Sucursal findSucursal(int sucursalID){
+        Sucursal sucursalEncontrada = null;
+
+        for(Sucursal sucursal : sucursales){
+            if (sucursalID == sucursal.getSucursalID()){
+                sucursalEncontrada = sucursal;
+                break;
+            }
+        }
+        return  sucursalEncontrada;
+    }
+
+    public void addResultadoToPeticion(PeticionDTO peticionDTO, PracticaDTO practicaDTO, float valorResultado, String descripcionResultado){
+        int peticionID = peticionDTO.getPeticionID();
+        Peticion peticionEncontrada = findPeticion(peticionID);
+        Practica practicaEncontrada = findPracticaInPeticion(peticionEncontrada, practicaDTO.getCodigoPractica());
+        if (peticionEncontrada != null && practicaEncontrada != null){
+
+            peticionEncontrada.addResultado(valorResultado, descripcionResultado, practicaEncontrada);
+
+            System.out.println(String.format("PeticionID: %d >>> PracticaID: %d --> Agregado Resultado >>> valorResultado: %f, descripcionResultado: %s", peticionID, practicaDTO.getCodigoPractica(), valorResultado, descripcionResultado));
+        }
+
+    }
+
+    public void addPracticaToPeticion(PeticionDTO peticionDTO, PracticaDTO practicaDTO){
+        int peticionID = peticionDTO.getPeticionID();
+        int practicaID = practicaDTO.getCodigoPractica();
+        Peticion peticionEncontrada = findPeticion(peticionID);
+        Practica practicaEncontrada = ControladorPractica.getInstance().findPractica(practicaID);
+
+        if (peticionEncontrada != null && practicaEncontrada != null){
+
+            peticionEncontrada.addPractica(practicaEncontrada);
+
+            System.out.println(String.format("PeticionID: %d --> Agregada PracticaID: %d", peticionID, practicaDTO.getCodigoPractica()));
+
+        }
+    }
+
+    public void addPeticionToSucursal(SucursalDTO sucursalDTO, PeticionDTO peticionDTO){
+        int sucursalID = sucursalDTO.getSucursalID();
+        int peticionID = peticionDTO.getPeticionID();
+        Sucursal sucursalEncontrada = findSucursal(sucursalID);
+        Peticion peticionEncontrada = findPeticion(peticionID);
+        if (sucursalEncontrada != null && peticionEncontrada != null){
+
+            sucursalEncontrada.addPeticion(peticionEncontrada);
+
+            System.out.println(String.format("SucursalID: %d --> Agregada PeticionID: %d", sucursalID, peticionID));
+
+        }
+    }
+
+    public void addPeticionToPaciente(PacienteDTO pacienteDTO, PeticionDTO peticionDTO){
+        int pacienteID = pacienteDTO.getPacienteID();
+        int peticionID = peticionDTO.getPeticionID();
+        Paciente pacienteEncontrado = ControladorPaciente.getInstance().findPaciente(pacienteID);
+        Peticion peticionEncontrada = findPeticion(peticionID);
+        if (pacienteEncontrado != null && peticionEncontrada != null){
+
+            pacienteEncontrado.addPeticion(peticionEncontrada);
+
+            System.out.println(String.format("PacienteID: %d --> Agregada PeticionID: %d", pacienteID, peticionID));
+
+        }
+
     }
 }

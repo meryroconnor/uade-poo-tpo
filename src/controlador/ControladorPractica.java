@@ -37,6 +37,17 @@ public class ControladorPractica {
         practicas.add(practica);
     }
 
+    protected Practica findPractica(int codigoPractica){
+        Practica practicaEncontrada = null;
+        for (Practica practica : practicas){
+            if (practica.getCodigoPractica() == codigoPractica){
+                practicaEncontrada = practica;
+                break;
+            }
+        }
+        return practicaEncontrada;
+    }
+
     // Método para obtener la lista de practicas (opcional)
     public List<PracticaDTO> getPracticas() {
         List<PracticaDTO> practicaDTOS = new ArrayList<>();
