@@ -1,5 +1,7 @@
 package Laboratorio;
 
+import DTOs.IndiceCriticoDTO;
+
 public class IndiceCritico {
     private String value;
     private Float lowLimit;
@@ -23,12 +25,9 @@ public class IndiceCritico {
         return highLimit;
     }
 
-    @Override
-    public String toString() {
-        return "IndiceCritico{" +
-                "value='" + value + '\'' +
-                ", lowLimit=" + lowLimit +
-                ", highLimit=" + highLimit +
-                '}';
+    public IndiceCriticoDTO toDTO(){
+         IndiceCriticoDTO indiceCriticoDTO = new IndiceCriticoDTO(this.value, this.lowLimit, this.highLimit);
+         return indiceCriticoDTO;
     }
+
 }
