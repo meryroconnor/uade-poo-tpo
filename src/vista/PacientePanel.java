@@ -3,6 +3,7 @@ package vista;
 import DAOs.PacienteDAO;
 import Laboratorio.Paciente;
 import controlador.ControladorPaciente;
+import vista.RegisterUserDialog;
 
 import javax.swing.*;
 import java.awt.*;

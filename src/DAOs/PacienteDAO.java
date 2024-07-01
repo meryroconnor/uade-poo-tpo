@@ -1,10 +1,57 @@
 package DAOs;
+
+
+
 import Laboratorio.Paciente;
-import utils.GenericDAO;
-public class PacienteDAO extends GenericDAO{
 
+import java.io.FileNotFoundException;
+import java.util.Objects;
 
-    public PacienteDAO(Class clase, String file) throws Exception {
-        super(Paciente.class, "./src/txtDataFiles/usuarios.json");
+public class PacienteDAO extends GenericDAO {
+
+    public PacienteDAO() throws Exception {
+        super(Paciente.class, "./src/goldenfiles/pacientes/pacientes_db");
+    }
+
+    public void CrearPaciente(Paciente p) throws Exception {
+        try {
+            if (!Objects.isNull(ObtenerPaciente(p.getPacienteID()))){ //faltan getters and setters
+                throw new Exception("Paciente ya existente");
+            }
+            this.save(p);
+        } catch (Exception e) {
+            throw new Exception("Error al crear el paciente: " + e.getMessage(), e);
+        }
+    }
+
+    public boolean ActualizarPaciente(Paciente p) throws Exception {
+        boolean fueActualizado = false;
+        try {
+            fueActualizado = this.update(p);
+        } catch (Exception e) {
+            throw new Exception("Error al actualizar el paciente: " + e.getMessage(), e);
+        }
+
+        return fueActualizado;
+    }
+
+    public boolean BorrarPaciente(int pacienteID) throws Exception {
+        boolean fueBorrado = false;
+        try {
+            fueBorrado = this.delete(pacienteID);
+        } catch (Exception e) {
+            throw new Exception("Error al borrar el paciente: " + e.getMessage(), e);
+        }
+        return fueBorrado;
+    }
+
+    public Paciente ObtenerPaciente(int pacienteID) throws FileNotFoundException {
+        Paciente pacienteDTO;
+        try {
+            pacienteDTO = (Paciente) this.search(pacienteID);
+        } catch (FileNotFoundException e) {
+            throw (e);
+        }
+        return pacienteDTO;
     }
 }

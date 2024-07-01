@@ -1,14 +1,10 @@
-package utils;
+package DAOs;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.*;
-
-import javax.swing.*;
 
 public abstract class GenericDAO<T> {
     final Class<T> clase;
