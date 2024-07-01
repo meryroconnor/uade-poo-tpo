@@ -11,21 +11,21 @@ public class SucursalDAO extends GenericDAO {
         super(Sucursal.class, "./src/goldenfiles/Sucursal/Sucursal_db");
     }//chequear el file
 
-    public void CrearSucursal(Sucursal p) throws Exception {
+    public void CrearSucursal(Sucursal sucursal) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerSucursal(p.getSucursalID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerSucursal(sucursal.getSucursalID()))){ //faltan getters and setters
                 throw new Exception("Sucursal ya existente");
             }
-            this.save(p);
+            this.save(sucursal);
         } catch (Exception e) {
             throw new Exception("Error al crear la Sucursal: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarSucursal(Sucursal p) throws Exception {
+    public boolean ActualizarSucursal(Sucursal sucursal) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(p);
+            fueActualizado = this.update(sucursal);
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Sucursal: " + e.getMessage(), e);
         }

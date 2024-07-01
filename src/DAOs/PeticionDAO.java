@@ -11,21 +11,21 @@ public class PeticionDAO extends GenericDAO {
         super(Peticion.class, "./src/goldenfiles/peticiones/peticiones_db");
     }//chequear el file
 
-    public void CrearPeticion(Peticion p) throws Exception {
+    public void CrearPeticion(Peticion peticion) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPeticion(p.getPeticionID()))){ //faltan getters and setters
+            if (!Objects.isNull(CrearPeticion(peticion.getPeticionID()))){ //faltan getters and setters
                 throw new Exception("Peticion ya existente");
             }
-            this.save(p);
+            this.save(peticion);
         } catch (Exception e) {
             throw new Exception("Error al crear la Peticion: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarPeticion(Peticion p) throws Exception {
+    public boolean ActualizarPeticion(Peticion peticion) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(p);
+            fueActualizado = this.update(peticion);
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Peticion: " + e.getMessage(), e);
         }

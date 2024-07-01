@@ -11,21 +11,21 @@ public class UserDAO extends GenericDAO {
         super(User.class, "./src/goldenfiles/users/users_db");
     }//chequear el file
 
-    public void CrearUser(User p) throws Exception {
+    public void CrearUser(User user) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerUser(p.getUserID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerUser(user.getUserID()))){ //faltan getters and setters
                 throw new Exception("Usuario ya existente");
             }
-            this.save(p);
+            this.save(user);
         } catch (Exception e) {
             throw new Exception("Error al crear el Usuario: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarUser(User p) throws Exception {
+    public boolean ActualizarUser(User user) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(p);
+            fueActualizado = this.update(user);
         } catch (Exception e) {
             throw new Exception("Error al actualizar el Usuario: " + e.getMessage(), e);
         }

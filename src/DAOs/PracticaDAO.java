@@ -11,21 +11,21 @@ public class PracticaDAO extends GenericDAO {
         super(Practica.class, "./src/goldenfiles/Practica/Practica_db");
     }//chequear el file
 
-    public void CrearPractica(Practica p) throws Exception {
+    public void CrearPractica(Practica practica) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPractica(p.getCodigoPractica()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerPractica(practica.getCodigoPractica()))){ //faltan getters and setters
                 throw new Exception("Practica ya existente");
             }
-            this.save(p);
+            this.save(practica);
         } catch (Exception e) {
             throw new Exception("Error al crear la Practica: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarPractica(Practica p) throws Exception {
+    public boolean ActualizarPractica(Practica practica) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(p);
+            fueActualizado = this.update(practica);
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Practica: " + e.getMessage(), e);
         }

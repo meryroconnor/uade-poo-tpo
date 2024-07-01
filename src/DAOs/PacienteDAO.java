@@ -13,21 +13,21 @@ public class PacienteDAO extends GenericDAO {
         super(Paciente.class, "./src/goldenfiles/pacientes/pacientes_db");
     }
 
-    public void CrearPaciente(Paciente p) throws Exception {
+    public void CrearPaciente(Paciente paciente ) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPaciente(p.getPacienteID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerPaciente(paciente.getPacienteID()))){ //faltan getters and setters
                 throw new Exception("Paciente ya existente");
             }
-            this.save(p);
+            this.save(paciente);
         } catch (Exception e) {
             throw new Exception("Error al crear el paciente: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarPaciente(Paciente p) throws Exception {
+    public boolean ActualizarPaciente(Paciente paciente) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(p);
+            fueActualizado = this.update(paciente);
         } catch (Exception e) {
             throw new Exception("Error al actualizar el paciente: " + e.getMessage(), e);
         }

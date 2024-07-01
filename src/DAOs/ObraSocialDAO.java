@@ -13,21 +13,21 @@ public class ObraSocialDAO extends GenericDAO {
         super(ObraSocial.class, "./src/goldenfiles/ObraSocial/ObraSocial_db");
     }
 
-    public void CrearAfiliado(ObraSocial p) throws Exception {
+    public void CrearAfiliado(ObraSocial obraSocial) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPaciente(p.getNumeroAfiliado()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerAfiliado(obraSocial.getNumeroAfiliado()))){ //faltan getters and setters
                 throw new Exception("numero afiliado ya existente");
             }
-            this.save(p);
+            this.save(obraSocial);
         } catch (Exception e) {
             throw new Exception("Error al crear la afiliado: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarAfiliado(ObraSocial p) throws Exception {
+    public boolean ActualizarAfiliado(ObraSocial obraSocial) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(p);
+            fueActualizado = this.update(obraSocial);
         } catch (Exception e) {
             throw new Exception("Error al actualizar al afiliado: " + e.getMessage(), e);
         }
