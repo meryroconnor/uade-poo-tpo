@@ -12,9 +12,9 @@ public class PacienteDAO extends GenericDAO {
         super(PacienteDTO.class, "./src/txtDataFiles/pacientes.db");
     }
 
-    public void CrearPaciente(PacienteDTO pacienteDTO ) throws Exception {
+    public void crearPaciente(PacienteDTO pacienteDTO ) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPaciente(pacienteDTO))){
+            if (!Objects.isNull(obtenerPaciente(pacienteDTO))){
                 throw new Exception("Paciente ya existente");
             }
             this.save(pacienteDTO);
@@ -23,7 +23,7 @@ public class PacienteDAO extends GenericDAO {
         }
     }
 
-    public boolean ActualizarPaciente(PacienteDTO pacienteDTO) throws Exception {
+    public boolean actualizarPaciente(PacienteDTO pacienteDTO) throws Exception {
         boolean fueActualizado = false;
         try {
             fueActualizado = this.update(pacienteDTO); //1 - parametro DTO
@@ -34,7 +34,7 @@ public class PacienteDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarPaciente(PacienteDTO pacienteDTO) throws Exception {
+    public boolean borrarPaciente(PacienteDTO pacienteDTO) throws Exception {
         int pacienteID = pacienteDTO.getPacienteID();
         boolean fueBorrado = false;
         try {
@@ -45,7 +45,7 @@ public class PacienteDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public PacienteDTO ObtenerPaciente(PacienteDTO pacienteDTOParam) throws FileNotFoundException { //idem anterior
+    public PacienteDTO obtenerPaciente(PacienteDTO pacienteDTOParam) throws FileNotFoundException { //idem anterior
         int pacienteID = pacienteDTOParam.getPacienteID();
         PacienteDTO pacienteDTO;
         try {

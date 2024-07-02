@@ -12,9 +12,9 @@ public class UserDAO extends GenericDAO {
         super(User.class, "./src/txtDataFiles/Users.db");
     }//chequear el file
 
-    public void CrearUser(UserDTO userDTO) throws Exception {
+    public void crearUser(UserDTO userDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerUser(userDTO))){
+            if (!Objects.isNull(obtenerUser(userDTO))){
                 throw new Exception("Usuario ya existente");
             }
             this.save(userDTO);
@@ -23,7 +23,7 @@ public class UserDAO extends GenericDAO {
         }
     }
 
-    public boolean ActualizarUser(UserDTO userDTO) throws Exception {
+    public boolean actualizarUser(UserDTO userDTO) throws Exception {
         boolean fueActualizado = false;
         try {
             fueActualizado = this.update(userDTO);
@@ -34,7 +34,7 @@ public class UserDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarUser (UserDTO userDTO) throws Exception {
+    public boolean borrarUser (UserDTO userDTO) throws Exception {
         int userID = userDTO.getUserID();
         boolean fueBorrado = false;
         try {
@@ -45,7 +45,7 @@ public class UserDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public UserDTO ObtenerUser(UserDTO userDTOParam) throws FileNotFoundException {
+    public UserDTO obtenerUser(UserDTO userDTOParam) throws FileNotFoundException {
         int userID = userDTOParam.getUserID();
         UserDTO userDTO;
         try {

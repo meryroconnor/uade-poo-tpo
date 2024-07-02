@@ -11,9 +11,9 @@ public class SucursalDAO extends GenericDAO {
         super(SucursalDTO.class, "./src/txtDataFiles/Sucursal.db");
     }//chequear el file
 
-    public void CrearSucursal(SucursalDTO sucursalDTO) throws Exception {
+    public void crearSucursal(SucursalDTO sucursalDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerSucursal(sucursalDTO))){
+            if (!Objects.isNull(obtenerSucursal(sucursalDTO))){
                 throw new Exception("Sucursal ya existente");
             }
             this.save(sucursalDTO);
@@ -22,7 +22,7 @@ public class SucursalDAO extends GenericDAO {
         }
     }
 
-    public boolean ActualizarSucursal(SucursalDTO sucursalDTO) throws Exception {
+    public boolean actualizarSucursal(SucursalDTO sucursalDTO) throws Exception {
         boolean fueActualizado = false;
         try {
             fueActualizado = this.update(sucursalDTO);
@@ -33,7 +33,7 @@ public class SucursalDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarSucursal (SucursalDTO sucursalDTO) throws Exception {
+    public boolean borrarSucursal (SucursalDTO sucursalDTO) throws Exception {
         int sucursalID = sucursalDTO.getSucursalID();
         boolean fueBorrado = false;
         try {
@@ -44,7 +44,7 @@ public class SucursalDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public SucursalDTO ObtenerSucursal(SucursalDTO sucursalDTOParam) throws FileNotFoundException {
+    public SucursalDTO obtenerSucursal(SucursalDTO sucursalDTOParam) throws FileNotFoundException {
         int sucursalID = sucursalDTOParam.getSucursalID();
         SucursalDTO sucursalDTO;
         try {

@@ -12,9 +12,9 @@ public class PracticaDAO extends GenericDAO {
         super(Practica.class, "./src/txtDataFiles/Practica.db");
     }//chequear el file
 
-    public void CrearPractica(PracticaDTO practicaDTO) throws Exception {
+    public void crearPractica(PracticaDTO practicaDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPractica(practicaDTO))){
+            if (!Objects.isNull(obtenerPractica(practicaDTO))){
                 throw new Exception("Practica ya existente");
             }
             this.save(practicaDTO);
@@ -23,7 +23,7 @@ public class PracticaDAO extends GenericDAO {
         }
     }
 
-    public boolean ActualizarPractica(PracticaDTO practicaDTO) throws Exception {
+    public boolean actualizarPractica(PracticaDTO practicaDTO) throws Exception {
         boolean fueActualizado = false;
         try {
             fueActualizado = this.update(practicaDTO);
@@ -34,7 +34,7 @@ public class PracticaDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarPractica (PracticaDTO practicaDTO) throws Exception {
+    public boolean borrarPractica (PracticaDTO practicaDTO) throws Exception {
         int codigoPractica = practicaDTO.getCodigoPractica();
         boolean fueBorrado = false;
         try {
@@ -45,7 +45,7 @@ public class PracticaDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public PracticaDTO ObtenerPractica(PracticaDTO practicaDTOParam) throws FileNotFoundException {
+    public PracticaDTO obtenerPractica(PracticaDTO practicaDTOParam) throws FileNotFoundException {
         int codigoPractica = practicaDTOParam.getCodigoPractica();
         PracticaDTO practicaDTO;
         try {

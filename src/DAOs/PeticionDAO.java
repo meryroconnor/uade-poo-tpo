@@ -11,9 +11,9 @@ public class PeticionDAO extends GenericDAO {
         super(PeticionDTO.class, "./src/txtDataFiles/Peticiones.db");
     }//chequear el file
 
-    public void CrearPeticion(PeticionDTO peticionDTO) throws Exception {
+    public void crearPeticion(PeticionDTO peticionDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPeticion(peticionDTO))){
+            if (!Objects.isNull(obtenerPeticion(peticionDTO))){
                 throw new Exception("Peticion ya existente");
             }
             this.save(peticionDTO);
@@ -22,7 +22,7 @@ public class PeticionDAO extends GenericDAO {
         }
     }
 
-    public boolean ActualizarPeticion(PeticionDTO peticionDTO) throws Exception {
+    public boolean actualizarPeticion(PeticionDTO peticionDTO) throws Exception {
         boolean fueActualizado = false;
         try {
             fueActualizado = this.update(peticionDTO);
@@ -33,7 +33,7 @@ public class PeticionDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarPeticion (PeticionDTO peticionDTO) throws Exception {
+    public boolean borrarPeticion (PeticionDTO peticionDTO) throws Exception {
         int peticionID = peticionDTO.getPeticionID();
         boolean fueBorrado = false;
         try {
@@ -44,7 +44,7 @@ public class PeticionDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public PeticionDTO ObtenerPeticion(PeticionDTO peticionDTOParam) throws FileNotFoundException {
+    public PeticionDTO obtenerPeticion(PeticionDTO peticionDTOParam) throws FileNotFoundException {
         int peticionID = peticionDTOParam.getPeticionID();
         PeticionDTO peticionDTO;
         try {
