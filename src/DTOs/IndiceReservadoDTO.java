@@ -1,13 +1,11 @@
-package Laboratorio;
+package DTOs;
 
-import DTOs.IndiceReservadoDTO;
-
-public class IndiceReservado {
+public class IndiceReservadoDTO {
     private String value;
     private Float lowLimit;
     private Float highLimit;
 
-    public IndiceReservado(String value, Float lowLimit, Float highLimit) {
+    public IndiceReservadoDTO(String value, Float lowLimit, Float highLimit){
         this.value = value;
         this.lowLimit = lowLimit;
         this.highLimit = highLimit;
@@ -23,10 +21,5 @@ public class IndiceReservado {
 
     public Float getHighLimit() {
         return highLimit;
-    }
-
-    public IndiceReservadoDTO toDTO(){
-        IndiceReservadoDTO indiceReservadoDTO = new IndiceReservadoDTO(this.value, this.lowLimit, this.highLimit);
-        return indiceReservadoDTO;
     }
 }

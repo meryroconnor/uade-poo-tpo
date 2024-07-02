@@ -1,5 +1,8 @@
 package Laboratorio;
 
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +69,24 @@ public class Paciente {
         }
         return false;
     }
+
+    public PacienteDTO toDTO() {
+        // creo coleccion local de peticionesDTO
+        List<PeticionDTO> peticionesDTO = new ArrayList<>();
+
+        // por cada peticion dentro del propio array de peticiones (propias)
+        //a la coleccion de peticionesDTO agregarle los DTO de cada peticion
+        for(Peticion peticion : this.peticiones){
+            peticionesDTO.add(peticion.toDTO());
+        }
+
+        // crear el DTO del paciente propio con los DTOs de cada peticion propia y el DTO de la obra social relacionada
+        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email, peticionesDTO, this.obraSocial.toDTO());
+        return pacienteDTO;
+    }
 }
+
+
+
 
 

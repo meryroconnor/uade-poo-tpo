@@ -1,5 +1,8 @@
 package controlador;
 
+import DTOs.ObraSocialDTO;
+import DTOs.PacienteDTO;
+import Laboratorio.ObraSocial;
 import Laboratorio.Paciente;
 
 import java.util.ArrayList;
@@ -8,12 +11,14 @@ import java.util.List;
 public class ControladorPaciente {
     private static ControladorPaciente instance;
     private List<Paciente> pacientes;
+    private List<ObraSocial> obrasSociales;
     private int nextPacienteID;
 
     // Constructor privado para implementar el patrón Singleton
     private ControladorPaciente() {
         this.pacientes = new ArrayList<>();
         this.nextPacienteID = 1;
+        this.obrasSociales = new ArrayList<>();
     }
 
     // Método para obtener la única instancia de ControladorPaciente (Singleton)
@@ -24,11 +29,18 @@ public class ControladorPaciente {
         return instance;
     }
 
+    public ObraSocialDTO createObraSocial(String nombreObraSocial, int numeroAfiliacionObraSocial){
+        ObraSocial obraSocial = new ObraSocial(nombreObraSocial, numeroAfiliacionObraSocial);
+        obrasSociales.add(obraSocial);
+        return obraSocial.toDTO();
+    }
+
     // Método para crear un nuevo Paciente
-    public Paciente createPaciente(String nombreApellido, String sexo, String DNI, String email) {
+    public PacienteDTO createPaciente(String nombreApellido, String sexo, String DNI, String email, ObraSocialDTO obraSocialDTO) {
         Paciente paciente = new Paciente(nextPacienteID++, nombreApellido,sexo, DNI, email);
         pacientes.add(paciente);
-        return paciente;
+        this.addObraSocialToPaciente(paciente, obraSocialDTO);
+        return paciente.toDTO();
     }
 
     // Método para agregar un paciente existente (si se requiere)
@@ -61,21 +73,60 @@ public class ControladorPaciente {
     }
 
     // Método para obtener la lista de pacientes (opcional)
-    public List<Paciente> getPacientes() {
-        return pacientes;
+    public List<PacienteDTO> getPacientes() {
+        List<PacienteDTO> pacienteDTOS = new ArrayList<>();
+        for (Paciente paciente : pacientes){
+            pacienteDTOS.add(paciente.toDTO());
+        }
+        return pacienteDTOS;
     }
 
     //Buscar paciente
-    public List<Paciente> buscarPaciente(String pacienteID, String dni) {
-        List<Paciente> resultados = new ArrayList<>();
+    public List<PacienteDTO> buscarPaciente(String pacienteID, String dni) {
+        List<PacienteDTO> resultadosDTOS = new ArrayList<>();
         for (Paciente paciente : pacientes) {
             if ((pacienteID != null && !pacienteID.isEmpty() && paciente.getPacienteID() == Integer.parseInt(pacienteID)) ||
                     (dni != null && !dni.isEmpty() && paciente.getDNI().equals(dni))) {
-                resultados.add(paciente);
+                resultadosDTOS.add(paciente.toDTO());
             }
         }
-        return resultados;
+        return resultadosDTOS;
     }
+
+    protected Paciente findPaciente(int pacienteID){
+        Paciente pacienteEncontrado = null;
+        for (Paciente paciente : pacientes){
+            if (paciente.getPacienteID() == pacienteID){
+                pacienteEncontrado = paciente;
+                break;
+            }
+        }
+        return pacienteEncontrado;
+    }
+
+    private ObraSocial findObraSocial(int numeroAfiliacion){
+        ObraSocial obraSocialEncontrada = null;
+        for (ObraSocial obraSocial : obrasSociales){
+            if (numeroAfiliacion == obraSocial.getNumeroAfilicion()){
+                obraSocialEncontrada = obraSocial;
+                break;
+            }
+        }
+        return obraSocialEncontrada;
+    }
+
+    private void addObraSocialToPaciente(Paciente paciente, ObraSocialDTO obraSocialDTO){
+        int pacienteID = paciente.getPacienteID();
+        int obraSocialNumeroAfiliacion = obraSocialDTO.getNumeroAfiliado();
+        Paciente pacienteEncontrado = findPaciente(pacienteID);
+        ObraSocial obraSocialEncontrada = findObraSocial(obraSocialNumeroAfiliacion);
+        if(pacienteEncontrado != null && obraSocialEncontrada != null){
+            pacienteEncontrado.setObraSocial(obraSocialEncontrada);
+
+            System.out.println(String.format("PacienteID: %d --> Agregada ObraSocial: %s", pacienteID, obraSocialEncontrada.getObraSocial()));
+        }
+    }
+
 }
 
 
