@@ -1,6 +1,6 @@
 package DAOs;
 
-import Laboratorio.Sucursal;
+import DTOs.SucursalDTO;
 
 import java.io.FileNotFoundException;
 import java.util.Objects;
@@ -8,24 +8,24 @@ import java.util.Objects;
 public class SucursalDAO extends GenericDAO {
 
     public SucursalDAO() throws Exception {
-        super(Sucursal.class, "./src/goldenfiles/Sucursal/Sucursal_db");
+        super(SucursalDTO.class, "./src/txtDataFiles/Sucursal/Sucursal_db");
     }//chequear el file
 
-    public void CrearSucursal(Sucursal sucursal) throws Exception {
+    public void CrearSucursal(SucursalDTO sucursalDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerSucursal(sucursal.getSucursalID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerSucursal(sucursalDTO.getSucursalID()))){ //faltan getters and setters
                 throw new Exception("Sucursal ya existente");
             }
-            this.save(sucursal);
+            this.save(sucursalDTO);
         } catch (Exception e) {
             throw new Exception("Error al crear la Sucursal: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarSucursal(Sucursal sucursal) throws Exception {
+    public boolean ActualizarSucursal(SucursalDTO sucursalDTO) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(sucursal);
+            fueActualizado = this.update(sucursalDTO);
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Sucursal: " + e.getMessage(), e);
         }
@@ -43,10 +43,10 @@ public class SucursalDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public Sucursal ObtenerSucursal(int sucursalID) throws FileNotFoundException {
-        Sucursal sucursalDTO;
+    public SucursalDTO ObtenerSucursal(int sucursalID) throws FileNotFoundException {
+        SucursalDTO sucursalDTO;
         try {
-            sucursalDTO = (Sucursal) this.search(sucursalID);
+            sucursalDTO = (SucursalDTO) this.search(sucursalID);
         } catch (FileNotFoundException e) {
             throw (e);
         }

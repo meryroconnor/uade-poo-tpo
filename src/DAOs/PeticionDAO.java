@@ -1,6 +1,6 @@
 package DAOs;
 
-import Laboratorio.Peticion;
+import DTOs.PeticionDTO;
 
 import java.io.FileNotFoundException;
 import java.util.Objects;
@@ -8,24 +8,24 @@ import java.util.Objects;
 public class PeticionDAO extends GenericDAO {
 
     public PeticionDAO() throws Exception {
-        super(Peticion.class, "./src/goldenfiles/peticiones/peticiones_db");
+        super(PeticionDTO.class, "./src/txtDataFiles/peticiones/peticiones_db");
     }//chequear el file
 
-    public void CrearPeticion(Peticion peticion) throws Exception {
+    public void CrearPeticion(PeticionDTO peticionDTO) throws Exception {
         try {
-            if (!Objects.isNull(CrearPeticion(peticion.getPeticionID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerPeticion(peticionDTO.getPeticionID()))){ //faltan getters and setters
                 throw new Exception("Peticion ya existente");
             }
-            this.save(peticion);
+            this.save(peticionDTO);
         } catch (Exception e) {
             throw new Exception("Error al crear la Peticion: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarPeticion(Peticion peticion) throws Exception {
+    public boolean ActualizarPeticion(PeticionDTO peticionDTO) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(peticion);
+            fueActualizado = this.update(peticionDTO);
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Peticion: " + e.getMessage(), e);
         }
@@ -43,10 +43,10 @@ public class PeticionDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public Peticion ObtenerPaciente(int peticionID) throws FileNotFoundException {
-        Peticion peticionDTO;
+    public PeticionDTO ObtenerPeticion(int peticionID) throws FileNotFoundException {
+        PeticionDTO peticionDTO;
         try {
-            peticionDTO = (Peticion) this.search(peticionID);
+            peticionDTO = (PeticionDTO) this.search(peticionID);
         } catch (FileNotFoundException e) {
             throw (e);
         }

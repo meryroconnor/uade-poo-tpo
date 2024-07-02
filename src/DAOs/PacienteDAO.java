@@ -1,8 +1,7 @@
 package DAOs;
 
 
-
-import Laboratorio.Paciente;
+import DTOs.PacienteDTO;
 
 import java.io.FileNotFoundException;
 import java.util.Objects;
@@ -10,24 +9,24 @@ import java.util.Objects;
 public class PacienteDAO extends GenericDAO {
 
     public PacienteDAO() throws Exception {
-        super(Paciente.class, "./src/goldenfiles/pacientes/pacientes_db");
+        super(PacienteDTO.class, "./src/txtDataFiles/pacientes/pacientes_db");
     }
 
-    public void CrearPaciente(Paciente paciente ) throws Exception {
+    public void CrearPaciente(PacienteDTO pacienteDTO ) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPaciente(paciente.getPacienteID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerPaciente(pacienteDTO.getPacienteID()))){ //faltan getters and setters
                 throw new Exception("Paciente ya existente");
             }
-            this.save(paciente);
+            this.save(pacienteDTO);
         } catch (Exception e) {
             throw new Exception("Error al crear el paciente: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarPaciente(Paciente paciente) throws Exception {
+    public boolean ActualizarPaciente(PacienteDTO pacienteDTO) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(paciente);
+            fueActualizado = this.update(pacienteDTO); //1 - parametro DTO
         } catch (Exception e) {
             throw new Exception("Error al actualizar el paciente: " + e.getMessage(), e);
         }
@@ -35,20 +34,20 @@ public class PacienteDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarPaciente(int pacienteID) throws Exception {
+    public boolean BorrarPaciente(int pacienteID) throws Exception { // tal vez convenga stream-linear esto recibiendo un parametro DTO
         boolean fueBorrado = false;
         try {
-            fueBorrado = this.delete(pacienteID);
+            fueBorrado = this.delete(pacienteID); //2- parametro ID ? wtf?
         } catch (Exception e) {
             throw new Exception("Error al borrar el paciente: " + e.getMessage(), e);
         }
         return fueBorrado;
     }
 
-    public Paciente ObtenerPaciente(int pacienteID) throws FileNotFoundException {
-        Paciente pacienteDTO;
+    public PacienteDTO ObtenerPaciente(int pacienteID) throws FileNotFoundException { //idem anterior
+        PacienteDTO pacienteDTO;
         try {
-            pacienteDTO = (Paciente) this.search(pacienteID);
+            pacienteDTO = (PacienteDTO) this.search(pacienteID);
         } catch (FileNotFoundException e) {
             throw (e);
         }

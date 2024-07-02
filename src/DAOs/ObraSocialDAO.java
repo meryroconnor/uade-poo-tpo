@@ -1,8 +1,5 @@
 package DAOs;
-
-
-
-import Laboratorio.ObraSocial;
+import DTOs.ObraSocialDTO;
 
 import java.io.FileNotFoundException;
 import java.util.Objects;
@@ -10,24 +7,24 @@ import java.util.Objects;
 public class ObraSocialDAO extends GenericDAO {
 
     public ObraSocialDAO() throws Exception {
-        super(ObraSocial.class, "./src/goldenfiles/ObraSocial/ObraSocial_db");
+        super(ObraSocialDTO.class, "./src/txtDataFiles/ObraSocial/ObraSocial_db");
     }
 
-    public void CrearAfiliado(ObraSocial obraSocial) throws Exception {
+    public void CrearAfiliado(ObraSocialDTO obraSocialDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerAfiliado(obraSocial.getNumeroAfiliado()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerAfiliado(obraSocialDTO.getNumeroAfiliado()))){
                 throw new Exception("numero afiliado ya existente");
             }
-            this.save(obraSocial);
+            this.save(obraSocialDTO);
         } catch (Exception e) {
             throw new Exception("Error al crear la afiliado: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarAfiliado(ObraSocial obraSocial) throws Exception {
+    public boolean ActualizarAfiliado(ObraSocialDTO obraSocialDTO) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(obraSocial);
+            fueActualizado = this.update(obraSocialDTO);
         } catch (Exception e) {
             throw new Exception("Error al actualizar al afiliado: " + e.getMessage(), e);
         }
@@ -35,7 +32,7 @@ public class ObraSocialDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarAfiliado(int numeroAfiliado) throws Exception {
+    public boolean BorrarAfiliado(int numeroAfiliado) throws Exception { // reemplazar con numero de afiliacion.
         boolean fueBorrado = false;
         try {
             fueBorrado = this.delete(numeroAfiliado);
@@ -45,13 +42,13 @@ public class ObraSocialDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public ObraSocial ObtenerAfiliado(int numeroAfiliado) throws FileNotFoundException {
-        ObraSocial ObraSocialDTO;
+    public ObraSocialDTO ObtenerAfiliado(int numeroAfiliado) throws FileNotFoundException {
+        ObraSocialDTO obraSocialDTO;
         try {
-            ObraSocialDTO = (ObraSocial) this.search(numeroAfiliado);
+            obraSocialDTO = (ObraSocialDTO) this.search(numeroAfiliado);
         } catch (FileNotFoundException e) {
             throw (e);
         }
-        return ObraSocialDTO;
+        return obraSocialDTO;
     }
 }

@@ -1,5 +1,6 @@
 package DAOs;
 
+import DTOs.PracticaDTO;
 import Laboratorio.Practica;
 
 import java.io.FileNotFoundException;
@@ -8,24 +9,24 @@ import java.util.Objects;
 public class PracticaDAO extends GenericDAO {
 
     public PracticaDAO() throws Exception {
-        super(Practica.class, "./src/goldenfiles/Practica/Practica_db");
+        super(Practica.class, "./src/txtDataFiles/Practica/Practica_db");
     }//chequear el file
 
-    public void CrearPractica(Practica practica) throws Exception {
+    public void CrearPractica(PracticaDTO practicaDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPractica(practica.getCodigoPractica()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerPractica(practicaDTO.getCodigoPractica()))){ //faltan getters and setters
                 throw new Exception("Practica ya existente");
             }
-            this.save(practica);
+            this.save(practicaDTO);
         } catch (Exception e) {
             throw new Exception("Error al crear la Practica: " + e.getMessage(), e);
         }
     }
 
-    public boolean ActualizarPractica(Practica practica) throws Exception {
+    public boolean ActualizarPractica(PracticaDTO practicaDTO) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(practica);
+            fueActualizado = this.update(practicaDTO);
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Practica: " + e.getMessage(), e);
         }
@@ -43,10 +44,10 @@ public class PracticaDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public Practica ObtenerPractica(int codigoPractica) throws FileNotFoundException {
-        Practica practicaDTO;
+    public PracticaDTO ObtenerPractica(int codigoPractica) throws FileNotFoundException {
+        PracticaDTO practicaDTO;
         try {
-            practicaDTO = (Practica) this.search(codigoPractica);
+            practicaDTO = (PracticaDTO) this.search(codigoPractica);
         } catch (FileNotFoundException e) {
             throw (e);
         }
