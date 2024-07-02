@@ -16,4 +16,9 @@ public class UserDTO {
         this.password = password;
         this.DNI = DNI;
     }
+
+    public int getUserID() {
+        return userID;
+    }
+
 }
