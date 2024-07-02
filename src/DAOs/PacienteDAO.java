@@ -14,7 +14,7 @@ public class PacienteDAO extends GenericDAO {
 
     public void CrearPaciente(PacienteDTO pacienteDTO ) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPaciente(pacienteDTO.getPacienteID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerPaciente(pacienteDTO))){
                 throw new Exception("Paciente ya existente");
             }
             this.save(pacienteDTO);
@@ -34,7 +34,8 @@ public class PacienteDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarPaciente(int pacienteID) throws Exception { // tal vez convenga stream-linear esto recibiendo un parametro DTO
+    public boolean BorrarPaciente(PacienteDTO pacienteDTO) throws Exception {
+        int pacienteID = pacienteDTO.getPacienteID();
         boolean fueBorrado = false;
         try {
             fueBorrado = this.delete(pacienteID); //2- parametro ID ? wtf?
@@ -44,7 +45,8 @@ public class PacienteDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public PacienteDTO ObtenerPaciente(int pacienteID) throws FileNotFoundException { //idem anterior
+    public PacienteDTO ObtenerPaciente(PacienteDTO pacienteDTOParam) throws FileNotFoundException { //idem anterior
+        int pacienteID = pacienteDTOParam.getPacienteID();
         PacienteDTO pacienteDTO;
         try {
             pacienteDTO = (PacienteDTO) this.search(pacienteID);

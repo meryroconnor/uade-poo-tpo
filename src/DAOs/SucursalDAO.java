@@ -13,7 +13,7 @@ public class SucursalDAO extends GenericDAO {
 
     public void CrearSucursal(SucursalDTO sucursalDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerSucursal(sucursalDTO.getSucursalID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerSucursal(sucursalDTO))){
                 throw new Exception("Sucursal ya existente");
             }
             this.save(sucursalDTO);
@@ -33,7 +33,8 @@ public class SucursalDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarSucursal (int sucursalID) throws Exception {
+    public boolean BorrarSucursal (SucursalDTO sucursalDTO) throws Exception {
+        int sucursalID = sucursalDTO.getSucursalID();
         boolean fueBorrado = false;
         try {
             fueBorrado = this.delete(sucursalID);
@@ -43,7 +44,8 @@ public class SucursalDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public SucursalDTO ObtenerSucursal(int sucursalID) throws FileNotFoundException {
+    public SucursalDTO ObtenerSucursal(SucursalDTO sucursalDTOParam) throws FileNotFoundException {
+        int sucursalID = sucursalDTOParam.getSucursalID();
         SucursalDTO sucursalDTO;
         try {
             sucursalDTO = (SucursalDTO) this.search(sucursalID);

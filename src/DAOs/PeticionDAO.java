@@ -13,7 +13,7 @@ public class PeticionDAO extends GenericDAO {
 
     public void CrearPeticion(PeticionDTO peticionDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPeticion(peticionDTO.getPeticionID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerPeticion(peticionDTO))){
                 throw new Exception("Peticion ya existente");
             }
             this.save(peticionDTO);
@@ -33,7 +33,8 @@ public class PeticionDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarPeticion (int peticionID) throws Exception {
+    public boolean BorrarPeticion (PeticionDTO peticionDTO) throws Exception {
+        int peticionID = peticionDTO.getPeticionID();
         boolean fueBorrado = false;
         try {
             fueBorrado = this.delete(peticionID);
@@ -43,7 +44,8 @@ public class PeticionDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public PeticionDTO ObtenerPeticion(int peticionID) throws FileNotFoundException {
+    public PeticionDTO ObtenerPeticion(PeticionDTO peticionDTOParam) throws FileNotFoundException {
+        int peticionID = peticionDTOParam.getPeticionID();
         PeticionDTO peticionDTO;
         try {
             peticionDTO = (PeticionDTO) this.search(peticionID);

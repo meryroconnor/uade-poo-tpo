@@ -14,7 +14,7 @@ public class UserDAO extends GenericDAO {
 
     public void CrearUser(UserDTO userDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerUser(userDTO.getUserID()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerUser(userDTO))){
                 throw new Exception("Usuario ya existente");
             }
             this.save(userDTO);
@@ -34,7 +34,8 @@ public class UserDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarUser (int userID) throws Exception {
+    public boolean BorrarUser (UserDTO userDTO) throws Exception {
+        int userID = userDTO.getUserID();
         boolean fueBorrado = false;
         try {
             fueBorrado = this.delete(userID);
@@ -44,7 +45,8 @@ public class UserDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public UserDTO ObtenerUser(int userID) throws FileNotFoundException {
+    public UserDTO ObtenerUser(UserDTO userDTOParam) throws FileNotFoundException {
+        int userID = userDTOParam.getUserID();
         UserDTO userDTO;
         try {
             userDTO = (UserDTO) this.search(userID);

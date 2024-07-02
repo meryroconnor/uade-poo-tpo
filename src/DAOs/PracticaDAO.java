@@ -14,7 +14,7 @@ public class PracticaDAO extends GenericDAO {
 
     public void CrearPractica(PracticaDTO practicaDTO) throws Exception {
         try {
-            if (!Objects.isNull(ObtenerPractica(practicaDTO.getCodigoPractica()))){ //faltan getters and setters
+            if (!Objects.isNull(ObtenerPractica(practicaDTO))){
                 throw new Exception("Practica ya existente");
             }
             this.save(practicaDTO);
@@ -34,7 +34,8 @@ public class PracticaDAO extends GenericDAO {
         return fueActualizado;
     }
 
-    public boolean BorrarPractica (int codigoPractica) throws Exception {
+    public boolean BorrarPractica (PracticaDTO practicaDTO) throws Exception {
+        int codigoPractica = practicaDTO.getCodigoPractica();
         boolean fueBorrado = false;
         try {
             fueBorrado = this.delete(codigoPractica);
@@ -44,7 +45,8 @@ public class PracticaDAO extends GenericDAO {
         return fueBorrado;
     }
 
-    public PracticaDTO ObtenerPractica(int codigoPractica) throws FileNotFoundException {
+    public PracticaDTO ObtenerPractica(PracticaDTO practicaDTOParam) throws FileNotFoundException {
+        int codigoPractica = practicaDTOParam.getCodigoPractica();
         PracticaDTO practicaDTO;
         try {
             practicaDTO = (PracticaDTO) this.search(codigoPractica);
