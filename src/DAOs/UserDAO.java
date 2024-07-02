@@ -9,7 +9,7 @@ import java.util.Objects;
 public class UserDAO extends GenericDAO {
 
     public UserDAO() throws Exception {
-        super(User.class, "./src/txtDataFiles/users/users_db");
+        super(User.class, "./src/txtDataFiles/Users.db");
     }//chequear el file
 
     public void CrearUser(UserDTO userDTO) throws Exception {

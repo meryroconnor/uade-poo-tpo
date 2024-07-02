@@ -9,7 +9,7 @@ import java.util.Objects;
 public class PacienteDAO extends GenericDAO {
 
     public PacienteDAO() throws Exception {
-        super(PacienteDTO.class, "./src/txtDataFiles/pacientes/pacientes_db");
+        super(PacienteDTO.class, "./src/txtDataFiles/pacientes.db");
     }
 
     public void CrearPaciente(PacienteDTO pacienteDTO ) throws Exception {

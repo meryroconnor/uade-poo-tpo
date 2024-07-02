@@ -7,7 +7,7 @@ import java.util.Objects;
 public class ObraSocialDAO extends GenericDAO {
 
     public ObraSocialDAO() throws Exception {
-        super(ObraSocialDTO.class, "./src/txtDataFiles/ObraSocial/ObraSocial_db");
+        super(ObraSocialDTO.class, "./src/txtDataFiles/ObraSocial.db");
     }
 
     public void CrearAfiliado(ObraSocialDTO obraSocialDTO) throws Exception {

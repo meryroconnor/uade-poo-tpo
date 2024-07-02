@@ -8,7 +8,7 @@ import java.util.Objects;
 public class SucursalDAO extends GenericDAO {
 
     public SucursalDAO() throws Exception {
-        super(SucursalDTO.class, "./src/txtDataFiles/Sucursal/Sucursal_db");
+        super(SucursalDTO.class, "./src/txtDataFiles/Sucursal.db");
     }//chequear el file
 
     public void CrearSucursal(SucursalDTO sucursalDTO) throws Exception {

@@ -8,7 +8,7 @@ import java.util.Objects;
 public class PeticionDAO extends GenericDAO {
 
     public PeticionDAO() throws Exception {
-        super(PeticionDTO.class, "./src/txtDataFiles/peticiones/peticiones_db");
+        super(PeticionDTO.class, "./src/txtDataFiles/Peticiones.db");
     }//chequear el file
 
     public void CrearPeticion(PeticionDTO peticionDTO) throws Exception {
