@@ -1,8 +1,5 @@
-import DTOs.PacienteDTO;
-import DTOs.ObraSocialDTO;
-import DTOs.SucursalDTO;
-import DTOs.PracticaDTO;
-import DTOs.PeticionDTO;
+import DAOs.*;
+import DTOs.*;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 import controlador.ControladorPractica;
@@ -71,6 +68,42 @@ public class Main {
         // Intentar eliminar pacientes
         controladorPaciente.deletePaciente(1); // No se puede eliminar
         controladorPaciente.deletePaciente(2); // Se puede eliminar
+
+        //DAO testing
+        ObraSocialDAO obraSocialDAO = null;
+        PacienteDAO pacienteDAO = null;
+        PeticionDAO peticionDAO = null;
+        PracticaDAO practicaDAO = null;
+        SucursalDAO sucursalDAO = null;
+        try {
+            obraSocialDAO = new ObraSocialDAO();
+            pacienteDAO = new PacienteDAO();
+            peticionDAO = new PeticionDAO();
+            practicaDAO = new PracticaDAO();
+            sucursalDAO = new SucursalDAO();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            obraSocialDAO.crearObraSocial(obra1);
+            obraSocialDAO.borrarObraSocial(obra1);
+            obraSocialDAO.crearObraSocial(obra2);
+            pacienteDAO.crearPaciente(paciente1);
+            pacienteDAO.crearPaciente(paciente2);
+            pacienteDAO.borrarPaciente(paciente1);
+            peticionDAO.crearPeticion(peticion1);
+            peticionDAO.crearPeticion(peticion2);
+            peticionDAO.borrarPeticion(peticion1);
+            practicaDAO.crearPractica(practica1);
+            practicaDAO.crearPractica(practica2);
+            practicaDAO.borrarPractica(practica1);
+            sucursalDAO.crearSucursal(sucursal1);
+            sucursalDAO.crearSucursal(sucursal2);
+            sucursalDAO.borrarSucursal(sucursal1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
