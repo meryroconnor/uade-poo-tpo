@@ -1,10 +1,14 @@
 package DAOs;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.*;
 
 public abstract class GenericDAO<T> {
     final Class<T> clase;
@@ -92,6 +96,8 @@ public abstract class GenericDAO<T> {
     }
 
     public boolean delete(int id) throws Exception {
+        Field[] campos = clase.getDeclaredFields(); // recupero los nombres de atributos de las clases
+        String campoIdentificador = campos[0].getName(); //obtengo el nombre identificador de la clase
         boolean wasDeleted = false;
         try {
             BufferedReader b = new BufferedReader(new FileReader(archivo));
@@ -101,7 +107,7 @@ public abstract class GenericDAO<T> {
 
             while ((line = b.readLine()) != null) {
                 JsonObject jsonObject = parser.parse(line).getAsJsonObject();
-                if (Integer.parseInt(jsonObject.get("id").toString()) != id) {
+                if (Integer.parseInt(jsonObject.get(campoIdentificador).toString()) != id) {
                     inputBuffer.append(line);
                     inputBuffer.append('\n');
                 } else {
@@ -157,10 +163,13 @@ public abstract class GenericDAO<T> {
     }
 
     public T search(int id) throws FileNotFoundException {
+
         return search(id, clase);
     }
 
     public T search(int id, Class<T> clase) throws FileNotFoundException {
+        Field[] campos = clase.getDeclaredFields(); // recupero los nombres de atributos de las clases
+        String campoIdentificador = campos[0].getName(); //obtengo el nombre identificador de la clase
         BufferedReader b = new BufferedReader(new FileReader(archivo));
         String line;
         JsonParser parser = new JsonParser();
@@ -170,7 +179,7 @@ public abstract class GenericDAO<T> {
         try {
             while ((line = b.readLine()) != null && flag == false) {
                 JsonObject jsonObject = parser.parse(line).getAsJsonObject();
-                if (Integer.parseInt(jsonObject.get("id").toString()) == id) {
+                if (Integer.parseInt(jsonObject.get(campoIdentificador).toString()) == id) {
                     b.close();
                     return g.fromJson(jsonObject, clase);
                 }
