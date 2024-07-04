@@ -163,6 +163,22 @@ public class ControladorAtencion {
         return peticionDTOS;
     }
 
+    public PeticionDTO obtenerPeticion(int peticionID){ //Necesario porque la peticion sufre actualizaciones
+        Peticion peticionEncontrada = findPeticion(peticionID);
+        if (peticionEncontrada == null){
+            System.out.println(String.format("PeticionID: %d No Encontrada", peticionID));
+        }
+        return peticionEncontrada.toDTO(); // puede provocar Null!
+    }
+
+    public SucursalDTO obtenerSucursal(int sucursalID){ //Necesario porque la sucursal sufre actualizaciones
+        Sucursal sucursalEncontrada = findSucursal(sucursalID);
+        if (sucursalEncontrada == null){
+            System.out.println(String.format("SucursalID: %d No Encontrada", sucursalID));
+        }
+        return sucursalEncontrada.toDTO(); // puede provocar Null!
+    }
+
     private Peticion findPeticion(int peticionID){
         Peticion peticionEncontrada = null;
         for(Peticion peticion : peticiones){

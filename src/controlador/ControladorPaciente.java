@@ -33,7 +33,7 @@ public class ControladorPaciente {
         ObraSocial obraSocial = new ObraSocial(nombreObraSocial, numeroAfiliacionObraSocial);
         obrasSociales.add(obraSocial);
         return obraSocial.toDTO();
-    }
+    } // no hace falta metodo para obtener obra social porque una vez que se crea no se toca mas
 
     // Método para crear un nuevo Paciente
     public PacienteDTO createPaciente(String nombreApellido, String sexo, String DNI, String email, ObraSocialDTO obraSocialDTO) {
@@ -41,6 +41,14 @@ public class ControladorPaciente {
         pacientes.add(paciente);
         this.addObraSocialToPaciente(paciente, obraSocialDTO);
         return paciente.toDTO();
+    }
+
+    public PacienteDTO obtenerPaciente(int pacienteID){ //Necesario porque el paciente sufre actualizaciones
+        Paciente pacienteEncontrado = findPaciente(pacienteID);
+        if (pacienteEncontrado == null){
+            System.out.println(String.format("PacienteID: %d No Encontrado", pacienteID));
+        }
+        return pacienteEncontrado.toDTO(); // puede provocar Null!
     }
 
     // Método para agregar un paciente existente (si se requiere)

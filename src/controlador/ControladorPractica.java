@@ -37,6 +37,14 @@ public class ControladorPractica {
         practicas.add(practica);
     }
 
+    public PracticaDTO obtenerPractica(int codigoPractica){
+        Practica practicaEncontrada = findPractica(codigoPractica);
+        if (practicaEncontrada == null){
+            System.out.println(String.format("PracticaID: %d No Encontrada", codigoPractica));
+        }
+        return practicaEncontrada.toDTO(); // puede provocar Null!
+    }
+
     protected Practica findPractica(int codigoPractica){
         Practica practicaEncontrada = null;
         for (Practica practica : practicas){
