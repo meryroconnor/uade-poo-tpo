@@ -41,7 +41,7 @@ public class LoginFrame extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 String username = inputUsername.getText();
-                String rol = "recepcionista";
+                String rol = "admin";
                 System.out.println("El nombre de usuario es: " + username);
                 if(username.length() >= 1){ // ADD,aca va validacion para saber si es usuario o admin
                     SingletonSistema.getInstance().setUsername(username);

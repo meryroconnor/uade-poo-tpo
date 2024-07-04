@@ -1,9 +1,11 @@
 package vista;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class SucursalesPanel extends JPanel {
 
@@ -31,13 +33,32 @@ public class SucursalesPanel extends JPanel {
         inputPanel.add(osComboBox);
 
 
-        JPanel sendPanel = new JPanel(new GridLayout(1, 4));
-        buscarButton = new JButton("Buscar Sucursal");
+        JPanel sendPanel = new JPanel(new GridLayout(2, 3));
+
+        JLabel manageLabel = new JLabel(" ");
+        manageLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        manageLabel.setBorder(new EmptyBorder(10, 0, 10, 0)); // Márgenes superior e inferior
+        sendPanel.add(manageLabel);
+        sendPanel.add(new JLabel());
+        sendPanel.add(new JLabel());
+
         agregarButton = new JButton("Agregar Sucursal");
+        agregarButton.setForeground(new Color(0, 141, 213));
+        agregarButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        agregarButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/plus.png"))));
+
         eliminarButton = new JButton("Eliminar Sucursal");
-        sendPanel.add(buscarButton);
+        eliminarButton.setForeground(new Color(213, 0, 50));
+        eliminarButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        eliminarButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/trash.png"))));
+
+        buscarButton = new JButton("Buscar Sucursal");
+        buscarButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        buscarButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/search1.png"))));
+
         sendPanel.add(agregarButton);
         sendPanel.add(eliminarButton);
+        sendPanel.add(buscarButton);
 
         add(inputPanel, BorderLayout.NORTH);
         add(sendPanel, BorderLayout.SOUTH);

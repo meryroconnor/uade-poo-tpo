@@ -8,10 +8,10 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class LabPanel extends JPanel {
     private JTextField filterRequestId;
-    private JButton filterButton;
     private JButton getAllButton;
     private JTable table;
     private DefaultTableModel tableModel;
@@ -24,13 +24,20 @@ public class LabPanel extends JPanel {
         filterPanel.add(new JLabel("Filtrar por ID de Petición:"));
         filterRequestId = new JTextField();
         filterPanel.add(filterRequestId);
+
+
         filterPanel.add(new JLabel());
-        filterButton = new JButton("Filtrar");
-        filterPanel.add(filterButton);
-        filterPanel.add(new JLabel());
-        getAllButton = new JButton("Ver todo");
-        getAllButton.setForeground(new Color(0, 141, 213));
+        getAllButton = new JButton("Buscar Petición");
+        getAllButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        getAllButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/search1.png"))));
         filterPanel.add(getAllButton);
+
+
+        JLabel titleLabel = new JLabel("Carga Interactiva de Resultados:");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        filterPanel.add(titleLabel);
+        filterPanel.add(new JLabel()); // Espacio vacío para alinear correctamente
+        filterPanel.add(new JLabel());
 
         add(filterPanel, BorderLayout.NORTH);
 
@@ -41,25 +48,10 @@ public class LabPanel extends JPanel {
             @Override
             public boolean isCellEditable(int row, int column) {
                 // Hacer que solo la columna "Resultado" sea editable
-                return column == 3; // Index 3 corresponde a la columna "Resultado"
+                return column == 2; // Index 2 corresponde a la columna "Resultado"
             }
         };
         table = new JTable(tableModel);
-
-        // Agregar el TableModelListener
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 3) { // Índice 3 para la columna "Resultado"
-                    int row = e.getFirstRow();
-                    int column = e.getColumn();
-                    Object data = tableModel.getValueAt(row, column);
-                    Object petitionID = tableModel.getValueAt(row, 0); // Suponiendo que la Petición ID está en la columna 0
-                    Object practiceID = tableModel.getValueAt(row, 2); // Suponiendo que la Práctica está en la columna 2
-                    createResult(petitionID, practiceID, data);
-                }
-            }
-        });
 
         // Ajustar el color de fondo y el color del texto del encabezado de la tabla
         JTableHeader header = table.getTableHeader();
@@ -70,8 +62,27 @@ public class LabPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
+        this.asociarEventos();
+    }
+
+    private void asociarEventos() {
+        // Agregar el TableModelListener
+        tableModel.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 2) { // Índice 2 para la columna "Resultado"
+                    int row = e.getFirstRow();
+                    int column = e.getColumn();
+                    Object data = tableModel.getValueAt(row, column);
+                    Object petitionID = tableModel.getValueAt(row, 0); // la Petición ID está en la columna 0
+                    Object practiceID = tableModel.getValueAt(row, 1); // la Práctica está en la columna 2
+                    createResult(petitionID, practiceID, data);
+                }
+            }
+        });
+
         // Configurar el botón de filtrado
-        filterButton.addActionListener(new ActionListener() {
+        getAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 applyFilters();
