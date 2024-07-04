@@ -1,10 +1,12 @@
 package controlador;
 
+import DAOs.UserDAO;
 import DTOs.UserDTO;
 import Laboratorio.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ControladorUsuario {
     private static ControladorUsuario instance;
@@ -23,10 +25,44 @@ public class ControladorUsuario {
         return instance;
     }
 
-    public UserDTO crearUsuario(String nombreApellido, String DNI, String email, String username, String password, String rol){
-        User user = new User(nextUserID++, nombreApellido, DNI, email, username, password, rol);
+    private void saveToDAO(UserDTO userParam){
+        try{
+            UserDAO userDAO = new UserDAO();
+            userDAO.crearUser(userParam);
+            System.out.println(String.format("Usuario Creado: %s", userParam.getUsername()));
+        } catch (Exception e){
+            System.out.println("Usuario Existente: " + e);
+        }
+    }
+
+    private UserDTO getFromDAO(UserDTO userParam){
+        UserDTO userEncontrado = null;
+        try{
+            UserDAO userDAO = new UserDAO();
+            userEncontrado = userDAO.obtenerUser(userParam);
+            System.out.println(String.format("Usuario Encontrado: %s", userParam.getUsername()));
+
+        } catch (Exception e){
+            System.out.println("Usuario No Existente: " + e);
+        }
+        return userEncontrado;
+    }
+
+    public UserDTO checkCredentials(UserDTO userParam){
+        UserDTO usuarioDAO = null;
+        usuarioDAO = getFromDAO(userParam);
+        if (usuarioDAO != null){
+            if (Objects.equals(userParam.getPassword(), usuarioDAO.getPassword())){
+                return usuarioDAO;
+            }
+        }
+        return null;
+    }
+
+    public void crearUsuario(UserDTO userParam){
+        User user = new User(nextUserID++, userParam.getNombreApellido(), userParam.getDNI(), userParam.getEmail(), userParam.getUsername(), userParam.getPassword(), userParam.getRol());
         usuarios.add(user);
-        return user.toDTO();
+        saveToDAO(user.toDTO());
     } // tal vez no haria falta un metodo para obtener el usuario se supone que una vez que se creo no se toca mas.
 
     public void eliminarUsuario(int userID){
