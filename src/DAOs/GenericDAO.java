@@ -191,11 +191,12 @@ public abstract class GenericDAO<T> {
         return null;
     }
 
-    public List<T> searchByAttribute(String attr, String value) throws FileNotFoundException {
-        return searchByAttribute(attr, value, clase);
+    public List<T> listSearchByAttribute(String attr, String value) throws FileNotFoundException {
+        return listSearchByAttribute(attr, value, clase);
     }
 
-    public List<T> searchByAttribute(String attr,String value, Class<T> clase) throws FileNotFoundException {
+
+    public List<T> listSearchByAttribute(String attr,String value, Class<T> clase) throws FileNotFoundException {
         List<T> list = new ArrayList<T>();
         BufferedReader b = new BufferedReader(new FileReader(archivo));
         String line;
@@ -217,5 +218,29 @@ public abstract class GenericDAO<T> {
             return list;
         }
         return list;
+    }
+
+    public T searchByAttribute(String attr, String value) throws FileNotFoundException {
+        return searchByAttribute(attr, value, clase);
+    }
+    public T searchByAttribute(String attr,String value, Class<T> clase) throws FileNotFoundException { //para buscar segun atributo que queramos del DAO
+        BufferedReader b = new BufferedReader(new FileReader(archivo));
+        String line;
+        JsonParser parser = new JsonParser();
+        Gson g = new Gson();
+        Boolean flag = false;
+        try {
+            while ((line = b.readLine()) != null && flag == false) {
+                JsonObject jsonObject = parser.parse(line).getAsJsonObject();
+                if (jsonObject.get(attr).toString().equals("\""+value+"\"") || jsonObject.get(attr).toString().equals(value)) {
+                    b.close();
+                    return g.fromJson(jsonObject, clase);
+                }
+            }
+            b.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
