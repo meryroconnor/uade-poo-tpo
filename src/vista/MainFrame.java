@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
 
         // Agregar paneles
         tabbedPane.add("Pacientes", new PacientePanel());
-        tabbedPane.add("Peticiones", new PeticionPanel());
+        tabbedPane.add("Consultar Peticiones", new PeticionPanel());
 
         if (rol == "admin" ) {
             tabbedPane.add("Sucursales", new SucursalesPanel());

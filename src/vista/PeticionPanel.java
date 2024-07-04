@@ -1,20 +1,22 @@
 package vista;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class PeticionPanel extends JPanel {
     private JTextField filterPatientId;
     private JTextField filterRequestId;
-    private JTextField filterBranchId; // Campo para filtrar por sucursal
     private JButton filterButton;
     private JButton getAllButton;
+    private JButton settingsButton;
+    private JButton deleteButton;
+    private JButton updateButton;
     private JTable table;
     private DefaultTableModel tableModel;
 
@@ -22,22 +24,30 @@ public class PeticionPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Panel de filtros
-        JPanel filterPanel = new JPanel(new GridLayout(5, 2));
+        JPanel filterPanel = new JPanel(new GridLayout(6, 2));
+
+        JLabel filterLabel = new JLabel("Consultar Peticiones y Resultados");
+        filterLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        filterPanel.add(filterLabel);
+        filterPanel.add(new JLabel()); // Espacio vacío para alinear correctamente
+
         filterPanel.add(new JLabel("Filtrar por ID de Paciente:"));
         filterPatientId = new JTextField();
         filterPanel.add(filterPatientId);
         filterPanel.add(new JLabel("Filtrar por ID de Petición:"));
         filterRequestId = new JTextField();
         filterPanel.add(filterRequestId);
-        filterPanel.add(new JLabel("Filtrar por Sucursal:"));
-        filterBranchId = new JTextField();
-        filterPanel.add(filterBranchId);
+
         filterPanel.add(new JLabel());
-        filterButton = new JButton("Filtrar");
+        filterButton = new JButton("Busqueda Filtrada");
+        filterButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        filterButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/search1.png"))));
         filterPanel.add(filterButton);
+
         filterPanel.add(new JLabel());
-        getAllButton = new JButton("Ver todo");
-        getAllButton.setForeground(new Color(0, 141, 213));
+        getAllButton = new JButton("Ver todas las Peticiones");
+        getAllButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        getAllButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/search1.png"))));
         filterPanel.add(getAllButton);
 
         add(filterPanel, BorderLayout.NORTH);
@@ -48,13 +58,11 @@ public class PeticionPanel extends JPanel {
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Hacer que solo la columna "Resultado" sea editable
-                return column == 3; // Index 3 corresponde a la columna "Resultado"
+                // Hacer que ninguna columna sea editable
+                return false;
             }
         };
         table = new JTable(tableModel);
-
-
 
         // Ajustar el color de fondo y el color del texto del encabezado de la tabla
         JTableHeader header = table.getTableHeader();
@@ -65,25 +73,39 @@ public class PeticionPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
+        // Panel de Gestionar Peticion
+        JPanel menuPanel = new JPanel(new GridLayout(2, 3));
+
+        JLabel manageLabel = new JLabel("Gestionar Peticiones");
+        manageLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        manageLabel.setBorder(new EmptyBorder(10, 0, 10, 0)); // Márgenes superior e inferior
+        menuPanel.add(manageLabel);
+        menuPanel.add(new JLabel());
+        menuPanel.add(new JLabel());
+
+        settingsButton = new JButton("Crear Petición");
+        settingsButton.setForeground(new Color(0, 141, 213));
+        settingsButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        settingsButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/plus.png"))));
+
+        deleteButton = new JButton("Eliminar Petición");
+        deleteButton.setForeground(new Color(213, 0, 50));
+        deleteButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        deleteButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/trash.png"))));
+
+        updateButton = new JButton("Modificar Petición");
+        updateButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        updateButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/edit.png"))));
+
+        menuPanel.add(settingsButton);
+        menuPanel.add(deleteButton);
+        menuPanel.add(updateButton);
+
         this.asociarEventos();
+        add(menuPanel, BorderLayout.SOUTH);
     }
 
     private void asociarEventos() {
-        // Agregar el TableModelListener
-        tableModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 3) { // Índice 3 para la columna "Resultado"
-                    int row = e.getFirstRow();
-                    int column = e.getColumn();
-                    Object data = tableModel.getValueAt(row, column);
-                    Object petitionID = tableModel.getValueAt(row, 0); // Suponiendo que la Petición ID está en la columna 0
-                    Object practiceID = tableModel.getValueAt(row, 2); // Suponiendo que la Práctica está en la columna 2
-                    createResult(petitionID, practiceID, data);
-                }
-            }
-        });
-
         // Configurar el botón de filtrado
         filterButton.addActionListener(new ActionListener() {
             @Override
@@ -91,25 +113,37 @@ public class PeticionPanel extends JPanel {
                 applyFilters();
             }
         });
-    }
 
+        // Configurar el botón de creación
+        settingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Lógica para crear una nueva petición
+                System.out.println("Crear nueva petición");
+                RegisterPetitionDialog dialog = new RegisterPetitionDialog(JOptionPane.getFrameForComponent(PeticionPanel.this));
+                dialog.setVisible(true);
+            }
+        });
 
-    private void createResult(Object petitionID, Object practiceID, Object result) {
-        // Llamar a la lógica de negocio o al controlador para manejar la creación de un nuevo resultado
-        System.out.println("Crear resultado para Petición ID: " + petitionID + ", Práctica: " + practiceID + ", Resultado: " + result);
-        // Aquí puedes colocar el código que interactúa con la base de datos o el backend
+        // Configurar el botón de eliminación
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Lógica para eliminar una petición
+                System.out.println("Eliminar petición");
+            }
+        });
     }
 
     private void applyFilters() {
         // Implementación del filtrado según los inputs
         String patientId = filterPatientId.getText().trim();
         String requestId = filterRequestId.getText().trim();
-        String branchId = filterBranchId.getText().trim();
 
         // Aquí deberías reemplazar estos datos con una consulta real
         Object[][] newData = {
-                {requestId, patientId, "Análisis de Sangre", "Normal", "No", branchId},
-                {requestId, patientId, "Rayos X", "Fractura detectada", "Sí", branchId}
+                {requestId, patientId, "Análisis de Sangre", "Normal", "No", "Barrio Norte"},
+                {requestId, patientId, "Rayos X", "Fractura detectada", "Sí", "Barrio Norte"}
         };
 
         tableModel.setRowCount(0);
@@ -122,3 +156,5 @@ public class PeticionPanel extends JPanel {
         tableModel.addRow(rowData);
     }
 }
+
+
