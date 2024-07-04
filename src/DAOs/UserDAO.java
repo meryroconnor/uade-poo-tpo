@@ -1,7 +1,6 @@
 package DAOs;
 
 import DTOs.UserDTO;
-import Laboratorio.User;
 
 import java.io.FileNotFoundException;
 import java.util.Objects;
@@ -9,7 +8,7 @@ import java.util.Objects;
 public class UserDAO extends GenericDAO {
 
     public UserDAO() throws Exception {
-        super(User.class, "./src/txtDataFiles/Users.db");
+        super(UserDTO.class, "./src/txtDataFiles/Users.db");
     }//chequear el file
 
     public void crearUser(UserDTO userDTO) throws Exception {
@@ -46,10 +45,10 @@ public class UserDAO extends GenericDAO {
     }
 
     public UserDTO obtenerUser(UserDTO userDTOParam) throws FileNotFoundException {
-        int userID = userDTOParam.getUserID();
+        String username = userDTOParam.getUsername();
         UserDTO userDTO;
         try {
-            userDTO = (UserDTO) this.search(userID);
+            userDTO = (UserDTO) this.searchByAttribute("username", userDTOParam.getUsername());
         } catch (FileNotFoundException e) {
             throw (e);
         }
