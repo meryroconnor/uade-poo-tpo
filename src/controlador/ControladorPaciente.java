@@ -1,5 +1,6 @@
 package controlador;
 
+import DAOs.ObraSocialDAO;
 import DTOs.ObraSocialDTO;
 import DTOs.PacienteDTO;
 import Laboratorio.ObraSocial;
@@ -13,12 +14,14 @@ public class ControladorPaciente {
     private List<Paciente> pacientes;
     private List<ObraSocial> obrasSociales;
     private int nextPacienteID;
+    private int nextObraSocialID;
 
     // Constructor privado para implementar el patrón Singleton
     private ControladorPaciente() {
         this.pacientes = new ArrayList<>();
         this.nextPacienteID = 1;
         this.obrasSociales = new ArrayList<>();
+        this.nextObraSocialID = 1;
     }
 
     // Método para obtener la única instancia de ControladorPaciente (Singleton)
@@ -29,10 +32,49 @@ public class ControladorPaciente {
         return instance;
     }
 
-    public ObraSocialDTO createObraSocial(String nombreObraSocial, int numeroAfiliacionObraSocial){
-        ObraSocial obraSocial = new ObraSocial(nombreObraSocial, numeroAfiliacionObraSocial);
+    public ObraSocialDTO[] getObrasSocialesFromDAO(){
+        List<ObraSocialDTO> obrasSociales = new ArrayList<>();
+        try{
+            ObraSocialDAO obraSocialDAO = new ObraSocialDAO();
+            obrasSociales = obraSocialDAO.obtenerObrasSociales();
+            System.out.println(String.format("Obras Sociales Encontradas"));
+
+        } catch (Exception e){
+            System.out.println("Obras Sociales No Existentes: " + e);
+        }
+        ObraSocialDTO[] obrasSocialesVector = new ObraSocialDTO[obrasSociales.size()];
+        for (int i = 0; i < obrasSociales.size(); i++ ){
+            obrasSocialesVector[i] = obrasSociales.get(i);
+        }
+        return obrasSocialesVector;
+    }
+
+    private void saveObraSocialToDAO(ObraSocialDTO obraSocialParam){
+        try{
+            ObraSocialDAO obraSocialDAO = new ObraSocialDAO();
+            obraSocialDAO.crearObraSocial(obraSocialParam);
+            System.out.println(String.format("Obra Social Creada: %s", obraSocialParam.getObraSocial()));
+        } catch (Exception e){
+            System.out.println("Obra Social Existente: " + e);
+        }
+    }
+    private ObraSocialDTO getObraSocialFromDAO(ObraSocialDTO obraSocialParam){
+        ObraSocialDTO obraSocialEncontrada = null;
+        try{
+            ObraSocialDAO obraSocialDAO = new ObraSocialDAO();
+            obraSocialEncontrada = obraSocialDAO.obtenerObraSocial(obraSocialParam);
+            System.out.println(String.format("Obra Social Encontrada: %s", obraSocialParam.getObraSocial()));
+
+        } catch (Exception e){
+            System.out.println("Obra Social No Existente: " + e);
+        }
+        return obraSocialEncontrada;
+    }
+
+    public void createObraSocial(String nombreObraSocial){
+        ObraSocial obraSocial = new ObraSocial(nombreObraSocial, nextObraSocialID++);
         obrasSociales.add(obraSocial);
-        return obraSocial.toDTO();
+        saveObraSocialToDAO(obraSocial.toDTO());
     } // no hace falta metodo para obtener obra social porque una vez que se crea no se toca mas
 
     // Método para crear un nuevo Paciente
@@ -112,10 +154,10 @@ public class ControladorPaciente {
         return pacienteEncontrado;
     }
 
-    private ObraSocial findObraSocial(int numeroAfiliacion){
+    private ObraSocial findObraSocial(int obraSocialID){
         ObraSocial obraSocialEncontrada = null;
         for (ObraSocial obraSocial : obrasSociales){
-            if (numeroAfiliacion == obraSocial.getNumeroAfilicion()){
+            if (obraSocialID == obraSocial.getObraSocialID()){
                 obraSocialEncontrada = obraSocial;
                 break;
             }
@@ -125,9 +167,9 @@ public class ControladorPaciente {
 
     private void addObraSocialToPaciente(Paciente paciente, ObraSocialDTO obraSocialDTO){
         int pacienteID = paciente.getPacienteID();
-        int obraSocialNumeroAfiliacion = obraSocialDTO.getNumeroAfiliado();
+        int obraSocialID = obraSocialDTO.getObraSocialID();
         Paciente pacienteEncontrado = findPaciente(pacienteID);
-        ObraSocial obraSocialEncontrada = findObraSocial(obraSocialNumeroAfiliacion);
+        ObraSocial obraSocialEncontrada = findObraSocial(obraSocialID);
         if(pacienteEncontrado != null && obraSocialEncontrada != null){
             pacienteEncontrado.setObraSocial(obraSocialEncontrada);
 
