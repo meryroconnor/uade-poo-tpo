@@ -1,11 +1,14 @@
 package vista;
 
 import DTOs.ObraSocialDTO;
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
 import controlador.ControladorPaciente;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,7 +60,7 @@ public class PacienteDialog extends JDialog {
         obraSocialComboBox = new JComboBox<>(Objects.requireNonNull(obtenerObrasSociales()));
         contentPanel.add(obraSocialComboBox);
 
-        contentPanel.add(new JLabel("Nro Afiliado:"));
+        contentPanel.add(new JLabel("Nro Afiliado:")); //sacar esto
         nroAfiliadoField = new JTextField();
         contentPanel.add(nroAfiliadoField);
 
@@ -98,7 +101,25 @@ public class PacienteDialog extends JDialog {
 
     private void registrarPacienteEventos() {
         guardarButton.addActionListener(e -> {
-            // Aquí iría la lógica para guardar los datos del paciente
+
+            String nombre = nombreField.getText();
+            String DNI = dniField.getText();
+            String mail = emailField.getText();
+            //String fechaNacimiento = fechaNacimientoField.getText(); no se usa ?
+            String obraSocial = Objects.requireNonNull(obraSocialComboBox.getSelectedItem()).toString();
+            String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
+
+            ObraSocialDTO obraSocialDTO = new ObraSocialDTO(obraSocial, 0);
+            List<PeticionDTO> peticionesDTO = new ArrayList<>();
+            PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail,peticionesDTO,obraSocialDTO);
+
+            try{
+                ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                controladorPaciente.createPaciente(pacienteDTO);
+            } catch (Exception err){
+                System.out.println("Error ocurrido" + e);
+            }
+
             dispose();
         });
 
