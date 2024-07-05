@@ -3,6 +3,8 @@ package vista;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
+import java.util.Objects;
 
 public class RegisterPetitionDialog extends JDialog {
     private JTextField dniField, pacienteIDField;
@@ -83,6 +85,42 @@ public class RegisterPetitionDialog extends JDialog {
                 practicaListModel.removeElement(selectedCategory);
             }
         });
+    }
+
+    private String[] getNombrePracticas(){
+        ControladorPractica controladorPractica = ControladorPractica.getInstance();
+
+        List<PracticaDTO> practicas = controladorPractica.getPracticas();
+
+        String[] vectorPracticas = new String[practicas.size()];
+        for (int i = 0; i < practicas.size(); i++){
+            vectorPracticas[i] = practicas.get(i).getNombrePractica();
+        }
+        return vectorPracticas;
+    }
+
+    private String[] getDireccionSucursal(){
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+
+        List<SucursalDTO> sucursales = controladorAtencion.getSucursales();
+
+        String[] vectorSucursales = new String[sucursales.size()];
+        for (int i = 0; i < sucursales.size(); i++){
+            vectorSucursales[i] = sucursales.get(i).getDireccion();
+        }
+        return vectorSucursales;
+    }
+
+    private String[] getSucursalID(String SucursalDireccion){
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+
+        List<SucursalDTO> sucursales = controladorAtencion.getSucursales();
+
+        String[] vectorSucursales = new String[sucursales.size()];
+        for (int i = 0; i < sucursales.size(); i++){
+            vectorSucursales[i] = sucursales.get(i).getDireccion();
+        }
+        return vectorSucursales;
     }
 }
 

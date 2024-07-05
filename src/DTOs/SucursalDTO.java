@@ -18,4 +18,16 @@ public class SucursalDTO {
     public int getSucursalID() {
         return sucursalID;
     }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public int getResponsableMatricula() {
+        return responsableMatricula;
+    }
+
+    public List<PeticionDTO> getPeticionesDTO() {
+        return peticionesDTO;
+    }
 }

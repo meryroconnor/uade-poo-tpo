@@ -17,6 +17,7 @@ public class Sucursal {
         this.direccion = direccion;
         this.responsableMatricula = responsableMatricula;
         this.peticiones = new ArrayList<>();
+
     }
 
     public int getSucursalID() {

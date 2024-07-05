@@ -1,5 +1,6 @@
 package controlador;
 
+import DAOs.PracticaDAO;
 import DTOs.PracticaDTO;
 import Laboratorio.Practica;
 
@@ -15,6 +16,8 @@ public class ControladorPractica {
     private ControladorPractica() {
         this.practicas = new ArrayList<>();
         this.nextCodigoPractica = 1;
+
+        this.loadPracticasFromDAOToModel();
     }
 
     // Método para obtener la única instancia de ControladorPaciente (Singleton)
@@ -25,11 +28,69 @@ public class ControladorPractica {
         return instance;
     }
 
+    private void loadPracticasFromDAOToModel(){
+        List<PracticaDTO> practicaDTOS = new ArrayList<>();
+        practicaDTOS = getPracticasFromDAO();
+        for(PracticaDTO practicaDTO : practicaDTOS){
+            createPractica(practicaDTO); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
+        }
+    }
+
     // Método para crear una nueva Practica
-    public PracticaDTO createPractica(String valorCritico, Float lLimitCritico, Float hLCritico, String valorReservado, Float lLimitReservado, Float hLReservado) {
-        Practica practica = new Practica(nextCodigoPractica++, valorCritico, lLimitCritico, hLCritico, valorReservado, lLimitReservado, hLReservado);
-        practicas.add(practica);
-        return practica.toDTO();
+    public void createPractica(PracticaDTO practicaParam) {
+        Practica practica = new Practica(nextCodigoPractica++, practicaParam.getNombrePractica(), practicaParam.getIndiceCriticoDTO().getValue(),practicaParam.getIndiceCriticoDTO().getLowLimit(),practicaParam.getIndiceCriticoDTO().getHighLimit(),practicaParam.getIndiceReservadoDTO().getValue(), practicaParam.getIndiceReservadoDTO().getLowLimit(), practicaParam.getIndiceReservadoDTO().getHighLimit());
+
+        if (getPractica(practica.toDTO()) == null){
+            practicas.add(practica);
+            if (getPracticaFromDAO(practica.toDTO()) == null){
+                savePracticaToDAO(practica.toDTO());
+            }
+        } else{
+            practica = null;
+            System.out.println("Practica Existente Cancelando Operacion");
+        }
+    }
+
+    private PracticaDTO getPracticaFromDAO(PracticaDTO practicaParam){
+        PracticaDTO practicaEncontrada = null;
+        try{
+            PracticaDAO practicaDAO = new PracticaDAO();
+            practicaEncontrada = practicaDAO.obtenerPractica(practicaParam);
+        } catch (Exception e){
+            System.out.println("Error Ocurrido: " + e);
+        }
+        return  practicaEncontrada;
+    }
+
+    private List<PracticaDTO> getPracticasFromDAO(){
+        List<PracticaDTO> practicasDTOS = null;
+        try{
+            PracticaDAO practicaDAO = new PracticaDAO();
+            practicasDTOS = practicaDAO.obtenerPracticas();
+        } catch (Exception e){
+            System.out.println("Error Ocurrido: " + e);
+        }
+        return  practicasDTOS;
+    }
+
+    private void savePracticaToDAO(PracticaDTO practicaParam){
+        try{
+            PracticaDAO practicaDAO = new PracticaDAO();
+            practicaDAO.crearPractica(practicaParam);
+        } catch (Exception e){
+            System.out.println("Error Ocurrido: " + e);
+        }
+    }
+
+    public PracticaDTO getPractica(PracticaDTO practicaParam){
+        PracticaDTO practicaEncontrada = null;
+        for (Practica practica : practicas){
+            if(practicaParam.getCodigoPractica() == practica.getCodigoPractica()){
+                practicaEncontrada = practica.toDTO();
+                break;
+            }
+        }
+        return practicaEncontrada;
     }
 
     // Método para agregar un paciente existente (si se requiere)

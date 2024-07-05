@@ -14,7 +14,7 @@ import java.util.Objects;
 public class ControladorPaciente {
     private static ControladorPaciente instance;
     private List<Paciente> pacientes;
-    private List<ObraSocial> obrasSociales;
+    private List<ObraSocial> obrasSociales; // modificar asociacion y no crear con instancia vacia en constructor de paciente
     private int nextPacienteID;
     private int nextObraSocialID;
 

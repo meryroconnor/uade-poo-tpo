@@ -1,4 +1,6 @@
-import DTOs.*;
+import DTOs.IndiceCriticoDTO;
+import DTOs.IndiceReservadoDTO;
+import DTOs.PracticaDTO;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 import controlador.ControladorPractica;
@@ -19,9 +21,25 @@ public class Main {
         controladorPaciente.createObraSocial("Oseca");
         controladorPaciente.createObraSocial("Sin Obra Social");
 
+        IndiceReservadoDTO indiceR = new IndiceReservadoDTO(null, 600f, 800f);
+        IndiceCriticoDTO indiceC = new IndiceCriticoDTO(null, 2000f, 5000f);
+        PracticaDTO practica = new PracticaDTO(0,"Test de Orina: Aminoácidos Totales", indiceR, indiceC);
+        controladorPractica.createPractica(practica);
+
+        IndiceReservadoDTO indiceR2 = new IndiceReservadoDTO("Deteccion de Tumor", null, null);
+        IndiceCriticoDTO indiceC2 = new IndiceCriticoDTO("Deteccion de Tumor Posible metastasis", null, null);
+        PracticaDTO practica2 = new PracticaDTO(0,"Mamografia", indiceR2, indiceC2);
+        controladorPractica.createPractica(practica2);
+
+        IndiceReservadoDTO indiceR3 = new IndiceReservadoDTO("POSITIVO", null, null);
+        IndiceCriticoDTO indiceC3 = new IndiceCriticoDTO("POSITIVO", null, null);
+        PracticaDTO practica3 = new PracticaDTO(0,"Hemograma Celiaquía", indiceR3, indiceC3);
+        controladorPractica.createPractica(practica3);
+
+
         // Crear sucursales
-        SucursalDTO sucursal1 = controladorAtencion.createSucursal("Sucursal Centro", 1);
-        SucursalDTO sucursal2 = controladorAtencion.createSucursal("Sucursal Norte", 2);
+        //SucursalDTO sucursal1 = controladorAtencion.createSucursal("Sucursal Centro", 1);
+        //SucursalDTO sucursal2 = controladorAtencion.createSucursal("Sucursal Norte", 2);
 
         // Crear pacientes
         //PacienteDTO paciente1 = controladorPaciente.createPaciente("Juan Perez", "M", "39644881",  "jperez@gmail.com", obra1);
@@ -29,20 +47,20 @@ public class Main {
 
 
         // Crear peticiones y asociarlas a sucursales y pacientes
-        PeticionDTO peticion1 = controladorAtencion.createPeticion();
-        PracticaDTO practica1 = controladorPractica.createPractica(null, 0.20f, 3.0f, "POSITIVO", null, null);
+        //PeticionDTO peticion1 = controladorAtencion.createPeticion();
+        //PracticaDTO practica1 = controladorPractica.createPractica(null, 0.20f, 3.0f, "POSITIVO", null, null);
 
         //peticion1.addPractica(practica1);
-        controladorAtencion.addPracticaToPeticion(peticion1, practica1);
+       //controladorAtencion.addPracticaToPeticion(peticion1, practica1);
 
         //peticion1.addResultado(9.5f, "POSITIVO", practica1);
-        controladorAtencion.addResultadoToPeticion(peticion1, practica1, 9.5f, "POSITIVO");
+        //controladorAtencion.addResultadoToPeticion(peticion1, practica1, 9.5f, "POSITIVO");
 
-        PeticionDTO peticion2 = controladorAtencion.createPeticion();
-        PracticaDTO practica2 = controladorPractica.createPractica( "POSITIVO", null, null, "POSITIVO", 0f, 0f);
+        //PeticionDTO peticion2 = controladorAtencion.createPeticion();
+        //PracticaDTO practica2 = controladorPractica.createPractica( "POSITIVO", null, null, "POSITIVO", 0f, 0f);
 
         //peticion2.addPractica(practica2);
-        controladorAtencion.addPracticaToPeticion(peticion2, practica2);
+        //controladorAtencion.addPracticaToPeticion(peticion2, practica2);
 
         //sucursal1.addPeticion(peticion1);
         controladorAtencion.addPeticionToSucursal(sucursal1, peticion1);

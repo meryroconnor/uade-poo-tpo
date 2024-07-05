@@ -3,6 +3,8 @@ package DAOs;
 import DTOs.PeticionDTO;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PeticionDAO extends GenericDAO {
@@ -53,5 +55,15 @@ public class PeticionDAO extends GenericDAO {
             throw (e);
         }
         return peticionDTO;
+    }
+
+    public List<PeticionDTO> obtenerPeticiones() throws FileNotFoundException {
+        List<PeticionDTO> peticionDTOS = new ArrayList<>();
+        try {
+            peticionDTOS = (List<PeticionDTO>) this.getAll();
+        } catch (Exception e) {
+            throw new RuntimeException (e);
+        }
+        return peticionDTOS;
     }
 }

@@ -27,7 +27,7 @@ public class Practica {
     }
 
     public PracticaDTO toDTO(){
-        PracticaDTO practicaDTO = new PracticaDTO(this.codigoPractica, this.indiceReservado.toDTO(), this.indiceCritico.toDTO());
+        PracticaDTO practicaDTO = new PracticaDTO(this.codigoPractica, this.nombrePractica ,this.indiceReservado.toDTO(), this.indiceCritico.toDTO());
         return practicaDTO;
     }
 }

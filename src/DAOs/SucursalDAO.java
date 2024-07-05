@@ -3,6 +3,8 @@ package DAOs;
 import DTOs.SucursalDTO;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class SucursalDAO extends GenericDAO {
@@ -53,5 +55,15 @@ public class SucursalDAO extends GenericDAO {
             throw (e);
         }
         return sucursalDTO;
+    }
+
+    public List<SucursalDTO> obtenerSucursales() throws FileNotFoundException {
+        List<SucursalDTO> sucursalDTOS = new ArrayList<>();
+        try {
+            sucursalDTOS = (List<SucursalDTO>) this.getAll();
+        } catch (Exception e) {
+            throw new RuntimeException (e);
+        }
+        return sucursalDTOS;
     }
 }

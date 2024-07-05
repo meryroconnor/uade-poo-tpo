@@ -4,6 +4,8 @@ import DTOs.PracticaDTO;
 import Laboratorio.Practica;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PracticaDAO extends GenericDAO {
@@ -55,4 +57,16 @@ public class PracticaDAO extends GenericDAO {
         }
         return practicaDTO;
     }
+
+    public List<PracticaDTO> obtenerPracticas() throws FileNotFoundException {
+        List<PracticaDTO> practicas = new ArrayList<>();
+        try {
+            practicas = (List<PracticaDTO>) this.getAll();
+        } catch (Exception e) {
+            throw new RuntimeException (e);
+        }
+        return practicas;
+    }
+
+
 }
