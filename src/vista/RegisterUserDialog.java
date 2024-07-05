@@ -1,14 +1,11 @@
 package vista;
 
-import DAOs.PacienteDAO;
-import Laboratorio.Paciente;
-import controlador.ControladorPaciente;
-import controlador.ControladorVista;
+import DTOs.UserDTO;
+import controlador.ControladorUsuario;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.List;
 
 public class RegisterUserDialog extends JDialog {
     private JTextField dniField, nombreField, emailField, usernameField, passwordField, sexoField;
@@ -99,24 +96,20 @@ public class RegisterUserDialog extends JDialog {
             String username = usernameField.getText();
             String rol = (String) rolComboBox.getSelectedItem();
             String password= passwordField.getText();
-            //String sexo = (String) rolComboBox.getSelectedItem();
             System.out.println("Datos ingresados:" + dni + ", " + nombre + ", " + mail + ", " + username + ", " + rol + ", " + password);
 
-            //llamo al metodo que valida que exista el paciente
-            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
-            //List<Paciente> pacientes; = controladorPaciente.buscarPaciente("",dni);
-            //devuelve en DTO
+            UserDTO usuarioPropuesto = new UserDTO(0, nombre, mail, username, password, dni, rol);
+            //no importa el userID se sobreescribe al momento de la creacion desde el controller
 
-            List<Paciente> pacientes= (List<Paciente>) controladorPaciente.createPaciente(nombre,"",dni,mail);
+            ControladorUsuario controladorUsuario = ControladorUsuario.getInstance();
 
-            //verifico que no exista y lo creo
+            try{
+                controladorUsuario.crearUsuario(usuarioPropuesto);
+            } catch (Exception e){
+                System.out.println("Error ocurrido: " + e);
+                dispose();
+            }
 
-            //el dao va en un try and catch
-
-            //if(pacientes.isEmpty()){
-                System.out.println("Paciente creado"+ pacientes);
-                //PacienteDAO dao= new PacienteDAO();
-                //dao.saveAll(pacientes);
 
 
 
