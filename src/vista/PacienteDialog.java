@@ -1,8 +1,12 @@
 package vista;
 
+import DTOs.ObraSocialDTO;
+import controlador.ControladorPaciente;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Objects;
 
 public class PacienteDialog extends JDialog {
     private JTextField dniField, nombreField, emailField, fechaNacimientoField, nroAfiliadoField;
@@ -49,7 +53,7 @@ public class PacienteDialog extends JDialog {
         contentPanel.add(sexoComboBox);
 
         contentPanel.add(new JLabel("Obra Social:"));
-        obraSocialComboBox = new JComboBox<>(new String[]{"osde", "swiss medical"});
+        obraSocialComboBox = new JComboBox<>(Objects.requireNonNull(obtenerObrasSociales()));
         contentPanel.add(obraSocialComboBox);
 
         contentPanel.add(new JLabel("Nro Afiliado:"));
@@ -74,6 +78,21 @@ public class PacienteDialog extends JDialog {
         setLocationRelativeTo(owner);
 
         this.registrarPacienteEventos();
+    }
+
+    private String[] obtenerObrasSociales(){
+        try{
+        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+        ObraSocialDTO[] obrasSocialesDTO = controladorPaciente.getObrasSocialesFromDAO();
+        String[] obrasSociales = new String[obrasSocialesDTO.length];
+        for (int i = 0; i < obrasSocialesDTO.length; i++){
+            obrasSociales[i] = obrasSocialesDTO[i].getObraSocial();
+        }
+        return  obrasSociales;
+        } catch (Exception e){
+            System.out.println("Error ocurrido: " + e);
+        }
+        return null;
     }
 
     private void registrarPacienteEventos() {

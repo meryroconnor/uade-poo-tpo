@@ -1,5 +1,8 @@
 package vista;
 
+import DTOs.ObraSocialDTO;
+import controlador.ControladorPaciente;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -40,7 +43,7 @@ public class PacientePanel extends JPanel {
         inputPanel.add(pacienteField);
 
         inputPanel.add(new JLabel("Obra Social:"));
-        osComboBox = new JComboBox<>(new String[] {"osde", "swiss medical"});
+        osComboBox = new JComboBox<>(Objects.requireNonNull(obtenerObrasSociales()));
         inputPanel.add(osComboBox);
 
         inputPanel.add(new JLabel("Obra Social ID:"));
@@ -83,6 +86,20 @@ public class PacientePanel extends JPanel {
 
         this.asociarEventos();
 
+    }
+    private String[] obtenerObrasSociales(){
+        try{
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            ObraSocialDTO[] obrasSocialesDTO = controladorPaciente.getObrasSocialesFromDAO();
+            String[] obrasSociales = new String[obrasSocialesDTO.length];
+            for (int i = 0; i < obrasSocialesDTO.length; i++){
+                obrasSociales[i] = obrasSocialesDTO[i].getObraSocial();
+            }
+            return  obrasSociales;
+        } catch (Exception e){
+            System.out.println("Error ocurrido: " + e);
+        }
+        return null;
     }
 
     private void asociarEventos() {
