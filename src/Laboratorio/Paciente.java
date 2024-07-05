@@ -16,13 +16,14 @@ public class Paciente {
     private List<Peticion> peticiones;
 
     // Constructor con modificador de acceso 'protected' para que solo el controlador pueda instanciarlo
-    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email) {
+    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email, ObraSocial obraSocial) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
         this.sexo = sexo;
         this.DNI = DNI;
         this.email= email;
         this.peticiones = new ArrayList<>();
+        this.obraSocial = obraSocial;
     }
 
     public int getPacienteID() {
