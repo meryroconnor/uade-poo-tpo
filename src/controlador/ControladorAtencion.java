@@ -20,6 +20,7 @@ public class ControladorAtencion {
     private int nextSucursalID;
 
     // Constructor privado para implementar el patrón Singleton
+    // En el contructor tambien cargamos las sucursales y peticiones preexistentes (DAO->Model)
     private ControladorAtencion() {
         this.peticiones = new ArrayList<>();
         this.sucursales = new ArrayList<>();
@@ -39,7 +40,7 @@ public class ControladorAtencion {
     }
 
     // Método para crear una nueva Peticion
-    public PeticionDTO createPeticion() {
+    public void createPeticion() {
         Peticion peticion = new Peticion(nextPeticionID++);
 
         if (getPeticion(peticion.toDTO()) == null){

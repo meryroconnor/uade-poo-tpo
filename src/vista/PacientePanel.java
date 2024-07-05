@@ -24,8 +24,9 @@ public class PacientePanel extends JPanel {
     private JTextArea outputArea;
     private JPanel inputPanel;
     private JPanel sendPanel;
-    private JLabel sexoField;
     private JComboBox sexoComboBox;
+
+    private TextField sexoField;
 
     public PacientePanel() {
         setLayout(new BorderLayout());
@@ -58,6 +59,8 @@ public class PacientePanel extends JPanel {
         sexoComboBox = new JComboBox<>(new String[]{"F", "M"});
         inputPanel.add(sexoComboBox);
 
+
+        // Panel Con botones para accionar
         JPanel sendPanel = new JPanel(new GridLayout(2, 3));
 
         JLabel manageLabel = new JLabel(" ");

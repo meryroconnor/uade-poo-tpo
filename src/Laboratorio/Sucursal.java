@@ -40,6 +40,18 @@ public class Sucursal {
         peticiones.add(peticion);
     }
 
+    public void setSucursalID(int sucursalID) {
+        this.sucursalID = sucursalID;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public void setResponsableMatricula(int responsableMatricula) {
+        this.responsableMatricula = responsableMatricula;
+    }
+
     public boolean tieneResultadosFinalizados() {
         for (Peticion peticion : peticiones) {
             if (peticion.tieneResultados()) {

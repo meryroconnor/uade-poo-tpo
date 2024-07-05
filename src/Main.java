@@ -17,9 +17,9 @@ public class Main {
         ControladorUsuario controladorUsuario = ControladorUsuario.getInstance();
 
         //Crear Obras Sociales
-        controladorPaciente.createObraSocial("Osde");
-        controladorPaciente.createObraSocial("Oseca");
-        controladorPaciente.createObraSocial("Sin Obra Social");
+//        controladorPaciente.createObraSocial("Osde");
+//        controladorPaciente.createObraSocial("Oseca");
+//        controladorPaciente.createObraSocial("Sin Obra Social");
 
         IndiceReservadoDTO indiceR = new IndiceReservadoDTO(null, 600f, 800f);
         IndiceCriticoDTO indiceC = new IndiceCriticoDTO(null, 2000f, 5000f);
@@ -63,10 +63,10 @@ public class Main {
         //controladorAtencion.addPracticaToPeticion(peticion2, practica2);
 
         //sucursal1.addPeticion(peticion1);
-        controladorAtencion.addPeticionToSucursal(sucursal1, peticion1);
+        //controladorAtencion.addPeticionToSucursal(sucursal1, peticion1);
 
         //sucursal2.addPeticion(peticion2);
-        controladorAtencion.addPeticionToSucursal(sucursal2, peticion2);
+        //controladorAtencion.addPeticionToSucursal(sucursal2, peticion2);
 
         //paciente1.addPeticion(peticion1);
         //controladorAtencion.addPeticionToPaciente(paciente1, peticion1);
