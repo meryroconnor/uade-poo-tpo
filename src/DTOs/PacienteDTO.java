@@ -30,4 +30,32 @@ public class PacienteDTO {
     public int getPacienteID() {
         return pacienteID;
     }
+
+    public String getNombreApellido() {
+        return nombreApellido;
+    }
+
+    public String getDNI() {
+        return DNI;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public ObraSocialDTO getObraSocialDTO() {
+        return obraSocialDTO;
+    }
+
+    public List<PeticionDTO> getPeticionesDTO() {
+        return peticionesDTO;
+    }
 }
