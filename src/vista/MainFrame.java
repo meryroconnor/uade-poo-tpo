@@ -2,6 +2,7 @@ package vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class MainFrame extends JFrame {
 
@@ -19,11 +20,11 @@ public class MainFrame extends JFrame {
         tabbedPane.add("Pacientes", new PacientePanel());
         tabbedPane.add("Consultar Peticiones", new PeticionPanel());
 
-        if (rol == "admin" ) {
+        if (Objects.equals(rol, "admin")) {
             tabbedPane.add("Sucursales", new SucursalesPanel());
         }
 
-        if (rol == "admin" || rol == "laboratorista") {
+        if (Objects.equals(rol, "admin") || Objects.equals(rol, "laboratorista")) {
             tabbedPane.add("Laboratorio", new LabPanel());
         }
 
