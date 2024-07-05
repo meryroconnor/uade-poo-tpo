@@ -1,6 +1,7 @@
 package controlador;
 
 import DAOs.ObraSocialDAO;
+import DAOs.PacienteDAO;
 import DTOs.ObraSocialDTO;
 import DTOs.PacienteDTO;
 import Laboratorio.ObraSocial;
@@ -25,6 +26,7 @@ public class ControladorPaciente {
         this.nextObraSocialID = 1;
 
         this.loadObrasSocialesToModelFromDAO();
+        this.loadPacientesToModelFromDAO();
     }
 
     // Método para obtener la única instancia de ControladorPaciente (Singleton)
@@ -40,6 +42,14 @@ public class ControladorPaciente {
         obrasSocialesDTO = getObrasSocialesFromDAO();
         for(ObraSocialDTO obraSocial : obrasSocialesDTO){
             createObraSocial(obraSocial.getObraSocial()); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
+        }
+    }
+
+    private void loadPacientesToModelFromDAO(){
+        List<PacienteDTO> pacienteDTOS = new ArrayList<>();
+        pacienteDTOS = getPacientesFromDAO();
+        for(Paciente paciente : pacientes){
+            createPaciente(paciente.toDTO()); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
         }
     }
 
@@ -85,6 +95,30 @@ public class ControladorPaciente {
         return  obrasSocialesDTO;
     }
 
+    private List<PacienteDTO> getPacientesFromDAO(){
+        List<PacienteDTO> pacientes = new ArrayList<>();
+        try{
+            PacienteDAO pacienteDAO = new PacienteDAO();
+            pacientes = pacienteDAO.obtenerPacientes();
+        } catch (Exception e){
+            System.out.println("Error Ocurrido: " + e);
+        }
+        return pacientes;
+    }
+
+    private PacienteDTO getPacienteFromDAO(PacienteDTO pacienteParam){
+        PacienteDTO pacienteEncontrado = null;
+        try{
+            PacienteDAO pacienteDAO = new PacienteDAO();
+            pacienteEncontrado = pacienteDAO.obtenerPaciente(pacienteParam);
+            System.out.println(String.format("PacienteID Encontrado: %s", pacienteParam.getPacienteID()));
+
+        } catch (Exception e){
+            System.out.println("Paciente No Existente: " + e);
+        }
+        return pacienteEncontrado;
+    }
+
     private ObraSocialDTO getObraSocialFromDAO(ObraSocialDTO obraSocialParam){
         ObraSocialDTO obraSocialEncontrada = null;
         try{
@@ -114,19 +148,43 @@ public class ControladorPaciente {
     } // no hace falta metodo para obtener obra social porque una vez que se crea no se toca mas
 
     // Método para crear un nuevo Paciente
-    public PacienteDTO createPaciente(String nombreApellido, String sexo, String DNI, String email, ObraSocialDTO obraSocialDTO) {
-        Paciente paciente = new Paciente(nextPacienteID++, nombreApellido,sexo, DNI, email);
-        pacientes.add(paciente);
-        this.addObraSocialToPaciente(paciente, obraSocialDTO);
-        return paciente.toDTO();
+    public void createPaciente(PacienteDTO pacienteParam) {
+        ObraSocialDTO obraSocialDTO = getObraSocial(pacienteParam.getObraSocialDTO());
+        ObraSocial obraSocial = new ObraSocial(obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
+        Paciente paciente = new Paciente(nextPacienteID++, pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), obraSocial);
+        if (getPaciente(paciente.toDTO()) == null){
+            pacientes.add(paciente);
+
+            if (getPacienteFromDAO(paciente.toDTO()) == null){
+                savePacienteToDAO(paciente.toDTO());
+            }
+
+        } else {
+            obraSocialDTO = null;
+            paciente = null;
+            obraSocial = null;
+            System.out.println("Paciente Existente cancelando operacion");
+        }
     }
 
-    public PacienteDTO obtenerPaciente(int pacienteID){ //Necesario porque el paciente sufre actualizaciones
-        Paciente pacienteEncontrado = findPaciente(pacienteID);
-        if (pacienteEncontrado == null){
-            System.out.println(String.format("PacienteID: %d No Encontrado", pacienteID));
+    private void savePacienteToDAO(PacienteDTO pacienteParam){
+        try {
+            PacienteDAO pacienteDAO = new PacienteDAO();
+            pacienteDAO.crearPaciente(pacienteParam);
+            System.out.println(String.format("Paciente Creado >>> DNI: %s Sexo: %s", pacienteParam.getDNI(), pacienteParam.getSexo()));
+        } catch (Exception e) {
+            System.out.println("Error ocurrido: " + e);
         }
-        return pacienteEncontrado.toDTO(); // puede provocar Null!
+    }
+
+    public PacienteDTO getPaciente(PacienteDTO pacienteParam){ //Necesario porque el paciente sufre actualizaciones
+        PacienteDTO pacienteEncontrado = null;
+        for (Paciente paciente : pacientes){
+            if (Objects.equals(pacienteParam.getDNI(), paciente.getDNI()) && Objects.equals(pacienteParam.getSexo(), paciente.getSexo())){
+                pacienteEncontrado = paciente.toDTO();
+            }
+        }
+        return  pacienteEncontrado;
     }
 
     // Método para agregar un paciente existente (si se requiere)
