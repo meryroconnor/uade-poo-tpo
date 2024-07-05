@@ -71,7 +71,7 @@ public class ControladorUsuario {
         return usuarios;
     }
 
-    public UserDTO getUsuarios(UserDTO userParam){
+    public UserDTO getUsuario(UserDTO userParam){
         UserDTO usuarioEncontrado = null;
         for (User usuario : usuarios){
             if (Objects.equals(usuario.getUsername(), userParam.getUsername())){
@@ -83,7 +83,7 @@ public class ControladorUsuario {
     }
 
     public UserDTO checkCredentials(UserDTO userParam){
-        UserDTO usuario = getUsuarios(userParam);
+        UserDTO usuario = getUsuario(userParam);
         if (usuario != null){
             if (Objects.equals(userParam.getPassword(), usuario.getPassword())){
                 return usuario;
@@ -94,7 +94,7 @@ public class ControladorUsuario {
 
     public void crearUsuario(UserDTO userParam){
         User user = new User(nextUserID++, userParam.getNombreApellido(), userParam.getDNI(), userParam.getEmail(), userParam.getUsername(), userParam.getPassword(), userParam.getRol());
-        if (getUsuarios(user.toDTO()) == null){
+        if (getUsuario(user.toDTO()) == null){
             usuarios.add(user);
             if (getUsuarioFromDAO(user.toDTO()) == null){ //significa que no existe en el DAO
                 saveUsuarioToDAO(user.toDTO());
