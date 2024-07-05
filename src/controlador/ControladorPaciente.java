@@ -8,6 +8,7 @@ import Laboratorio.Paciente;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ControladorPaciente {
     private static ControladorPaciente instance;
@@ -22,6 +23,8 @@ public class ControladorPaciente {
         this.nextPacienteID = 1;
         this.obrasSociales = new ArrayList<>();
         this.nextObraSocialID = 1;
+
+        loadObrasSocialesToModelFromDAO();
     }
 
     // Método para obtener la única instancia de ControladorPaciente (Singleton)
@@ -32,7 +35,15 @@ public class ControladorPaciente {
         return instance;
     }
 
-    public ObraSocialDTO[] getObrasSocialesFromDAO(){
+    private void loadObrasSocialesToModelFromDAO(){
+        List<ObraSocialDTO> obrasSocialesDTO = new ArrayList<>();
+        obrasSocialesDTO = getObrasSocialesFromDAO();
+        for(ObraSocialDTO obraSocial : obrasSocialesDTO){
+            createObraSocial(obraSocial.getObraSocial()); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
+        }
+    }
+
+    private List<ObraSocialDTO> getObrasSocialesFromDAO(){
         List<ObraSocialDTO> obrasSociales = new ArrayList<>();
         try{
             ObraSocialDAO obraSocialDAO = new ObraSocialDAO();
@@ -42,11 +53,7 @@ public class ControladorPaciente {
         } catch (Exception e){
             System.out.println("Obras Sociales No Existentes: " + e);
         }
-        ObraSocialDTO[] obrasSocialesVector = new ObraSocialDTO[obrasSociales.size()];
-        for (int i = 0; i < obrasSociales.size(); i++ ){
-            obrasSocialesVector[i] = obrasSociales.get(i);
-        }
-        return obrasSocialesVector;
+        return obrasSociales;
     }
 
     private void saveObraSocialToDAO(ObraSocialDTO obraSocialParam){
@@ -58,6 +65,26 @@ public class ControladorPaciente {
             System.out.println("Obra Social Existente: " + e);
         }
     }
+
+    public ObraSocialDTO getObraSocial(ObraSocialDTO obraSocialParam){
+        ObraSocialDTO obraSocialEncontrada = null;
+        for (ObraSocial obraSocial : obrasSociales){
+            if (Objects.equals(obraSocial.getObraSocial(), obraSocialParam.getObraSocial())){
+                obraSocialEncontrada = obraSocial.toDTO();
+                break;
+            }
+        }
+        return obraSocialEncontrada;
+    }
+
+    public List<ObraSocialDTO> getObrasSociales(){
+        List<ObraSocialDTO> obrasSocialesDTO = new ArrayList<>();
+        for (ObraSocial obraSocial : obrasSociales){
+            obrasSocialesDTO.add(obraSocial.toDTO());
+        }
+        return  obrasSocialesDTO;
+    }
+
     private ObraSocialDTO getObraSocialFromDAO(ObraSocialDTO obraSocialParam){
         ObraSocialDTO obraSocialEncontrada = null;
         try{
@@ -73,8 +100,15 @@ public class ControladorPaciente {
 
     public void createObraSocial(String nombreObraSocial){
         ObraSocial obraSocial = new ObraSocial(nombreObraSocial, nextObraSocialID++);
-        obrasSociales.add(obraSocial);
-        saveObraSocialToDAO(obraSocial.toDTO());
+        if (getObraSocial(obraSocial.toDTO()) != null){
+            obrasSociales.add(obraSocial);
+            if (getObraSocialFromDAO(obraSocial.toDTO()) == null){
+                saveObraSocialToDAO(obraSocial.toDTO()); // significa que no existe en el DAO entonces la guarda.
+            } else {
+                obraSocial = null;
+                System.out.println("ObraSocial Existente Cancelando Operacion");
+            }
+        }
     } // no hace falta metodo para obtener obra social porque una vez que se crea no se toca mas
 
     // Método para crear un nuevo Paciente
