@@ -48,8 +48,8 @@ public class ControladorPaciente {
     private void loadPacientesToModelFromDAO(){
         List<PacienteDTO> pacienteDTOS = new ArrayList<>();
         pacienteDTOS = getPacientesFromDAO();
-        for(Paciente paciente : pacientes){
-            createPaciente(paciente.toDTO()); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
+        for(PacienteDTO paciente : pacienteDTOS){
+            createPaciente(paciente); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
         }
     }
 
