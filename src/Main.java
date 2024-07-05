@@ -1,8 +1,8 @@
-import DAOs.*;
 import DTOs.*;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 import controlador.ControladorPractica;
+import controlador.ControladorUsuario;
 
 import java.util.List;
 
@@ -12,18 +12,20 @@ public class Main {
         ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
         ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
         ControladorPractica controladorPractica = ControladorPractica.getInstance();
+        ControladorUsuario controladorUsuario = ControladorUsuario.getInstance();
 
         //Crear Obras Sociales
-        ObraSocialDTO obra1 = controladorPaciente.createObraSocial("Osxe", 5001);
-        ObraSocialDTO obra2 = controladorPaciente.createObraSocial("Osec", 5002);
+        controladorPaciente.createObraSocial("Osxe");
+        controladorPaciente.createObraSocial("Osec");
+        controladorPaciente.createObraSocial("IOFA");
 
         // Crear sucursales
         SucursalDTO sucursal1 = controladorAtencion.createSucursal("Sucursal Centro", 1);
         SucursalDTO sucursal2 = controladorAtencion.createSucursal("Sucursal Norte", 2);
 
         // Crear pacientes
-        PacienteDTO paciente1 = controladorPaciente.createPaciente("Juan Perez", "M", "39644881",  "jperez@gmail.com", obra1);
-        PacienteDTO paciente2 = controladorPaciente.createPaciente("Maria Gomez", "F", "39655771", "mgomez@gmail.com", obra2);
+        //PacienteDTO paciente1 = controladorPaciente.createPaciente("Juan Perez", "M", "39644881",  "jperez@gmail.com", obra1);
+        //PacienteDTO paciente2 = controladorPaciente.createPaciente("Maria Gomez", "F", "39655771", "mgomez@gmail.com", obra2);
 
 
         // Crear peticiones y asociarlas a sucursales y pacientes
@@ -49,10 +51,10 @@ public class Main {
         controladorAtencion.addPeticionToSucursal(sucursal2, peticion2);
 
         //paciente1.addPeticion(peticion1);
-        controladorAtencion.addPeticionToPaciente(paciente1, peticion1);
+        //controladorAtencion.addPeticionToPaciente(paciente1, peticion1);
 
         //paciente2.addPeticion(peticion2);
-        controladorAtencion.addPeticionToPaciente(paciente2, peticion2);
+        //controladorAtencion.addPeticionToPaciente(paciente2, peticion2);
 
         // Mostrar resultados
         controladorAtencion.showResultados(1);
@@ -69,41 +71,48 @@ public class Main {
         controladorPaciente.deletePaciente(1); // No se puede eliminar
         controladorPaciente.deletePaciente(2); // Se puede eliminar
 
-        //DAO testing
-        ObraSocialDAO obraSocialDAO = null;
-        PacienteDAO pacienteDAO = null;
-        PeticionDAO peticionDAO = null;
-        PracticaDAO practicaDAO = null;
-        SucursalDAO sucursalDAO = null;
-        try {
-            obraSocialDAO = new ObraSocialDAO();
-            pacienteDAO = new PacienteDAO();
-            peticionDAO = new PeticionDAO();
-            practicaDAO = new PracticaDAO();
-            sucursalDAO = new SucursalDAO();
+        //Creacion de Usuarios
+        //UserDTO usuario1 = controladorUsuario.crearUsuario("FedeB", "123", "feder@gmail.com", "fede", "1234", "admin");
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            obraSocialDAO.crearObraSocial(obra1);
-            obraSocialDAO.borrarObraSocial(obra1);
-            obraSocialDAO.crearObraSocial(obra2);
-            pacienteDAO.crearPaciente(paciente1);
-            pacienteDAO.crearPaciente(paciente2);
-            pacienteDAO.borrarPaciente(paciente1);
-            peticionDAO.crearPeticion(peticion1);
-            peticionDAO.crearPeticion(peticion2);
-            peticionDAO.borrarPeticion(peticion1);
-            practicaDAO.crearPractica(practica1);
-            practicaDAO.crearPractica(practica2);
-            practicaDAO.borrarPractica(practica1);
-            sucursalDAO.crearSucursal(sucursal1);
-            sucursalDAO.crearSucursal(sucursal2);
-            sucursalDAO.borrarSucursal(sucursal1);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
+        //DAO testing
+//        ObraSocialDAO obraSocialDAO = null;
+//        PacienteDAO pacienteDAO = null;
+//        PeticionDAO peticionDAO = null;
+//        PracticaDAO practicaDAO = null;
+//        SucursalDAO sucursalDAO = null;
+//        UserDAO userDAO = null;
+//        try {
+//            obraSocialDAO = new ObraSocialDAO();
+//            pacienteDAO = new PacienteDAO();
+//            peticionDAO = new PeticionDAO();
+//            practicaDAO = new PracticaDAO();
+//            sucursalDAO = new SucursalDAO();
+//            userDAO = new UserDAO();
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        try {
+//            obraSocialDAO.crearObraSocial(obra1);
+//            obraSocialDAO.borrarObraSocial(obra1);
+//            obraSocialDAO.crearObraSocial(obra2);
+//            pacienteDAO.crearPaciente(paciente1);
+//            pacienteDAO.crearPaciente(paciente2);
+//            pacienteDAO.borrarPaciente(paciente1);
+//            peticionDAO.crearPeticion(peticion1);
+//            peticionDAO.crearPeticion(peticion2);
+//            peticionDAO.borrarPeticion(peticion1);
+//            practicaDAO.crearPractica(practica1);
+//            practicaDAO.crearPractica(practica2);
+//            practicaDAO.borrarPractica(practica1);
+//            sucursalDAO.crearSucursal(sucursal1);
+//            sucursalDAO.crearSucursal(sucursal2);
+//            sucursalDAO.borrarSucursal(sucursal1);
+//            userDAO.crearUser(usuario1);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }
 
