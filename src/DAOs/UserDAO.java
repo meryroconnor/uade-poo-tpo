@@ -3,6 +3,8 @@ package DAOs;
 import DTOs.UserDTO;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class UserDAO extends GenericDAO {
@@ -53,5 +55,15 @@ public class UserDAO extends GenericDAO {
             throw (e);
         }
         return userDTO;
+    }
+
+    public List<UserDTO> obtenerUsuarios() throws FileNotFoundException {
+        List<UserDTO> usuarios = new ArrayList<>();
+        try {
+            usuarios = (List<UserDTO>) this.getAll();
+        } catch (Exception e) {
+            throw new RuntimeException (e);
+        }
+        return usuarios;
     }
 }

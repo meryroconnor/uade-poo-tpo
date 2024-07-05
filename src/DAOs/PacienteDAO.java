@@ -4,6 +4,8 @@ package DAOs;
 import DTOs.PacienteDTO;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PacienteDAO extends GenericDAO {
@@ -54,5 +56,15 @@ public class PacienteDAO extends GenericDAO {
             throw (e);
         }
         return pacienteDTO;
+    }
+
+    public List<PacienteDTO> obtenerPacientes() throws FileNotFoundException {
+        List<PacienteDTO> pacientes = new ArrayList<>();
+        try {
+            pacientes = (List<PacienteDTO>) this.getAll();
+        } catch (Exception e) {
+            throw new RuntimeException (e);
+        }
+        return pacientes;
     }
 }
