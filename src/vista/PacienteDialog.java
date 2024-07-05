@@ -6,6 +6,7 @@ import controlador.ControladorPaciente;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
 import java.util.Objects;
 
 public class PacienteDialog extends JDialog {
@@ -82,13 +83,13 @@ public class PacienteDialog extends JDialog {
 
     private String[] obtenerObrasSociales(){
         try{
-        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
-        ObraSocialDTO[] obrasSocialesDTO = controladorPaciente.getObrasSocialesFromDAO();
-        String[] obrasSociales = new String[obrasSocialesDTO.length];
-        for (int i = 0; i < obrasSocialesDTO.length; i++){
-            obrasSociales[i] = obrasSocialesDTO[i].getObraSocial();
-        }
-        return  obrasSociales;
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            List<ObraSocialDTO> obrasSocialesDTO = controladorPaciente.getObrasSociales();
+            String[] obrasSociales = new String[obrasSocialesDTO.size()];
+            for (int i = 0; i < obrasSocialesDTO.size(); i++){
+                obrasSociales[i] = obrasSocialesDTO.get(i).getObraSocial();
+            }
+            return  obrasSociales;
         } catch (Exception e){
             System.out.println("Error ocurrido: " + e);
         }
