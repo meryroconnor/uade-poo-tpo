@@ -15,9 +15,9 @@ public class Main {
         ControladorUsuario controladorUsuario = ControladorUsuario.getInstance();
 
         //Crear Obras Sociales
-        controladorPaciente.createObraSocial("Osxe");
-        controladorPaciente.createObraSocial("Osec");
-        controladorPaciente.createObraSocial("IOFA");
+        controladorPaciente.createObraSocial("Osde");
+        controladorPaciente.createObraSocial("Oseca");
+        controladorPaciente.createObraSocial("Sin Obra Social");
 
         // Crear sucursales
         SucursalDTO sucursal1 = controladorAtencion.createSucursal("Sucursal Centro", 1);
