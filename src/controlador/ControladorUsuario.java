@@ -25,7 +25,7 @@ public class ControladorUsuario {
         return instance;
     }
 
-    private void saveToDAO(UserDTO userParam){
+    private void saveUsuarioToDAO(UserDTO userParam){
         try{
             UserDAO userDAO = new UserDAO();
             userDAO.crearUser(userParam);
@@ -35,7 +35,7 @@ public class ControladorUsuario {
         }
     }
 
-    private UserDTO getFromDAO(UserDTO userParam){
+    private UserDTO getUsuarioFromDAO(UserDTO userParam){
         UserDTO userEncontrado = null;
         try{
             UserDAO userDAO = new UserDAO();
@@ -50,7 +50,7 @@ public class ControladorUsuario {
 
     public UserDTO checkCredentials(UserDTO userParam){
         UserDTO usuarioDAO = null;
-        usuarioDAO = getFromDAO(userParam);
+        usuarioDAO = getUsuarioFromDAO(userParam);
         if (usuarioDAO != null){
             if (Objects.equals(userParam.getPassword(), usuarioDAO.getPassword())){
                 return usuarioDAO;
@@ -62,7 +62,7 @@ public class ControladorUsuario {
     public void crearUsuario(UserDTO userParam){
         User user = new User(nextUserID++, userParam.getNombreApellido(), userParam.getDNI(), userParam.getEmail(), userParam.getUsername(), userParam.getPassword(), userParam.getRol());
         usuarios.add(user);
-        saveToDAO(user.toDTO());
+        saveUsuarioToDAO(user.toDTO());
     } // tal vez no haria falta un metodo para obtener el usuario se supone que una vez que se creo no se toca mas.
 
     public void eliminarUsuario(int userID){
