@@ -1,6 +1,7 @@
 package vista;
 
 import DTOs.ObraSocialDTO;
+import DTOs.PacienteDTO;
 import controlador.ControladorPaciente;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Objects;
 
 public class PacientePanel extends JPanel {
@@ -90,10 +92,10 @@ public class PacientePanel extends JPanel {
     private String[] obtenerObrasSociales(){
         try{
             ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
-            ObraSocialDTO[] obrasSocialesDTO = controladorPaciente.getObrasSocialesFromDAO();
-            String[] obrasSociales = new String[obrasSocialesDTO.length];
-            for (int i = 0; i < obrasSocialesDTO.length; i++){
-                obrasSociales[i] = obrasSocialesDTO[i].getObraSocial();
+            List<ObraSocialDTO> obrasSocialesDTO = controladorPaciente.getObrasSociales();
+            String[] obrasSociales = new String[obrasSocialesDTO.size()];
+            for (int i = 0; i < obrasSocialesDTO.size(); i++){
+                obrasSociales[i] = obrasSocialesDTO.get(i).getObraSocial();
             }
             return  obrasSociales;
         } catch (Exception e){
