@@ -7,7 +7,7 @@ public class ObraSocial {
     private String obraSocial;
 
 
-    public ObraSocial(String obraSocial, int numeroAfilicion) {
+    public ObraSocial(String obraSocial, int obraSocialID) {
         this.obraSocial = obraSocial;
         this.obraSocialID = obraSocialID;
     }
