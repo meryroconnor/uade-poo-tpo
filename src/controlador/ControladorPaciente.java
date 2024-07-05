@@ -24,7 +24,7 @@ public class ControladorPaciente {
         this.obrasSociales = new ArrayList<>();
         this.nextObraSocialID = 1;
 
-        loadObrasSocialesToModelFromDAO();
+        this.loadObrasSocialesToModelFromDAO();
     }
 
     // Método para obtener la única instancia de ControladorPaciente (Singleton)
@@ -100,14 +100,16 @@ public class ControladorPaciente {
 
     public void createObraSocial(String nombreObraSocial){
         ObraSocial obraSocial = new ObraSocial(nombreObraSocial, nextObraSocialID++);
-        if (getObraSocial(obraSocial.toDTO()) != null){
+        if (getObraSocial(obraSocial.toDTO()) == null){
             obrasSociales.add(obraSocial);
+
             if (getObraSocialFromDAO(obraSocial.toDTO()) == null){
                 saveObraSocialToDAO(obraSocial.toDTO()); // significa que no existe en el DAO entonces la guarda.
-            } else {
-                obraSocial = null;
-                System.out.println("ObraSocial Existente Cancelando Operacion");
             }
+
+        } else {
+            obraSocial = null;
+            System.out.println("ObraSocial Existente Cancelando Operacion");
         }
     } // no hace falta metodo para obtener obra social porque una vez que se crea no se toca mas
 

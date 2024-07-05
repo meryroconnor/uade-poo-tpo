@@ -17,7 +17,7 @@ public class ControladorUsuario {
         nextUserID = 1;
         this.usuarios = new ArrayList<>();
 
-        loadUsuariosToModelFromDAO();
+        this.loadUsuariosToModelFromDAO();
     }
 
     public static ControladorUsuario getInstance(){
