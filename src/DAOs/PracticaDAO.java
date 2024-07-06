@@ -1,7 +1,6 @@
 package DAOs;
 
 import DTOs.PracticaDTO;
-import Laboratorio.Practica;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.Objects;
 public class PracticaDAO extends GenericDAO {
 
     public PracticaDAO() throws Exception {
-        super(Practica.class, "./src/txtDataFiles/Practica.db");
+        super(PracticaDTO.class, "./src/txtDataFiles/Practica.db");
     }//chequear el file
 
     public void crearPractica(PracticaDTO practicaDTO) throws Exception {

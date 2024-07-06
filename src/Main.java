@@ -21,8 +21,8 @@ public class Main {
 //        controladorPaciente.createObraSocial("Oseca");
 //        controladorPaciente.createObraSocial("Sin Obra Social");
 
-        IndiceReservadoDTO indiceR = new IndiceReservadoDTO(null, 600f, 800f);
-        IndiceCriticoDTO indiceC = new IndiceCriticoDTO(null, 2000f, 5000f);
+        IndiceReservadoDTO indiceR = new IndiceReservadoDTO("No aplica", 600f, 800f);
+        IndiceCriticoDTO indiceC = new IndiceCriticoDTO("No aplica", 2000f, 5000f);
         PracticaDTO practica = new PracticaDTO(0,"Test de Orina: Aminoácidos Totales", indiceR, indiceC);
         controladorPractica.createPractica(practica);
 
