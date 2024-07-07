@@ -1,0 +1,9 @@
+Esto tendria que estar en formato JSON
+//////////////////////////////////////////
+{
+ claseIdentificadora: Valor,
+ atributoSiguiente: ValorAtributo,
+ etc: etc,
+}
+//////////////////////////////////////////
+Aca de nuevo otro objeto mas en la db seria una repeticion de la estructura anterior con valores distintos

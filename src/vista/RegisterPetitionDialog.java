@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class RegisterPetitionDialog extends JDialog {
-    private JTextField dniField, pacienteIDField;
-    private JComboBox<String> sucursalComboBox;
+    private JTextField dniField;
+    private JComboBox<String> sexoComboBox, sucursalComboBox;
     private JComboBox<String> practicaComboBox;
     private JList<String> practicaList;
     private DefaultListModel<String> practicaListModel;
@@ -26,16 +26,18 @@ public class RegisterPetitionDialog extends JDialog {
         setLayout(new BorderLayout());
 
         // Panel norte con identificación del paciente y selección de Sucursal y Prácticas
-        JPanel northPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        JPanel northPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         northPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         northPanel.add(new JLabel("DNI:"));
         dniField = new JTextField();
         northPanel.add(dniField);
 
         northPanel.add(new JLabel("Sexo:"));
-        pacienteIDField = new JTextField();
-        northPanel.add(pacienteIDField);
+        sexoComboBox = new JComboBox<>(new String[]{"F", "M"});
+        northPanel.add(sexoComboBox);
 
+
+        northPanel.add(new JLabel("Sucursal:"));
         sucursalComboBox = new JComboBox<>(Objects.requireNonNull(getDireccionSucursal()));
         northPanel.add(sucursalComboBox);
 
