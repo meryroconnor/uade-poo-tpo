@@ -16,6 +16,7 @@ public class PacientePanel extends JPanel {
 
     private JTextField dniField;
     private JComboBox sexoComboBox;
+    private JButton editarButton;
     private JButton buscarButton;
     private JButton agregarButton;
     private JButton eliminarButton;
@@ -44,6 +45,10 @@ public class PacientePanel extends JPanel {
         sexoComboBox = new JComboBox<>(new String[]{"F", "M"});
         inputPanel.add(sexoComboBox);
 
+        inputPanel.add(new JLabel());
+        editarButton = new JButton("Editar Paciente");
+        editarButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/edit.png"))));
+        inputPanel.add(editarButton);
 
         // Panel Con botones para accionar
         JPanel sendPanel = new JPanel(new GridLayout(2, 3));
@@ -133,8 +138,14 @@ public class PacientePanel extends JPanel {
                         outputArea.append("Mail: " + pacienteDTO.getEmail() + "\n");
                         outputArea.append("Sexo: " + pacienteDTO.getSexo() + "\n");
                         outputArea.append("Paciente ID: " + pacienteDTO.getPacienteID() + "\n");
-                        outputArea.append("Obra Social: " + pacienteDTO.getObraSocialDTO().getObraSocial() + "\n");
-                        outputArea.append("Obra Social ID: " + pacienteDTO.getObraSocialDTO().getObraSocialID() + "\n\n");
+
+                        if (pacienteDTO.getObraSocialDTO().getObraSocial() != null) {
+                            outputArea.append("Paciente tiene Obra Social");
+                            outputArea.append("Obra Social: " + pacienteDTO.getObraSocialDTO().getObraSocial() + "\n");
+                            outputArea.append("Obra Social ID: " + pacienteDTO.getObraSocialDTO().getObraSocialID() + "\n\n");
+                        } else {
+                            outputArea.append("Paciente NO tiene Obra Social \n\n");
+                        }
                     } else {
                         outputArea.append("PACIENTE NO ENCONTRADO\n\n");
                     }

@@ -1,5 +1,6 @@
 package Laboratorio;
 
+import DTOs.ObraSocialDTO;
 import DTOs.PacienteDTO;
 import DTOs.PeticionDTO;
 
@@ -88,7 +89,13 @@ public class Paciente {
         }
 
         // crear el DTO del paciente propio con los DTOs de cada peticion propia y el DTO de la obra social relacionada
-        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email, peticionesDTO, this.obraSocial.toDTO());
+        ObraSocialDTO obraSocialDTO;
+        if (obraSocial == null){
+            obraSocialDTO= new ObraSocialDTO(null, 0);
+        } else {
+            obraSocialDTO= this.obraSocial.toDTO();
+        }
+        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email, peticionesDTO, obraSocialDTO);
         return pacienteDTO;
     }
 }

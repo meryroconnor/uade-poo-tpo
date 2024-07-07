@@ -98,34 +98,38 @@ public class PacienteDialog extends JDialog {
         }
         return null;
     }
-
     private void registrarPacienteEventos() {
         guardarButton.addActionListener(e -> {
 
             String nombre = nombreField.getText();
             String DNI = dniField.getText();
             String mail = emailField.getText();
-            //String fechaNacimiento = fechaNacimientoField.getText(); no se usa ?
-            int nroAfiliado = Integer.parseInt(nroAfiliadoField.getText());
+            String nroAfiliadoText = nroAfiliadoField.getText();
             String obraSocial = Objects.requireNonNull(obraSocialComboBox.getSelectedItem()).toString();
             String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
 
-            ObraSocialDTO obraSocialDTO = new ObraSocialDTO(obraSocial, nroAfiliado);
+            ObraSocialDTO obraSocialDTO;
+            if (nroAfiliadoText.isEmpty() && "Sin Obra Social".equals(obraSocial)) {
+                obraSocialDTO = new ObraSocialDTO(null, 0);
+            } else {
+                int nroAfiliado = Integer.parseInt(nroAfiliadoText);
+                obraSocialDTO = new ObraSocialDTO(obraSocial, nroAfiliado);
+            }
+
             List<PeticionDTO> peticionesDTO = new ArrayList<>();
-            PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail,peticionesDTO,obraSocialDTO);
+            PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail, peticionesDTO, obraSocialDTO);
 
             try{
                 ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
                 controladorPaciente.createPaciente(pacienteDTO);
             } catch (Exception err){
-                System.out.println("Error ocurrido" + e);
+                System.out.println("Error ocurrido: " + err.getMessage());
             }
 
             dispose();
         });
 
         cancelButton.addActionListener(e -> dispose());
-
     }
 }
 
