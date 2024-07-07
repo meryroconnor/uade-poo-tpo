@@ -48,9 +48,12 @@ public class ControladorPaciente {
     private void loadPacientesToModelFromDAO(){
         List<PacienteDTO> pacienteDTOS;
         pacienteDTOS = getPacientesFromDAO();
+        int maxPacienteID = 0;
         for(PacienteDTO paciente : pacienteDTOS){
-            createPaciente(paciente); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
+            loadPaciente(paciente);
+            if (paciente.getPacienteID()> maxPacienteID) {maxPacienteID = paciente.getPacienteID();}
         }
+        nextPacienteID=maxPacienteID+1;
     }
 
     private List<ObraSocialDTO> getObrasSocialesFromDAO(){
@@ -150,6 +153,23 @@ public class ControladorPaciente {
     public void createPaciente(PacienteDTO pacienteParam) {
         ObraSocialDTO obraSocialDTO = pacienteParam.getObraSocialDTO();
         Paciente paciente = new Paciente(nextPacienteID++, pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
+
+        if (getPaciente(paciente.getDNI(), paciente.getSexo()) == null){
+            pacientes.add(paciente);
+
+            if (getPacienteFromDAO(paciente.toDTO()) == null){
+                savePacienteToDAO(paciente.toDTO());
+            }
+
+        } else {
+            System.out.println("Paciente Existente cancelando operacion");
+        }
+    }
+
+    // Método para Cargar Paciente
+    public void loadPaciente(PacienteDTO pacienteParam) {
+        ObraSocialDTO obraSocialDTO = pacienteParam.getObraSocialDTO();
+        Paciente paciente = new Paciente(pacienteParam.getPacienteID(), pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
 
         if (getPaciente(paciente.getDNI(), paciente.getSexo()) == null){
             pacientes.add(paciente);

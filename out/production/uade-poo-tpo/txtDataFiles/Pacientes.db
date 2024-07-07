@@ -1,2 +1,3 @@
-{"pacienteID":1,"nombreApellido":"Luis Mari","DNI":"1111111","sexo":"M","email":"lma@mail.com","obraSocialDTO":{"obraSocialID":2020,"obraSocial":"Osde"},"peticionesDTO":[]}
 {"pacienteID":2,"nombreApellido":"Mariel Estella","DNI":"78945613","sexo":"F","email":"mestella@gmail.com","obraSocialDTO":{"obraSocialID":0},"peticionesDTO":[]}
+{"pacienteID":3,"nombreApellido":"Lorena Penas","DNI":"56565656","sexo":"F","email":"lorena@mail.com","obraSocialDTO":{"obraSocialID":1512,"obraSocial":"Osde"},"peticionesDTO":[]}
+{"pacienteID":4,"nombreApellido":"Mariana Sosa","DNI":"1234567","sexo":"F","email":"msosa@gmail.com","obraSocialDTO":{"obraSocialID":0},"peticionesDTO":[]}
