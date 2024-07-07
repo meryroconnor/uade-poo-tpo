@@ -14,19 +14,15 @@ import java.util.Objects;
 
 public class PacientePanel extends JPanel {
 
-    private JTextField pacienteField;
     private JTextField dniField;
-    private JComboBox<String> osComboBox;
-    private JTextField osIDField;
+    private JComboBox sexoComboBox;
     private JButton buscarButton;
     private JButton agregarButton;
     private JButton eliminarButton;
     private JTextArea outputArea;
     private JPanel inputPanel;
     private JPanel sendPanel;
-    private JComboBox sexoComboBox;
 
-    private TextField sexoField;
 
     public PacientePanel() {
         setLayout(new BorderLayout());
@@ -43,17 +39,6 @@ public class PacientePanel extends JPanel {
         dniField = new JTextField();
         inputPanel.add(dniField);
 
-//        inputPanel.add(new JLabel("Paciente ID:"));
-//        pacienteField = new JTextField();
-//        inputPanel.add(pacienteField);
-
-//        inputPanel.add(new JLabel("Obra Social:"));
-//        osComboBox = new JComboBox<>(Objects.requireNonNull(obtenerObrasSociales()));
-//        inputPanel.add(osComboBox);
-
-//        inputPanel.add(new JLabel("Obra Social ID:"));
-//        osIDField = new JTextField();
-//        inputPanel.add(osIDField);
 
         inputPanel.add(new JLabel("Sexo:"));
         sexoComboBox = new JComboBox<>(new String[]{"F", "M"});
@@ -98,23 +83,6 @@ public class PacientePanel extends JPanel {
         this.asociarEventos();
 
     }
-    private String[] obtenerObrasSociales(){
-        try{
-            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
-            List<ObraSocialDTO> obrasSocialesDTO = controladorPaciente.getObrasSociales();
-            String[] obrasSociales = new String[obrasSocialesDTO.size()];
-            for (int i = 0; i < obrasSocialesDTO.size(); i++){
-                obrasSociales[i] = obrasSocialesDTO.get(i).getObraSocial();
-            }
-            return  obrasSociales;
-        } catch (Exception e){
-            System.out.println("Error ocurrido: " + e);
-        }
-        return null;
-    }
-
-
-
     private void asociarEventos() {
         // Action listener for "Agregar Paciente" button
         agregarButton.addActionListener(new ActionListener() {
@@ -130,17 +98,20 @@ public class PacientePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String dni = dniField.getText();
-                int pacienteID = Integer.parseInt(pacienteField.getText());
-                String obraSocial = (String) osComboBox.getSelectedItem();
-                //String osID = osIDField.getText(); para que quiero el id de la obra social si tengo el nombre.
+                String sexo = (String) sexoComboBox.getSelectedItem();
+
+                try {
+                    ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                    String output = controladorPaciente.deletePaciente(dni, sexo);
 
 
+                    outputArea.append(output);
 
-                outputArea.append("Eliminar Paciente:\n");
-                outputArea.append("DNI: " + dni + "\n");
-                outputArea.append("Paciente ID: " + pacienteID + "\n");
-                outputArea.append("Obra Social: " + obraSocial + "\n");
-                //outputArea.append("Obra Social ID: " + osID + "\n\n");
+
+                } catch (Exception err) {
+                    outputArea.append("Error: " + err.getMessage() + "\n\n");
+                    err.printStackTrace();
+                }
             }
         });
 
@@ -149,38 +120,33 @@ public class PacientePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String dni = dniField.getText();
-                //String pacienteID = pacienteField.getText();
-                //String obraSocial = (String) osComboBox.getSelectedItem();
-                //String osID = osIDField.getText();
                 String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
 
-                //ObraSocialDTO obraSocialDTO = new ObraSocialDTO(obraSocial, 0); //no importa el id se sobreescribe porque se usa para buscar
-
-
-                PacienteDTO pacienteDTO = new PacienteDTO(0, null, sexo, dni, null, null, null);
-
-                try{
+                try {
                     ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
-                    pacienteDTO = controladorPaciente.getPaciente(pacienteDTO);
-                } catch (Exception err ){
-                    System.out.println("Error ocurrido: " + e);
-                }
+                    PacienteDTO pacienteDTO = controladorPaciente.getPaciente(dni, sexo);
 
-                if (pacienteDTO != null) {
-                    outputArea.append("Buscar Paciente:\n");
-                    outputArea.append("Nombre: " + pacienteDTO.getNombreApellido() + "\n");
-                    outputArea.append("DNI: " + pacienteDTO.getDNI() + "\n");
-                    outputArea.append("Mail: " + pacienteDTO.getEmail() + "\n");
-                    outputArea.append("Sexo: " + pacienteDTO.getSexo() + "\n");
-                    outputArea.append("Paciente ID: " + pacienteDTO.getPacienteID() + "\n");
-                    outputArea.append("Obra Social: " + pacienteDTO.getObraSocialDTO().getObraSocial() + "\n");
-                    outputArea.append("Obra Social ID: " + pacienteDTO.getObraSocialDTO().getObraSocialID() + "\n\n");
-                } else {
-                    outputArea.append("PACIENTE NO ENCONTRADO\n");
+                    if (pacienteDTO != null) {
+                        outputArea.append("Buscar Paciente:\n");
+                        outputArea.append("Nombre: " + pacienteDTO.getNombreApellido() + "\n");
+                        outputArea.append("DNI: " + pacienteDTO.getDNI() + "\n");
+                        outputArea.append("Mail: " + pacienteDTO.getEmail() + "\n");
+                        outputArea.append("Sexo: " + pacienteDTO.getSexo() + "\n");
+                        outputArea.append("Paciente ID: " + pacienteDTO.getPacienteID() + "\n");
+                        outputArea.append("Obra Social: " + pacienteDTO.getObraSocialDTO().getObraSocial() + "\n");
+                        outputArea.append("Obra Social ID: " + pacienteDTO.getObraSocialDTO().getObraSocialID() + "\n\n");
+                    } else {
+                        outputArea.append("PACIENTE NO ENCONTRADO\n\n");
+                    }
+
+                } catch (Exception err) {
+                    outputArea.append("Error al buscar el paciente: " + err.getMessage() + "\n\n");
+                    err.printStackTrace();
                 }
             }
         });
     }
+
 }
 
 

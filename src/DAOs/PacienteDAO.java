@@ -40,7 +40,7 @@ public class PacienteDAO extends GenericDAO {
         int pacienteID = pacienteDTO.getPacienteID();
         boolean fueBorrado = false;
         try {
-            fueBorrado = this.delete(pacienteID); //2- parametro ID ? wtf?
+            fueBorrado = this.delete(pacienteID);
         } catch (Exception e) {
             throw new Exception("Error al borrar el paciente: " + e.getMessage(), e);
         }

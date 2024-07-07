@@ -48,15 +48,14 @@ public class LoginFrame extends JFrame{
                 String password = inputPassword.getText();
                 ControladorUsuario controladorUsuario = ControladorUsuario.getInstance();
 
-                UserDTO usuario = new UserDTO(0, null, null, username, password, null, null);
-                usuario = controladorUsuario.checkCredentials(usuario);
+                UserDTO usuario = controladorUsuario.checkCredentials(username, password);
                 if (usuario != null){
                     SingletonSistema.getInstance().setUsername(usuario.getUsername());
                     SingletonSistema.getInstance().setRol(usuario.getRol());
                     navegateSistema(usuario.getRol()); //si apretas ingresar te lleva a la pantalla de usuario(FrmUsuario)
                     System.out.println(String.format("Username: %s >>> Rol: %s", usuario.getUsername(), usuario.getRol()));
                 } else {
-                    System.out.println("Usuario o Contrasenia no valida"); //reemplazar con enie q no tengo :(
+                    System.out.println("Usuario o Contraseña no valida");
                     dispose();
                 }
             }

@@ -85,9 +85,9 @@ public class Main {
         controladorAtencion.deleteSucursal(1); // Transferir peticiones activas y eliminar
         controladorAtencion.deleteSucursal(2); // No se puede eliminar porque no hay otras sucursales
 
-        // Intentar eliminar pacientes
-        controladorPaciente.deletePaciente(1); // No se puede eliminar
-        controladorPaciente.deletePaciente(2); // Se puede eliminar
+//        // Intentar eliminar pacientes
+//        controladorPaciente.deletePaciente(1); // No se puede eliminar
+//        controladorPaciente.deletePaciente(2); // Se puede eliminar
 
         //Creacion de Usuarios
         //UserDTO usuario1 = controladorUsuario.crearUsuario("FedeB", "123", "feder@gmail.com", "fede", "1234", "admin");

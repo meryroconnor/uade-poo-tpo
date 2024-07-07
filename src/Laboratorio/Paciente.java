@@ -15,48 +15,54 @@ public class Paciente {
     private ObraSocial obraSocial;
     private List<Peticion> peticiones;
 
-    // Constructor con modificador de acceso 'protected' para que solo el controlador pueda instanciarlo
-    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email, ObraSocial obraSocial) {
+    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email, String nombreObraSocial, int obraSocialID) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
         this.sexo = sexo;
         this.DNI = DNI;
         this.email= email;
         this.peticiones = new ArrayList<>();
-        this.obraSocial = obraSocial;
+
+        // Permitir que obraSocial sea nulo
+        if (nombreObraSocial != null && obraSocialID != 0) {
+            this.obraSocial = new ObraSocial(nombreObraSocial, obraSocialID);
+        } else {
+            this.obraSocial = null;
+        }
     }
 
     public int getPacienteID() {
         return pacienteID;
     }
-
     public String getNombreApellido() {
         return nombreApellido;
     }
-
     public String getDNI() {
         return DNI;
     }
-
     public String getSexo() {
         return sexo;
     }
-
     public String getEmail() {
         return email;
     }
-
-    public void setObraSocial(ObraSocial obraSocial) {
-        this.obraSocial = obraSocial;
-    }
-
     public ObraSocial getObraSocial() {
         return obraSocial;
     }
-
     public List<Peticion> getPeticiones() {
         return peticiones;
     }
+
+    //public void setObraSocial(ObraSocial obraSocial) { this.obraSocial = obraSocial;}
+    public void setObraSocial(String nombreObraSocial, int obraSocialID) {
+        if (nombreObraSocial != null && obraSocialID != 0) {
+            this.obraSocial = new ObraSocial(nombreObraSocial, obraSocialID);
+        } else {
+            this.obraSocial = null;
+        }
+    }
+
+
 
     public void addPeticion(Peticion peticion) {
         peticiones.add(peticion);

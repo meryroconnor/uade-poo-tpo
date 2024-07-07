@@ -106,10 +106,11 @@ public class PacienteDialog extends JDialog {
             String DNI = dniField.getText();
             String mail = emailField.getText();
             //String fechaNacimiento = fechaNacimientoField.getText(); no se usa ?
+            int nroAfiliado = Integer.parseInt(nroAfiliadoField.getText());
             String obraSocial = Objects.requireNonNull(obraSocialComboBox.getSelectedItem()).toString();
             String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
 
-            ObraSocialDTO obraSocialDTO = new ObraSocialDTO(obraSocial, 0);
+            ObraSocialDTO obraSocialDTO = new ObraSocialDTO(obraSocial, nroAfiliado);
             List<PeticionDTO> peticionesDTO = new ArrayList<>();
             PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail,peticionesDTO,obraSocialDTO);
 

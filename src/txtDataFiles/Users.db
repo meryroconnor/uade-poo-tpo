@@ -1,4 +1,4 @@
-{"userID":1,"nombreApellido":"Federico","email":"fedeb@gmail.com","username":"fedeb","password":"1234","DNI":"11223344","rol":"admin"}
-{"userID":1,"nombreApellido":"Jorge","email":"jorge@mail.com","username":"jorge","password":"0000","DNI":"11332288","rol":"recepcionista"}
+{"userID":1,"nombreApellido":"Jorge","email":"jorge@mail.com","username":"jorge","password":"0000","DNI":"11332288","rol":"admin"}
 {"userID":2,"nombreApellido":"Kian","email":"kian@notshittymail.com","username":"kian","password":"1111","DNI":"00998877","rol":"laboratorista"}
-{"userID":4,"nombreApellido":"Augusto","email":"augusto@gmail.com","username":"augus","password":"1234","DNI":"1222123","rol":"recepcionista"}
+{"userID":3,"nombreApellido":"Augusto","email":"augusto@gmail.com","username":"augus","password":"1234","DNI":"1222123","rol":"recepcionista"}
+{"userID":4,"nombreApellido":"Maria Garcia","email":"mgarciagmail.com","username":"maria","password":"123","DNI":"39644881","rol":"admin"}

@@ -27,8 +27,21 @@ public class ControladorUsuario {
         return instance;
     }
 
+    public void crearUsuario(UserDTO userParam){
+        User user = new User(nextUserID++, userParam.getNombreApellido(), userParam.getDNI(), userParam.getEmail(), userParam.getUsername(), userParam.getPassword(), userParam.getRol());
+        if (getUsuario(user.getUsername()) == null){
+            usuarios.add(user);
+            if (getUsuarioFromDAO(user.toDTO()) == null){ //significa que no existe en el DAO
+                saveUsuarioToDAO(user.toDTO());
+            }
+        } else {
+            user = null;
+            System.out.println("Usuario existente cancelando operacion");
+        }
+    } // tal vez no haria falta un metodo para obtener el usuario se supone que una vez que se creo no se toca mas.
+
     private void loadUsuariosToModelFromDAO(){
-        List<UserDTO> usuariosDTO = new ArrayList<>();
+        List<UserDTO> usuariosDTO;
         usuariosDTO = getUsuariosFromDAO();
         for(UserDTO usuario : usuariosDTO){
             crearUsuario(usuario); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
@@ -71,10 +84,10 @@ public class ControladorUsuario {
         return usuarios;
     }
 
-    public UserDTO getUsuario(UserDTO userParam){
+    public UserDTO getUsuario(String username){
         UserDTO usuarioEncontrado = null;
         for (User usuario : usuarios){
-            if (Objects.equals(usuario.getUsername(), userParam.getUsername())){
+            if (Objects.equals(usuario.getUsername(),username)){
                 usuarioEncontrado = usuario.toDTO();
                 break;
             }
@@ -82,28 +95,17 @@ public class ControladorUsuario {
         return usuarioEncontrado;
     }
 
-    public UserDTO checkCredentials(UserDTO userParam){
-        UserDTO usuario = getUsuario(userParam);
+    public UserDTO checkCredentials(String username, String password){
+        UserDTO usuario = getUsuario(username);
         if (usuario != null){
-            if (Objects.equals(userParam.getPassword(), usuario.getPassword())){
+            if (Objects.equals(password, usuario.getPassword())){
                 return usuario;
             }
         }
         return null;
     }
 
-    public void crearUsuario(UserDTO userParam){
-        User user = new User(nextUserID++, userParam.getNombreApellido(), userParam.getDNI(), userParam.getEmail(), userParam.getUsername(), userParam.getPassword(), userParam.getRol());
-        if (getUsuario(user.toDTO()) == null){
-            usuarios.add(user);
-            if (getUsuarioFromDAO(user.toDTO()) == null){ //significa que no existe en el DAO
-                saveUsuarioToDAO(user.toDTO());
-            }
-        } else {
-            user = null;
-            System.out.println("Usuario existente cancelando operacion");
-        }
-    } // tal vez no haria falta un metodo para obtener el usuario se supone que una vez que se creo no se toca mas.
+
 
     public void eliminarUsuario(int userID){
         boolean usuarioEncontrado = false;

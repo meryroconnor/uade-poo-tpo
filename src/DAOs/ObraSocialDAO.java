@@ -47,10 +47,10 @@ public class ObraSocialDAO extends GenericDAO {
     }
 
     public ObraSocialDTO obtenerObraSocial(ObraSocialDTO obraSocialDTOParam) throws FileNotFoundException {
-        int ObraSocialID = obraSocialDTOParam.getObraSocialID();
+        String ObraSocialID = Integer.toString(obraSocialDTOParam.getObraSocialID());
         ObraSocialDTO obraSocialDTO;
         try {
-            obraSocialDTO = (ObraSocialDTO) this.searchByAttribute("obraSocial", obraSocialDTOParam.getObraSocial());
+            obraSocialDTO = (ObraSocialDTO) this.searchByAttribute("obraSocialID", ObraSocialID);
         } catch (FileNotFoundException e) {
             throw (e);
         }
@@ -58,7 +58,7 @@ public class ObraSocialDAO extends GenericDAO {
     }
 
     public List<ObraSocialDTO> obtenerObrasSociales() throws FileNotFoundException {
-        List<ObraSocialDTO> obrasSociales = new ArrayList<>();
+        List<ObraSocialDTO> obrasSociales;
         try {
             obrasSociales = (List<ObraSocialDTO>) this.getAll();
         } catch (Exception e) {

@@ -14,7 +14,7 @@ import java.util.Objects;
 public class ControladorPaciente {
     private static ControladorPaciente instance;
     private List<Paciente> pacientes;
-    private List<ObraSocial> obrasSociales; // modificar asociacion y no crear con instancia vacia en constructor de paciente
+    private List<ObraSocial> obrasSociales;
     private int nextPacienteID;
     private int nextObraSocialID;
 
@@ -38,15 +38,15 @@ public class ControladorPaciente {
     }
 
     private void loadObrasSocialesToModelFromDAO(){
-        List<ObraSocialDTO> obrasSocialesDTO = new ArrayList<>();
+        List<ObraSocialDTO> obrasSocialesDTO;
         obrasSocialesDTO = getObrasSocialesFromDAO();
         for(ObraSocialDTO obraSocial : obrasSocialesDTO){
-            createObraSocial(obraSocial.getObraSocial()); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
+            parametrizeCobertura(obraSocial.getObraSocial()); // por ahora es solo para traer las coverturas aceptadas
         }
     }
 
     private void loadPacientesToModelFromDAO(){
-        List<PacienteDTO> pacienteDTOS = new ArrayList<>();
+        List<PacienteDTO> pacienteDTOS;
         pacienteDTOS = getPacientesFromDAO();
         for(PacienteDTO paciente : pacienteDTOS){
             createPaciente(paciente); // se mantiene el orden de los parametros ID porque tienen el orden en el que aparecen en el JSON
@@ -132,7 +132,7 @@ public class ControladorPaciente {
         return obraSocialEncontrada;
     }
 
-    public void createObraSocial(String nombreObraSocial){
+    public void parametrizeCobertura(String nombreObraSocial){
         ObraSocial obraSocial = new ObraSocial(nombreObraSocial, nextObraSocialID++);
         if (getObraSocial(obraSocial.toDTO()) == null){
             obrasSociales.add(obraSocial);
@@ -142,17 +142,16 @@ public class ControladorPaciente {
             }
 
         } else {
-            obraSocial = null;
             System.out.println("ObraSocial Existente Cancelando Operacion");
         }
     } // no hace falta metodo para obtener obra social porque una vez que se crea no se toca mas
 
     // Método para crear un nuevo Paciente
     public void createPaciente(PacienteDTO pacienteParam) {
-        ObraSocialDTO obraSocialDTO = getObraSocial(pacienteParam.getObraSocialDTO());
-        ObraSocial obraSocial = new ObraSocial(obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
-        Paciente paciente = new Paciente(nextPacienteID++, pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), obraSocial);
-        if (getPaciente(paciente.toDTO()) == null){
+        ObraSocialDTO obraSocialDTO = pacienteParam.getObraSocialDTO();
+        Paciente paciente = new Paciente(nextPacienteID++, pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
+
+        if (getPaciente(paciente.getDNI(), paciente.getSexo()) == null){
             pacientes.add(paciente);
 
             if (getPacienteFromDAO(paciente.toDTO()) == null){
@@ -160,9 +159,6 @@ public class ControladorPaciente {
             }
 
         } else {
-            obraSocialDTO = null;
-            paciente = null;
-            obraSocial = null;
             System.out.println("Paciente Existente cancelando operacion");
         }
     }
@@ -177,10 +173,10 @@ public class ControladorPaciente {
         }
     }
 
-    public PacienteDTO getPaciente(PacienteDTO pacienteParam){ //Necesario porque el paciente sufre actualizaciones
+    public PacienteDTO getPaciente(String dni, String sexo){ //Necesario porque el paciente sufre actualizaciones
         PacienteDTO pacienteEncontrado = null;
         for (Paciente paciente : pacientes){
-            if (Objects.equals(pacienteParam.getDNI(), paciente.getDNI()) && Objects.equals(pacienteParam.getSexo(), paciente.getSexo())){
+            if (Objects.equals(dni, paciente.getDNI()) && Objects.equals(sexo, paciente.getSexo())){
                 pacienteEncontrado = paciente.toDTO();
             }
         }
@@ -193,26 +189,46 @@ public class ControladorPaciente {
     }
 
     // Método para eliminar un paciente por su ID
-    public void deletePaciente(int pacienteID) {
+    public String deletePaciente(String dni, String sexo) {
         Paciente pacienteAEliminar = null;
         Boolean pacienteEncontrado = false;
+        String output;
         for (Paciente paciente : pacientes) {
-            if (paciente.getPacienteID() == pacienteID) {
+            if (Objects.equals(dni, paciente.getDNI()) && Objects.equals(sexo, paciente.getSexo())) {
                 pacienteEncontrado = true;
                 if (!paciente.tieneResultadosFinalizados()) {
                     pacienteAEliminar = paciente;
                 } else {
                     System.out.println("No se puede eliminar el paciente. Tiene resultados finalizados.");
-                    break;
+                    output = "No se puede eliminar el paciente. Tiene resultados finalizados.";
+                    return output;
                 }
                 break;
             }
         }
         if (pacienteAEliminar != null) {
-            pacientes.remove(pacienteAEliminar);
+            PacienteDTO pacienteDTO =  pacienteAEliminar.toDTO();
+
+            pacientes.remove(pacienteAEliminar); // Elimino en sistema
+            deletePacienteFromDAO(pacienteDTO); // Elimino en db
+
             System.out.println("Paciente eliminado.");
-        } if (!pacienteEncontrado){
-            System.out.println("Paciente no encontrado.");
+            output = "Paciente eliminado. DNI "+dni;
+            return output;
+        }
+
+        System.out.println("Paciente no encontrado.");
+        output = "Paciente no encontrado.";
+        return output;
+
+    }
+
+    private void deletePacienteFromDAO(PacienteDTO pacienteParam){
+        try {
+            PacienteDAO pacienteDAO = new PacienteDAO();
+            pacienteDAO.borrarPaciente(pacienteParam);
+        } catch (Exception e) {
+            System.out.println("Error ocurrido: " + e);
         }
     }
 
@@ -225,17 +241,6 @@ public class ControladorPaciente {
         return pacienteDTOS;
     }
 
-    //Buscar paciente
-    public List<PacienteDTO> buscarPaciente(String pacienteID, String dni) {
-        List<PacienteDTO> resultadosDTOS = new ArrayList<>();
-        for (Paciente paciente : pacientes) {
-            if ((pacienteID != null && !pacienteID.isEmpty() && paciente.getPacienteID() == Integer.parseInt(pacienteID)) ||
-                    (dni != null && !dni.isEmpty() && paciente.getDNI().equals(dni))) {
-                resultadosDTOS.add(paciente.toDTO());
-            }
-        }
-        return resultadosDTOS;
-    }
 
     protected Paciente findPaciente(int pacienteID){
         Paciente pacienteEncontrado = null;
@@ -257,18 +262,6 @@ public class ControladorPaciente {
             }
         }
         return obraSocialEncontrada;
-    }
-
-    private void addObraSocialToPaciente(Paciente paciente, ObraSocialDTO obraSocialDTO){
-        int pacienteID = paciente.getPacienteID();
-        int obraSocialID = obraSocialDTO.getObraSocialID();
-        Paciente pacienteEncontrado = findPaciente(pacienteID);
-        ObraSocial obraSocialEncontrada = findObraSocial(obraSocialID);
-        if(pacienteEncontrado != null && obraSocialEncontrada != null){
-            pacienteEncontrado.setObraSocial(obraSocialEncontrada);
-
-            System.out.println(String.format("PacienteID: %d --> Agregada ObraSocial: %s", pacienteID, obraSocialEncontrada.getObraSocial()));
-        }
     }
 
 }
