@@ -27,7 +27,7 @@ public class PeticionDAO extends GenericDAO {
     public boolean actualizarPeticion(PeticionDTO peticionDTO) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(peticionDTO);
+            fueActualizado = this.update2(peticionDTO, peticionDTO.getPeticionID());
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Peticion: " + e.getMessage(), e);
         }

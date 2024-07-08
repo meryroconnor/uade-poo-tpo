@@ -4,8 +4,11 @@ import DAOs.ObraSocialDAO;
 import DAOs.PacienteDAO;
 import DTOs.ObraSocialDTO;
 import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
+import DTOs.PracticaDTO;
 import Laboratorio.ObraSocial;
 import Laboratorio.Paciente;
+import Laboratorio.Peticion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +54,7 @@ public class ControladorPaciente {
         int maxPacienteID = 0;
         for(PacienteDTO paciente : pacienteDTOS){
             loadPaciente(paciente);
+            for (PeticionDTO peticionDTO: paciente.getPeticionesDTO()){ addPeticionToPaciente(paciente, peticionDTO);}
             if (paciente.getPacienteID()> maxPacienteID) {maxPacienteID = paciente.getPacienteID();}
         }
         nextPacienteID=maxPacienteID+1;
@@ -147,7 +151,7 @@ public class ControladorPaciente {
         } else {
             System.out.println("ObraSocial Existente Cancelando Operacion");
         }
-    } // no hace falta metodo para obtener obra social porque una vez que se crea no se toca mas
+    }
 
     // Método para crear un nuevo Paciente
     public void createPaciente(PacienteDTO pacienteParam) {
@@ -166,8 +170,8 @@ public class ControladorPaciente {
         }
     }
 
-    // Método para Cargar Paciente
-    public void loadPaciente(PacienteDTO pacienteParam) {
+    // Método para Cargar Paciente (solo se ejecuta en la carga dao->sistema)
+    private void loadPaciente(PacienteDTO pacienteParam) {
         ObraSocialDTO obraSocialDTO = pacienteParam.getObraSocialDTO();
         Paciente paciente = new Paciente(pacienteParam.getPacienteID(), pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
 
@@ -282,6 +286,29 @@ public class ControladorPaciente {
             }
         }
         return obraSocialEncontrada;
+    }
+    public void addPeticionToPaciente(PacienteDTO pacienteDTO, PeticionDTO peticionDTO){
+        int pacienteID = pacienteDTO.getPacienteID();
+        int peticionID = peticionDTO.getPeticionID();
+        Paciente pacienteEncontrado = findPaciente(pacienteID);
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+        Peticion peticionEncontrada = controladorAtencion.findPeticion(peticionID);
+        if (pacienteEncontrado != null && peticionEncontrada != null){
+
+            pacienteEncontrado.addPeticion(peticionEncontrada);
+
+            try {
+                PacienteDAO pacienteDAO = new PacienteDAO();
+                pacienteDAO.actualizarPaciente(pacienteEncontrado.toDTO());
+                System.out.println(String.format("Paciente Actualizado >>> DNI: %s Sexo: %s", pacienteEncontrado.getDNI(), pacienteEncontrado.getSexo()));
+            } catch (Exception e) {
+                System.out.println("Error ocurrido: " + e);
+            }
+
+            System.out.println(String.format("PacienteID: %d --> Agregada PeticionID: %d", pacienteID, peticionID));
+
+        }
+
     }
 
 }

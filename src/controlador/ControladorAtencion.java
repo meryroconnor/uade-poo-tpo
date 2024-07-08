@@ -1,6 +1,8 @@
 package controlador;
 
+import DAOs.PacienteDAO;
 import DAOs.PeticionDAO;
+import DAOs.PracticaDAO;
 import DAOs.SucursalDAO;
 import DTOs.PacienteDTO;
 import DTOs.PeticionDTO;
@@ -10,6 +12,7 @@ import Laboratorio.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class ControladorAtencion {
@@ -40,18 +43,17 @@ public class ControladorAtencion {
     }
 
     // Método para crear una nueva Peticion
-    public void createPeticion() {
+    public PeticionDTO createPeticion() {
         Peticion peticion = new Peticion(nextPeticionID++);
+        PeticionDTO peticionDTO = peticion.toDTO();
 
         if (getPeticion(peticion.toDTO()) == null){
             peticiones.add(peticion);
             if (getPeticionFromDAO(peticion.toDTO()) == null){
                 savePeticionToDAO(peticion.toDTO());
             }
-        } else{
-            peticion = null;
-            System.out.println("Peticion Existente Cancelando Operacion");
         }
+        return peticionDTO;
     }
 
     private PeticionDTO getPeticionFromDAO(PeticionDTO peticionParam){
@@ -90,14 +92,40 @@ public class ControladorAtencion {
     // Método para crear una nueva Sucursal
     public void createSucursal(SucursalDTO sucursalParam) {
         Sucursal sucursal = new Sucursal(nextSucursalID++, sucursalParam.getDireccion(), sucursalParam.getResponsableMatricula());
-        if (obtenerSucursal(sucursal.toDTO()) == null){
+        if (getSucursal(sucursal.toDTO()) == null){
             sucursales.add(sucursal);
             if (getSucursalFromDAO(sucursal.toDTO()) == null){
                 saveSucursalToDAO(sucursal.toDTO());
             }
         } else {
-            sucursal = null;
             System.out.println("Sucursal Existente Cancelando Operacion");
+        }
+    }
+
+    // Método para cargar una Sucursal desde dao al sistema
+    public void cargarSucursal(SucursalDTO sucursalParam) {
+        Sucursal sucursal = new Sucursal(sucursalParam.getSucursalID(), sucursalParam.getDireccion(), sucursalParam.getResponsableMatricula());
+        if (getSucursal(sucursal.toDTO()) == null){
+            sucursales.add(sucursal);
+            if (getSucursalFromDAO(sucursal.toDTO()) == null){
+                saveSucursalToDAO(sucursal.toDTO());
+            }
+        } else {
+            System.out.println("Sucursal Existente Cancelando Operacion");
+        }
+    }
+
+    // Método para cargar una Peticion desde dao al sistema
+    public void cargarPeticion(int peticionID) {
+        Peticion peticion = new Peticion(peticionID);
+
+        if (getPeticion(peticion.toDTO()) == null){
+            peticiones.add(peticion);
+            if (getPeticionFromDAO(peticion.toDTO()) == null){
+                savePeticionToDAO(peticion.toDTO());
+            }
+        } else{
+            System.out.println("Peticion Existente Cancelando Operacion");
         }
     }
 
@@ -114,33 +142,35 @@ public class ControladorAtencion {
     }
 
 
-
-    // SUCURSAL
-
     private  void bootControllerFromDaoToModel(){
         List<SucursalDTO> sucursalDTOS;
         sucursalDTOS = getSucursalesFromDAO();
+        int maxSucursalID = 0;
+        int maxPeticionID = 0;
 
         List<PeticionDTO> peticionDTOS;
         peticionDTOS = getPeticionesFromDAO();
 
         for(SucursalDTO sucursalDTO : sucursalDTOS){
-            createSucursal(sucursalDTO);
+            cargarSucursal(sucursalDTO);
+            for (PeticionDTO peticionDTO: sucursalDTO.getPeticionesDTO()){ addPeticionToSucursal(peticionDTO, sucursalDTO);}
+            if (sucursalDTO.getSucursalID()> maxSucursalID) {maxSucursalID = sucursalDTO.getSucursalID();}
         }
 
         for(PeticionDTO peticionDTO : peticionDTOS){
-            createPeticion();
+            cargarPeticion(peticionDTO.getPeticionID());
+            for (PracticaDTO practicaDTO: peticionDTO.getPracticasDTO()){ addPracticaToPeticion(practicaDTO, peticionDTO);}
+            if (peticionDTO.getPeticionID()> maxPeticionID) {maxPeticionID = peticionDTO.getPeticionID();}
         }
+
+        nextPeticionID = maxPeticionID+1;
+        nextSucursalID = maxSucursalID+1;
 
         for(SucursalDTO sucursalDTO : sucursalDTOS){
-            Sucursal sucursal = findSucursal(sucursalDTO.getSucursalID());
             for (PeticionDTO peticionDTO : sucursalDTO.getPeticionesDTO()){
-                Peticion peticion = findPeticion(peticionDTO.getPeticionID());
-                sucursal.addPeticion(peticion);
+                addPeticionToSucursal(peticionDTO,sucursalDTO);
             }
-
         }
-
 
     }
 
@@ -293,24 +323,21 @@ public class ControladorAtencion {
         return peticionDTOS;
     }
 
-    public PeticionDTO obtenerPeticion(int peticionID){ //Necesario porque la peticion sufre actualizaciones
-        Peticion peticionEncontrada = findPeticion(peticionID);
-        if (peticionEncontrada == null){
-            System.out.println(String.format("PeticionID: %d No Encontrada", peticionID));
-        }
-        return peticionEncontrada.toDTO(); // puede provocar Null!
-    }
 
-    public SucursalDTO obtenerSucursal(SucursalDTO sucursalParam){ //Necesario porque la sucursal sufre actualizaciones
+
+    public SucursalDTO getSucursal(SucursalDTO sucursalParam){ //Necesario porque la sucursal sufre actualizaciones
         int sucursalID = sucursalParam.getSucursalID();
-        Sucursal sucursalEncontrada = findSucursal(sucursalID);
-        if (sucursalEncontrada == null){
-            System.out.println(String.format("SucursalID: %d No Encontrada", sucursalID));
+        SucursalDTO sucursalEncontrada = null;
+
+        for (Sucursal sucursal : sucursales){
+            if (Objects.equals(sucursalID, sucursal.getSucursalID())){
+                sucursalEncontrada = sucursal.toDTO();
+            }
         }
-        return sucursalEncontrada.toDTO(); // puede provocar Null!
+        return  sucursalEncontrada;
     }
 
-    private Peticion findPeticion(int peticionID){
+    protected Peticion findPeticion(int peticionID){
         Peticion peticionEncontrada = null;
         for(Peticion peticion : peticiones){
             if (peticion.getPeticionID() == peticionID){
@@ -357,7 +384,7 @@ public class ControladorAtencion {
 
     }
 
-    public void addPracticaToPeticion(PeticionDTO peticionDTO, PracticaDTO practicaDTO){
+    public void addPracticaToPeticion(PracticaDTO practicaDTO, PeticionDTO peticionDTO){
         int peticionID = peticionDTO.getPeticionID();
         int practicaID = practicaDTO.getCodigoPractica();
         Peticion peticionEncontrada = findPeticion(peticionID);
@@ -366,13 +393,19 @@ public class ControladorAtencion {
         if (peticionEncontrada != null && practicaEncontrada != null){
 
             peticionEncontrada.addPractica(practicaEncontrada);
+            try {
+                PeticionDAO peticionDAO = new PeticionDAO();
+                peticionDAO.actualizarPeticion(peticionEncontrada.toDTO());
+            } catch (Exception e) {
+                System.out.println("Error ocurrido: " + e);
+            }
 
             System.out.println(String.format("PeticionID: %d --> Agregada PracticaID: %d", peticionID, practicaDTO.getCodigoPractica()));
 
         }
     }
 
-    public void addPeticionToSucursal(SucursalDTO sucursalDTO, PeticionDTO peticionDTO){
+    public void addPeticionToSucursal( PeticionDTO peticionDTO, SucursalDTO sucursalDTO){
         int sucursalID = sucursalDTO.getSucursalID();
         int peticionID = peticionDTO.getPeticionID();
         Sucursal sucursalEncontrada = findSucursal(sucursalID);
@@ -380,24 +413,15 @@ public class ControladorAtencion {
         if (sucursalEncontrada != null && peticionEncontrada != null){
 
             sucursalEncontrada.addPeticion(peticionEncontrada);
+            try {
+                SucursalDAO sucursalDAO = new SucursalDAO();
+                sucursalDAO.actualizarSucursal(sucursalEncontrada.toDTO());
+            } catch (Exception e) {
+                System.out.println("Error ocurrido: " + e);
+            }
 
             System.out.println(String.format("SucursalID: %d --> Agregada PeticionID: %d", sucursalID, peticionID));
 
         }
-    }
-
-    public void addPeticionToPaciente(PacienteDTO pacienteDTO, PeticionDTO peticionDTO){
-        int pacienteID = pacienteDTO.getPacienteID();
-        int peticionID = peticionDTO.getPeticionID();
-        Paciente pacienteEncontrado = ControladorPaciente.getInstance().findPaciente(pacienteID);
-        Peticion peticionEncontrada = findPeticion(peticionID);
-        if (pacienteEncontrado != null && peticionEncontrada != null){
-
-            pacienteEncontrado.addPeticion(peticionEncontrada);
-
-            System.out.println(String.format("PacienteID: %d --> Agregada PeticionID: %d", pacienteID, peticionID));
-
-        }
-
     }
 }

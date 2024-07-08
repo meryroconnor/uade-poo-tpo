@@ -129,6 +129,46 @@ public abstract class GenericDAO<T> {
         return wasDeleted;
     }
 
+    public boolean update2(T obj, int id) throws Exception {
+        Field[] campos = clase.getDeclaredFields(); // recupero los nombres de atributos de las clases
+        String campoIdentificador = campos[0].getName(); //obtengo el nombre identificador de la clase
+        boolean wasUpdated = false;
+        try {
+            BufferedReader b = new BufferedReader(new FileReader(archivo));
+            StringBuffer inputBuffer = new StringBuffer();
+            String line;
+            JsonParser parser = new JsonParser();
+
+            while ((line = b.readLine()) != null) {
+                JsonObject jsonObject = parser.parse(line).getAsJsonObject();
+                if (Integer.parseInt(jsonObject.get(campoIdentificador).toString()) != id) {
+                    inputBuffer.append(line);
+                    inputBuffer.append('\n');
+                } else {
+                    // aca save updated obj
+                    Gson g = new Gson();
+                    String updated_obj = g.toJson(obj);
+                    inputBuffer.append(updated_obj);
+                    inputBuffer.append('\n');
+
+                    wasUpdated = true;
+                }
+            }
+            b.close();
+            String inputStr = inputBuffer.toString();
+
+            //System.out.println(inputStr);
+
+            FileOutputStream fileOut = new FileOutputStream(archivo);
+            fileOut.write(inputStr.getBytes());
+            fileOut.close();
+
+        } catch (Exception e) {
+            System.out.println("Problem reading file.");
+        }
+        return wasUpdated;
+    }
+
     public boolean update(T obj) throws Exception {
         Boolean wasUpdate = false;
         try {

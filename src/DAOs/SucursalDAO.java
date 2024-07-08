@@ -27,7 +27,7 @@ public class SucursalDAO extends GenericDAO {
     public boolean actualizarSucursal(SucursalDTO sucursalDTO) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(sucursalDTO);
+            fueActualizado = this.update2(sucursalDTO, sucursalDTO.getSucursalID());
         } catch (Exception e) {
             throw new Exception("Error al actualizar la Sucursal: " + e.getMessage(), e);
         }

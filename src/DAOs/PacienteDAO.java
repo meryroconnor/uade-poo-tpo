@@ -28,7 +28,7 @@ public class PacienteDAO extends GenericDAO {
     public boolean actualizarPaciente(PacienteDTO pacienteDTO) throws Exception {
         boolean fueActualizado = false;
         try {
-            fueActualizado = this.update(pacienteDTO); //1 - parametro DTO
+            fueActualizado = this.update2(pacienteDTO, pacienteDTO.getPacienteID());
         } catch (Exception e) {
             throw new Exception("Error al actualizar el paciente: " + e.getMessage(), e);
         }

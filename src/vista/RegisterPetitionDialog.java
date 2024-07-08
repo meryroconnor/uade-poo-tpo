@@ -1,8 +1,12 @@
 package vista;
 
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
 import DTOs.PracticaDTO;
 import DTOs.SucursalDTO;
+import Laboratorio.Peticion;
 import controlador.ControladorAtencion;
+import controlador.ControladorPaciente;
 import controlador.ControladorPractica;
 
 import javax.swing.*;
@@ -85,11 +89,34 @@ public class RegisterPetitionDialog extends JDialog {
 
     private void registrarPeticionEventos() {
         guardarButton.addActionListener(e -> {
-            ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
-            controladorAtencion.createPeticion();
-
-            // Esa peticion deberia asociarse a una sucursal
+            String dni = dniField.getText();
+            String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
             String sucursalDireccion = Objects.requireNonNull(sucursalComboBox.getSelectedItem().toString());
+
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            PacienteDTO pacienteDTO = controladorPaciente.getPaciente(dni, sexo);
+
+            if (pacienteDTO !=null) {// if paciente existe --> creo peticion y la asocio a sucursal y a paciente
+                ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+                PeticionDTO peticionDTO = controladorAtencion.createPeticion();
+
+                for (int i = 0; i < practicaListModel.size(); i++) {
+                    PracticaDTO practicaDTO =  getPractica(practicaListModel.getElementAt(i));
+                    controladorAtencion.addPracticaToPeticion(practicaDTO,peticionDTO);
+                }
+
+                controladorPaciente.addPeticionToPaciente(pacienteDTO, peticionDTO);
+                controladorAtencion.addPeticionToSucursal(peticionDTO, getSucursal(sucursalDireccion));
+
+                dispose();
+            } else {
+                // Mostrar un mensaje de error si no se encuentra el paciente
+                JOptionPane.showMessageDialog(this,
+                        "El paciente ingresado no existe!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
 
 
 
@@ -133,16 +160,29 @@ public class RegisterPetitionDialog extends JDialog {
         return vectorSucursales;
     }
 
-    private String[] getSucursalID(String SucursalDireccion){
+    private SucursalDTO getSucursal(String direccion){
         ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
-
         List<SucursalDTO> sucursales = controladorAtencion.getSucursales();
+        SucursalDTO sucursalEncontrada = null;
 
-        String[] vectorSucursales = new String[sucursales.size()];
-        for (int i = 0; i < sucursales.size(); i++){
-            vectorSucursales[i] = sucursales.get(i).getDireccion();
+        for (SucursalDTO sucursal : sucursales){
+            if (Objects.equals(sucursal.getDireccion(), direccion)) {
+                sucursalEncontrada = sucursal;
+            }
         }
-        return vectorSucursales;
+        return sucursalEncontrada;
+    }
+    private PracticaDTO getPractica(String nombrePractica){
+        ControladorPractica controladorPractica = ControladorPractica.getInstance();
+        List<PracticaDTO> practicas = controladorPractica.getPracticas();
+        PracticaDTO practicaEncontrada = null;
+
+        for (PracticaDTO practica : practicas){
+            if (Objects.equals(practica.getNombrePractica(), nombrePractica)) {
+                practicaEncontrada = practica;
+            }
+        }
+        return practicaEncontrada;
     }
 }
 
