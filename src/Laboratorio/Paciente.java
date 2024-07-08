@@ -1,5 +1,6 @@
 package Laboratorio;
 
+import DTOs.ObraSocialDTO;
 import DTOs.PacienteDTO;
 import DTOs.PeticionDTO;
 
@@ -15,47 +16,54 @@ public class Paciente {
     private ObraSocial obraSocial;
     private List<Peticion> peticiones;
 
-    // Constructor con modificador de acceso 'protected' para que solo el controlador pueda instanciarlo
-    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email) {
+    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email, String nombreObraSocial, int obraSocialID) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
         this.sexo = sexo;
         this.DNI = DNI;
         this.email= email;
         this.peticiones = new ArrayList<>();
+
+        // Permitir que obraSocial sea nulo
+        if (nombreObraSocial != null && obraSocialID != 0) {
+            this.obraSocial = new ObraSocial(nombreObraSocial, obraSocialID);
+        } else {
+            this.obraSocial = null;
+        }
     }
 
     public int getPacienteID() {
         return pacienteID;
     }
-
     public String getNombreApellido() {
         return nombreApellido;
     }
-
     public String getDNI() {
         return DNI;
     }
-
     public String getSexo() {
         return sexo;
     }
-
     public String getEmail() {
         return email;
     }
-
-    public void setObraSocial(ObraSocial obraSocial) {
-        this.obraSocial = obraSocial;
-    }
-
     public ObraSocial getObraSocial() {
         return obraSocial;
     }
-
     public List<Peticion> getPeticiones() {
         return peticiones;
     }
+
+    //public void setObraSocial(ObraSocial obraSocial) { this.obraSocial = obraSocial;}
+    public void setObraSocial(String nombreObraSocial, int obraSocialID) {
+        if (nombreObraSocial != null && obraSocialID != 0) {
+            this.obraSocial = new ObraSocial(nombreObraSocial, obraSocialID);
+        } else {
+            this.obraSocial = null;
+        }
+    }
+
+
 
     public void addPeticion(Peticion peticion) {
         peticiones.add(peticion);
@@ -81,7 +89,13 @@ public class Paciente {
         }
 
         // crear el DTO del paciente propio con los DTOs de cada peticion propia y el DTO de la obra social relacionada
-        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email, peticionesDTO, this.obraSocial.toDTO());
+        ObraSocialDTO obraSocialDTO;
+        if (obraSocial == null){
+            obraSocialDTO= new ObraSocialDTO(null, 0);
+        } else {
+            obraSocialDTO= this.obraSocial.toDTO();
+        }
+        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email, peticionesDTO, obraSocialDTO);
         return pacienteDTO;
     }
 }

@@ -1,4 +1,7 @@
 package vista;
+import DTOs.UserDTO;
+import controlador.ControladorUsuario;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +12,7 @@ public class LoginFrame extends JFrame{
     private JTextField inputUsername;
     private JButton ingresarButton;
     private JButton registrarmeButton;
+    private JTextField inputPassword;
 
     private LoginFrame self;
 
@@ -41,16 +45,19 @@ public class LoginFrame extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 String username = inputUsername.getText();
-                String rol = "admin";
-                System.out.println("El nombre de usuario es: " + username);
-                if(username.length() >= 1){ // ADD,aca va validacion para saber si es usuario o admin
-                    SingletonSistema.getInstance().setUsername(username);
-                    SingletonSistema.getInstance().setRol(rol);
-                    navegateSistema(rol); //si apretas ingresar te lleva a la pantalla de usuario(FrmUsuario)
-                }else {
+                String password = inputPassword.getText();
+                ControladorUsuario controladorUsuario = ControladorUsuario.getInstance();
 
+                UserDTO usuario = controladorUsuario.checkCredentials(username, password);
+                if (usuario != null){
+                    SingletonSistema.getInstance().setUsername(usuario.getUsername());
+                    SingletonSistema.getInstance().setRol(usuario.getRol());
+                    navegateSistema(usuario.getRol()); //si apretas ingresar te lleva a la pantalla de usuario(FrmUsuario)
+                    System.out.println(String.format("Username: %s >>> Rol: %s", usuario.getUsername(), usuario.getRol()));
+                } else {
+                    System.out.println("Usuario o Contraseña no valida");
+                    dispose();
                 }
-
             }
         });
     }

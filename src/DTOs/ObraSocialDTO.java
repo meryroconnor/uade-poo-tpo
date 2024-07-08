@@ -1,15 +1,21 @@
 package DTOs;
 
 public class ObraSocialDTO {
+    private int obraSocialID;
     private String obraSocial;
-    private int numeroAfiliado;
 
-    public ObraSocialDTO(String obraSocial, int numeroAfiliado){
+
+    public ObraSocialDTO(String obraSocial, int obraSocialID){
+        this.obraSocialID = obraSocialID;
         this.obraSocial = obraSocial;
-        this.numeroAfiliado = numeroAfiliado;
     }
 
-    public int getNumeroAfiliado() {
-        return numeroAfiliado;
+    public int getObraSocialID() {
+        return obraSocialID;
+    }
+
+    public String getObraSocial() {
+        return obraSocial;
     }
 }
+

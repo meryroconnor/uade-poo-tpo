@@ -1,24 +1,29 @@
 package vista;
 
+import DTOs.ObraSocialDTO;
+import DTOs.PacienteDTO;
+import controlador.ControladorPaciente;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Objects;
 
 public class PacientePanel extends JPanel {
 
-    private JTextField pacienteField;
     private JTextField dniField;
-    private JComboBox<String> osComboBox;
-    private JTextField osIDField;
+    private JComboBox sexoComboBox;
+    private JButton editarButton;
     private JButton buscarButton;
     private JButton agregarButton;
     private JButton eliminarButton;
     private JTextArea outputArea;
     private JPanel inputPanel;
     private JPanel sendPanel;
+
 
     public PacientePanel() {
         setLayout(new BorderLayout());
@@ -35,18 +40,17 @@ public class PacientePanel extends JPanel {
         dniField = new JTextField();
         inputPanel.add(dniField);
 
-        inputPanel.add(new JLabel("Paciente ID:"));
-        pacienteField = new JTextField();
-        inputPanel.add(pacienteField);
 
-        inputPanel.add(new JLabel("Obra Social:"));
-        osComboBox = new JComboBox<>(new String[] {"osde", "swiss medical"});
-        inputPanel.add(osComboBox);
+        inputPanel.add(new JLabel("Sexo:"));
+        sexoComboBox = new JComboBox<>(new String[]{"F", "M"});
+        inputPanel.add(sexoComboBox);
 
-        inputPanel.add(new JLabel("Obra Social ID:"));
-        osIDField = new JTextField();
-        inputPanel.add(osIDField);
+        inputPanel.add(new JLabel());
+        editarButton = new JButton("Editar Paciente");
+        editarButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/edit.png"))));
+        inputPanel.add(editarButton);
 
+        // Panel Con botones para accionar
         JPanel sendPanel = new JPanel(new GridLayout(2, 3));
 
         JLabel manageLabel = new JLabel(" ");
@@ -84,7 +88,6 @@ public class PacientePanel extends JPanel {
         this.asociarEventos();
 
     }
-
     private void asociarEventos() {
         // Action listener for "Agregar Paciente" button
         agregarButton.addActionListener(new ActionListener() {
@@ -100,14 +103,20 @@ public class PacientePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String dni = dniField.getText();
-                String pacienteID = pacienteField.getText();
-                String obraSocial = (String) osComboBox.getSelectedItem();
-                String osID = osIDField.getText();
-                outputArea.append("Eliminar Paciente:\n");
-                outputArea.append("DNI: " + dni + "\n");
-                outputArea.append("Paciente ID: " + pacienteID + "\n");
-                outputArea.append("Obra Social: " + obraSocial + "\n");
-                outputArea.append("Obra Social ID: " + osID + "\n\n");
+                String sexo = (String) sexoComboBox.getSelectedItem();
+
+                try {
+                    ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                    String output = controladorPaciente.deletePaciente(dni, sexo);
+
+
+                    outputArea.append(output);
+
+
+                } catch (Exception err) {
+                    outputArea.append("Error: " + err.getMessage() + "\n\n");
+                    err.printStackTrace();
+                }
             }
         });
 
@@ -116,17 +125,39 @@ public class PacientePanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String dni = dniField.getText();
-                String pacienteID = pacienteField.getText();
-                String obraSocial = (String) osComboBox.getSelectedItem();
-                String osID = osIDField.getText();
-                outputArea.append("Buscar Paciente:\n");
-                outputArea.append("DNI: " + dni + "\n");
-                outputArea.append("Paciente ID: " + pacienteID + "\n");
-                outputArea.append("Obra Social: " + obraSocial + "\n");
-                outputArea.append("Obra Social ID: " + osID + "\n\n");
+                String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
+
+                try {
+                    ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                    PacienteDTO pacienteDTO = controladorPaciente.getPaciente(dni, sexo);
+
+                    if (pacienteDTO != null) {
+                        outputArea.append("Buscar Paciente:\n");
+                        outputArea.append("Nombre: " + pacienteDTO.getNombreApellido() + "\n");
+                        outputArea.append("DNI: " + pacienteDTO.getDNI() + "\n");
+                        outputArea.append("Mail: " + pacienteDTO.getEmail() + "\n");
+                        outputArea.append("Sexo: " + pacienteDTO.getSexo() + "\n");
+                        outputArea.append("Paciente ID: " + pacienteDTO.getPacienteID() + "\n");
+
+                        if (pacienteDTO.getObraSocialDTO().getObraSocial() != null) {
+                            outputArea.append("Paciente tiene Obra Social");
+                            outputArea.append("Obra Social: " + pacienteDTO.getObraSocialDTO().getObraSocial() + "\n");
+                            outputArea.append("Obra Social ID: " + pacienteDTO.getObraSocialDTO().getObraSocialID() + "\n\n");
+                        } else {
+                            outputArea.append("Paciente NO tiene Obra Social \n\n");
+                        }
+                    } else {
+                        outputArea.append("PACIENTE NO ENCONTRADO\n\n");
+                    }
+
+                } catch (Exception err) {
+                    outputArea.append("Error al buscar el paciente: " + err.getMessage() + "\n\n");
+                    err.printStackTrace();
+                }
             }
         });
     }
+
 }
 
 

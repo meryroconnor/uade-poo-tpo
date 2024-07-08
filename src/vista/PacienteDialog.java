@@ -1,8 +1,16 @@
 package vista;
 
+import DTOs.ObraSocialDTO;
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
+import controlador.ControladorPaciente;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class PacienteDialog extends JDialog {
     private JTextField dniField, nombreField, emailField, fechaNacimientoField, nroAfiliadoField;
@@ -49,10 +57,10 @@ public class PacienteDialog extends JDialog {
         contentPanel.add(sexoComboBox);
 
         contentPanel.add(new JLabel("Obra Social:"));
-        obraSocialComboBox = new JComboBox<>(new String[]{"osde", "swiss medical"});
+        obraSocialComboBox = new JComboBox<>(Objects.requireNonNull(obtenerObrasSociales()));
         contentPanel.add(obraSocialComboBox);
 
-        contentPanel.add(new JLabel("Nro Afiliado:"));
+        contentPanel.add(new JLabel("Nro Afiliado:")); //sacar esto
         nroAfiliadoField = new JTextField();
         contentPanel.add(nroAfiliadoField);
 
@@ -76,14 +84,52 @@ public class PacienteDialog extends JDialog {
         this.registrarPacienteEventos();
     }
 
+    private String[] obtenerObrasSociales(){
+        try{
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            List<ObraSocialDTO> obrasSocialesDTO = controladorPaciente.getObrasSociales();
+            String[] obrasSociales = new String[obrasSocialesDTO.size()];
+            for (int i = 0; i < obrasSocialesDTO.size(); i++){
+                obrasSociales[i] = obrasSocialesDTO.get(i).getObraSocial();
+            }
+            return  obrasSociales;
+        } catch (Exception e){
+            System.out.println("Error ocurrido: " + e);
+        }
+        return null;
+    }
     private void registrarPacienteEventos() {
         guardarButton.addActionListener(e -> {
-            // Aquí iría la lógica para guardar los datos del paciente
+
+            String nombre = nombreField.getText();
+            String DNI = dniField.getText();
+            String mail = emailField.getText();
+            String nroAfiliadoText = nroAfiliadoField.getText();
+            String obraSocial = Objects.requireNonNull(obraSocialComboBox.getSelectedItem()).toString();
+            String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
+
+            ObraSocialDTO obraSocialDTO;
+            if (nroAfiliadoText.isEmpty() && "Sin Obra Social".equals(obraSocial)) {
+                obraSocialDTO = new ObraSocialDTO(null, 0);
+            } else {
+                int nroAfiliado = Integer.parseInt(nroAfiliadoText);
+                obraSocialDTO = new ObraSocialDTO(obraSocial, nroAfiliado);
+            }
+
+            List<PeticionDTO> peticionesDTO = new ArrayList<>();
+            PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail, peticionesDTO, obraSocialDTO);
+
+            try{
+                ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                controladorPaciente.createPaciente(pacienteDTO);
+            } catch (Exception err){
+                System.out.println("Error ocurrido: " + err.getMessage());
+            }
+
             dispose();
         });
 
         cancelButton.addActionListener(e -> dispose());
-
     }
 }
 

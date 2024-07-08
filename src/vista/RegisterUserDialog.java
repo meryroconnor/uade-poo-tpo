@@ -1,5 +1,8 @@
 package vista;
 
+import DTOs.UserDTO;
+import controlador.ControladorUsuario;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -59,18 +62,53 @@ public class RegisterUserDialog extends JDialog {
         buttonPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         guardarButton = new JButton("Guardar");
         guardarButton.setForeground(new Color(0, 141, 213));
-        guardarButton.addActionListener(e -> {
-            // Aquí iría la lógica para guardar los datos del paciente
-            dispose();
-        });
         buttonPanel.add(guardarButton);
 
         cancelButton = new JButton("Cancelar");
-        cancelButton.addActionListener(e -> dispose());
         buttonPanel.add(cancelButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 
         setLocationRelativeTo(owner);
+        this.asociarEventos();
     }
+
+    private void asociarEventos() {
+        // Registro de un nuevo usuario
+        guardarButton.addActionListener(e -> {
+            try {
+                validarDatos();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+            dispose();
+        });
+
+        // Boton Cancelar
+        cancelButton.addActionListener(e -> dispose());
+    }
+
+        public void validarDatos() throws Exception {
+            String dni = dniField.getText();
+            String nombre = nombreField.getText();
+            String mail = emailField.getText();
+            String username = usernameField.getText();
+            String rol = (String) rolComboBox.getSelectedItem();
+            String password= passwordField.getText();
+            System.out.println("Datos ingresados:" + dni + ", " + nombre + ", " + mail + ", " + username + ", " + rol + ", " + password);
+
+            UserDTO usuarioPropuesto = new UserDTO(0, nombre, mail, username, password, dni, rol);
+            //El userID en las  operaciones de creacion es un placeholder que el controlador sobrescribe
+
+            ControladorUsuario controladorUsuario = ControladorUsuario.getInstance();
+
+            try{
+                controladorUsuario.crearUsuario(usuarioPropuesto);
+            } catch (Exception e){
+                System.out.println("Error ocurrido: " + e);
+                dispose();
+            }
+
+
+        };
 }

@@ -1,11 +1,23 @@
 package vista;
 
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
+import DTOs.PracticaDTO;
+import DTOs.SucursalDTO;
+import Laboratorio.Peticion;
+import controlador.ControladorAtencion;
+import controlador.ControladorPaciente;
+import controlador.ControladorPractica;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
+import java.util.Objects;
 
 public class RegisterPetitionDialog extends JDialog {
-    private JTextField dniField, pacienteIDField;
+    private JTextField dniField;
+    private JComboBox<String> sexoComboBox, sucursalComboBox;
     private JComboBox<String> practicaComboBox;
     private JList<String> practicaList;
     private DefaultListModel<String> practicaListModel;
@@ -17,17 +29,24 @@ public class RegisterPetitionDialog extends JDialog {
         setSize(500, 500); // Ajustar tamaño para acomodar nuevos componentes
         setLayout(new BorderLayout());
 
-        // Panel norte con identificación del paciente y selección de prácticas
-        JPanel northPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        // Panel norte con identificación del paciente y selección de Sucursal y Prácticas
+        JPanel northPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         northPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         northPanel.add(new JLabel("DNI:"));
         dniField = new JTextField();
         northPanel.add(dniField);
-        northPanel.add(new JLabel("ID Paciente:"));
-        pacienteIDField = new JTextField();
-        northPanel.add(pacienteIDField);
+
+        northPanel.add(new JLabel("Sexo:"));
+        sexoComboBox = new JComboBox<>(new String[]{"F", "M"});
+        northPanel.add(sexoComboBox);
+
+
+        northPanel.add(new JLabel("Sucursal:"));
+        sucursalComboBox = new JComboBox<>(Objects.requireNonNull(getDireccionSucursal()));
+        northPanel.add(sucursalComboBox);
+
         northPanel.add(new JLabel("Seleccione una práctica:"));
-        practicaComboBox = new JComboBox<>(new String[]{"Glucemia", "Resonancia Magnetica", "Ecografia", "Mamografía"});
+        practicaComboBox = new JComboBox<>(Objects.requireNonNull(getNombrePracticas()));
         northPanel.add(practicaComboBox);
 
         add(northPanel, BorderLayout.NORTH);
@@ -69,7 +88,39 @@ public class RegisterPetitionDialog extends JDialog {
     }
 
     private void registrarPeticionEventos() {
-        guardarButton.addActionListener(e -> dispose());
+        guardarButton.addActionListener(e -> {
+            String dni = dniField.getText();
+            String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
+            String sucursalDireccion = Objects.requireNonNull(sucursalComboBox.getSelectedItem().toString());
+
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            PacienteDTO pacienteDTO = controladorPaciente.getPaciente(dni, sexo);
+
+            if (pacienteDTO !=null) {// if paciente existe --> creo peticion y la asocio a sucursal y a paciente
+                ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+                PeticionDTO peticionDTO = controladorAtencion.createPeticion();
+
+                for (int i = 0; i < practicaListModel.size(); i++) {
+                    PracticaDTO practicaDTO =  getPractica(practicaListModel.getElementAt(i));
+                    controladorAtencion.addPracticaToPeticion(practicaDTO,peticionDTO);
+                }
+
+                controladorPaciente.addPeticionToPaciente(pacienteDTO, peticionDTO);
+                controladorAtencion.addPeticionToSucursal(peticionDTO, getSucursal(sucursalDireccion));
+
+                dispose();
+            } else {
+                // Mostrar un mensaje de error si no se encuentra el paciente
+                JOptionPane.showMessageDialog(this,
+                        "El paciente ingresado no existe!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+
+
+
+        });
         cancelButton.addActionListener(e -> dispose());
         cargarItemButton.addActionListener(e -> {
             String selectedCategory = (String) practicaComboBox.getSelectedItem();
@@ -83,6 +134,55 @@ public class RegisterPetitionDialog extends JDialog {
                 practicaListModel.removeElement(selectedCategory);
             }
         });
+    }
+
+    private String[] getNombrePracticas(){
+        ControladorPractica controladorPractica = ControladorPractica.getInstance();
+
+        List<PracticaDTO> practicas = controladorPractica.getPracticas();
+
+        String[] vectorPracticas = new String[practicas.size()];
+        for (int i = 0; i < practicas.size(); i++){
+            vectorPracticas[i] = practicas.get(i).getNombrePractica();
+        }
+        return vectorPracticas;
+    }
+
+    private String[] getDireccionSucursal(){
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+
+        List<SucursalDTO> sucursales = controladorAtencion.getSucursales();
+
+        String[] vectorSucursales = new String[sucursales.size()];
+        for (int i = 0; i < sucursales.size(); i++){
+            vectorSucursales[i] = sucursales.get(i).getDireccion();
+        }
+        return vectorSucursales;
+    }
+
+    private SucursalDTO getSucursal(String direccion){
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+        List<SucursalDTO> sucursales = controladorAtencion.getSucursales();
+        SucursalDTO sucursalEncontrada = null;
+
+        for (SucursalDTO sucursal : sucursales){
+            if (Objects.equals(sucursal.getDireccion(), direccion)) {
+                sucursalEncontrada = sucursal;
+            }
+        }
+        return sucursalEncontrada;
+    }
+    private PracticaDTO getPractica(String nombrePractica){
+        ControladorPractica controladorPractica = ControladorPractica.getInstance();
+        List<PracticaDTO> practicas = controladorPractica.getPracticas();
+        PracticaDTO practicaEncontrada = null;
+
+        for (PracticaDTO practica : practicas){
+            if (Objects.equals(practica.getNombrePractica(), nombrePractica)) {
+                practicaEncontrada = practica;
+            }
+        }
+        return practicaEncontrada;
     }
 }
 

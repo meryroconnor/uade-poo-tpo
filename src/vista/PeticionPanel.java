@@ -1,5 +1,12 @@
 package vista;
 
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
+import DTOs.PracticaDTO;
+import DTOs.SucursalDTO;
+import controlador.ControladorAtencion;
+import controlador.ControladorPaciente;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -7,6 +14,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Objects;
 
 public class PeticionPanel extends JPanel {
@@ -114,6 +122,11 @@ public class PeticionPanel extends JPanel {
             }
         });
 
+        getAllButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {actualizarTablaConTodasLasPeticiones();}
+        });
+
         // Configurar el botón de creación
         settingsButton.addActionListener(new ActionListener() {
             @Override
@@ -133,6 +146,31 @@ public class PeticionPanel extends JPanel {
                 System.out.println("Eliminar petición");
             }
         });
+    }
+    // Método para actualizar la tabla con todas las peticiones
+    private void actualizarTablaConTodasLasPeticiones() {
+        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+        List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
+
+        tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
+        for (PacienteDTO paciente : pacientes) {
+            if (paciente.getPeticionesDTO().size()!=0) {
+                for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
+                    for (PracticaDTO practica : peticion.getPracticasDTO()) {
+
+                        Object[] rowData = new Object[]{
+                                peticion.getPeticionID(),
+                                paciente.getPacienteID(),
+                                practica.getNombrePractica(),
+                                "Resultado", // Ajustar manejo de los resultados
+                                "Retirar por sucursal", // Asumiendo que tienes algún flag o método para determinar esto
+                                "peticion.getSucursalID()" // Hay que reveer diseño
+                        };
+                        tableModel.addRow(rowData);
+                    }
+                }
+            }
+        }
     }
 
     private void applyFilters() {

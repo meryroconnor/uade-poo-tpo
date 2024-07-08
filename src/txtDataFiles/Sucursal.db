@@ -1,0 +1,1 @@
+{"sucursalID":1,"direccion":"Barrio Norte","responsableMatricula":12456,"peticionesDTO":[{"peticionID":1,"resultadosDTO":[],"practicasDTO":[{"codigoPractica":1,"nombrePractica":"Test de Orina: Aminoácidos Totales","indiceReservadoDTO":{"value":"No aplica","lowLimit":600.0,"highLimit":800.0},"indiceCriticoDTO":{"value":"No aplica","lowLimit":2000.0,"highLimit":5000.0}}]}]}

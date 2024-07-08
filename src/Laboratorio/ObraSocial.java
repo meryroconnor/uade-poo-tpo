@@ -3,24 +3,25 @@ package Laboratorio;
 import DTOs.ObraSocialDTO;
 
 public class ObraSocial {
+    private int obraSocialID;
     private String obraSocial;
-    private int numeroAfilicion;
 
-    public ObraSocial(String obraSocial, int numeroAfilicion) {
+
+    public ObraSocial(String obraSocial, int obraSocialID) {
         this.obraSocial = obraSocial;
-        this.numeroAfilicion = numeroAfilicion;
+        this.obraSocialID = obraSocialID;
     }
 
     public String getObraSocial() {
         return obraSocial;
     }
 
-    public int getNumeroAfilicion() {
-        return numeroAfilicion;
+    public int getObraSocialID() {
+        return obraSocialID;
     }
 
     public ObraSocialDTO toDTO(){
-        ObraSocialDTO obraSocialDTO = new ObraSocialDTO(this.obraSocial, this.numeroAfilicion);
+        ObraSocialDTO obraSocialDTO = new ObraSocialDTO(this.obraSocial, this.obraSocialID);
         return obraSocialDTO;
     }
 }
