@@ -3,6 +3,7 @@ package vista;
 import DTOs.PacienteDTO;
 import DTOs.PeticionDTO;
 import DTOs.PracticaDTO;
+import DTOs.SucursalDTO;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 
@@ -156,13 +157,14 @@ public class PeticionPanel extends JPanel {
             if (paciente.getPeticionesDTO().size()!=0) {
                 for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
                     for (PracticaDTO practica : peticion.getPracticasDTO()) {
+
                         Object[] rowData = new Object[]{
                                 peticion.getPeticionID(),
                                 paciente.getPacienteID(),
-                                practica.getNombrePractica(), // Asumiendo que tienes un método para obtener la práctica
-                                "Resultado", // Deberías ajustar esto según cómo manejas los resultados
+                                practica.getNombrePractica(),
+                                "Resultado", // Ajustar manejo de los resultados
                                 "Retirar por sucursal", // Asumiendo que tienes algún flag o método para determinar esto
-                                "peticion.getSucursalID()" // Asumiendo que puedes obtener la sucursal de alguna manera
+                                "peticion.getSucursalID()" // Hay que reveer diseño
                         };
                         tableModel.addRow(rowData);
                     }
