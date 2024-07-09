@@ -4,10 +4,7 @@ import DAOs.PacienteDAO;
 import DAOs.PeticionDAO;
 import DAOs.PracticaDAO;
 import DAOs.SucursalDAO;
-import DTOs.PacienteDTO;
-import DTOs.PeticionDTO;
-import DTOs.PracticaDTO;
-import DTOs.SucursalDTO;
+import DTOs.*;
 import Laboratorio.*;
 
 import java.util.ArrayList;
@@ -159,7 +156,7 @@ public class ControladorAtencion {
 
         for(PeticionDTO peticionDTO : peticionDTOS){
             cargarPeticion(peticionDTO.getPeticionID());
-            for (PracticaDTO practicaDTO: peticionDTO.getPracticasDTO()){ addPracticaToPeticion(practicaDTO, peticionDTO);}
+            for (EstudioDTO estudioDTO: peticionDTO.getEstudiosDTO()){ addEstudioToPeticion(estudioDTO, peticionDTO);}
             if (peticionDTO.getPeticionID()> maxPeticionID) {maxPeticionID = peticionDTO.getPeticionID();}
         }
 
@@ -242,8 +239,10 @@ public class ControladorAtencion {
     private List<Peticion> getPeticionesActivas(Sucursal sucursal) {
         List<Peticion> peticionesActivas = new ArrayList<>();
         for (Peticion peticion : sucursal.getPeticiones()) {
-            if (peticion.tieneResultados()) {
-                peticionesActivas.add(peticion);
+            for (Estudio estudio : peticion.getEstudios()) {
+                if (estudio.tieneResultado()) {
+                    peticionesActivas.add(peticion);
+                }
             }
         }
         return peticionesActivas;
@@ -274,36 +273,37 @@ public class ControladorAtencion {
     public List<Integer> listarPeticionesConResultadoCritico() { //modificar a dto? solo devuelve enteros.
         List<Integer> peticionesCriticas = new ArrayList<>();
         for (Peticion peticion : peticiones) {
-            for (Resultado resultado : peticion.getResultados()) {
-                if (resultado.isResultadoCritico()){
+            for (Estudio estudio: peticion.getEstudios()) {
+                if (estudio.isResultadoCritico()) {
                     peticionesCriticas.add(peticion.getPeticionID());
                 }
+
             }
         }
         return peticionesCriticas;
     }
 
-    public void showResultados(int peticionID) {
-        Peticion peticionBuscada = null;
-        for (Peticion peticion : peticiones) {
-            if (peticion.getPeticionID() == peticionID) {
-                peticionBuscada = peticion;
-                for (Resultado resultado: peticion.getResultados()){
-                    System.out.println("RESULTADOS PETICION #"+ peticionID);
-                    if(resultado.isResultadoReservado()){
-                        System.out.println("Practica #" +resultado.getPractica().getCodigoPractica() + "= RETIRAR POR SUCURSAL");
-                    } else {
-                        System.out.println("Practica #" +resultado.getPractica().getCodigoPractica()+ "=" + resultado.getDescripcionResultado() + resultado.getValorResultado());
-                    }
-                    break;
-                }
-            }
-        }
-        if (peticionBuscada == null) {
-            System.out.println("La peticion solicitada no existe.");
-        }
-
-    }
+//    public void showResultados(int peticionID) {
+//        Peticion peticionBuscada = null;
+//        for (Peticion peticion : peticiones) {
+//            if (peticion.getPeticionID() == peticionID) {
+//                peticionBuscada = peticion;
+//                for (Resultado resultado: peticion.getResultados()){
+//                    System.out.println("RESULTADOS PETICION #"+ peticionID);
+//                    if(resultado.isResultadoReservado()){
+//                        System.out.println("Practica #" +resultado.getPractica().getCodigoPractica() + "= RETIRAR POR SUCURSAL");
+//                    } else {
+//                        System.out.println("Practica #" +resultado.getPractica().getCodigoPractica()+ "=" + resultado.getDescripcionResultado() + resultado.getValorResultado());
+//                    }
+//                    break;
+//                }
+//            }
+//        }
+//        if (peticionBuscada == null) {
+//            System.out.println("La peticion solicitada no existe.");
+//        }
+//
+//    }
 
     // Método para obtener la lista de sucursales (opcional)
     public List<SucursalDTO> getSucursales() {
@@ -348,17 +348,6 @@ public class ControladorAtencion {
         return peticionEncontrada;
     }
 
-    private Practica findPracticaInPeticion(Peticion peticion, int codigoPractica){
-        Practica practicaEncontrada = null;
-        for(Practica practica : peticion.getPracticas()){
-            if (practica.getCodigoPractica() == codigoPractica){
-                practicaEncontrada = practica;
-                break;
-            }
-        }
-        return practicaEncontrada;
-    }
-
     private Sucursal findSucursal(int sucursalID){
         Sucursal sucursalEncontrada = null;
 
@@ -371,28 +360,28 @@ public class ControladorAtencion {
         return  sucursalEncontrada;
     }
 
-    public void addResultadoToPeticion(PeticionDTO peticionDTO, PracticaDTO practicaDTO, float valorResultado, String descripcionResultado){
+//    public void addResultadoToPeticion(PeticionDTO peticionDTO, PracticaDTO practicaDTO, float valorResultado, String descripcionResultado){
+//        int peticionID = peticionDTO.getPeticionID();
+//        Peticion peticionEncontrada = findPeticion(peticionID);
+//        Practica practicaEncontrada = findPracticaInPeticion(peticionEncontrada, practicaDTO.getCodigoPractica());
+//        if (peticionEncontrada != null && practicaEncontrada != null){
+//
+//            peticionEncontrada.addResultado(valorResultado, descripcionResultado, practicaEncontrada);
+//
+//            System.out.println(String.format("PeticionID: %d >>> PracticaID: %d --> Agregado Resultado >>> valorResultado: %f, descripcionResultado: %s", peticionID, practicaDTO.getCodigoPractica(), valorResultado, descripcionResultado));
+//        }
+//
+//    }
+
+    public void addEstudioToPeticion(EstudioDTO estudioDTO, PeticionDTO peticionDTO){
         int peticionID = peticionDTO.getPeticionID();
+        int codigoPractica= estudioDTO.getPracticaDTO().getCodigoPractica();
         Peticion peticionEncontrada = findPeticion(peticionID);
-        Practica practicaEncontrada = findPracticaInPeticion(peticionEncontrada, practicaDTO.getCodigoPractica());
+        Practica practicaEncontrada = ControladorPractica.getInstance().findPractica(codigoPractica);
+
         if (peticionEncontrada != null && practicaEncontrada != null){
 
-            peticionEncontrada.addResultado(valorResultado, descripcionResultado, practicaEncontrada);
-
-            System.out.println(String.format("PeticionID: %d >>> PracticaID: %d --> Agregado Resultado >>> valorResultado: %f, descripcionResultado: %s", peticionID, practicaDTO.getCodigoPractica(), valorResultado, descripcionResultado));
-        }
-
-    }
-
-    public void addPracticaToPeticion(PracticaDTO practicaDTO, PeticionDTO peticionDTO){
-        int peticionID = peticionDTO.getPeticionID();
-        int practicaID = practicaDTO.getCodigoPractica();
-        Peticion peticionEncontrada = findPeticion(peticionID);
-        Practica practicaEncontrada = ControladorPractica.getInstance().findPractica(practicaID);
-
-        if (peticionEncontrada != null && practicaEncontrada != null){
-
-            peticionEncontrada.addPractica(practicaEncontrada);
+            peticionEncontrada.addEstudio(practicaEncontrada, estudioDTO.getResultadoDTO().getValorResultado(), estudioDTO.getResultadoDTO().getDescripcionResultado());
             try {
                 PeticionDAO peticionDAO = new PeticionDAO();
                 peticionDAO.actualizarPeticion(peticionEncontrada.toDTO());
@@ -400,7 +389,7 @@ public class ControladorAtencion {
                 System.out.println("Error ocurrido: " + e);
             }
 
-            System.out.println(String.format("PeticionID: %d --> Agregada PracticaID: %d", peticionID, practicaDTO.getCodigoPractica()));
+            System.out.println(String.format("PeticionID: %d --> Agregada Estudio para practica: %d", peticionID, estudioDTO.getPracticaDTO().getCodigoPractica()));
 
         }
     }

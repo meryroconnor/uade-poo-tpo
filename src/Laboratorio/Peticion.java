@@ -10,13 +10,13 @@ import java.util.List;
 
 public class Peticion {
     private int peticionID;
-    //private List<Resultado> resultados;
-    //private List<Practica> practicas;
+    private int nextCodigoEstudio;
     private List<Estudio> estudios;
 
     public Peticion(int peticionID) {
         this.peticionID = peticionID;
         this.estudios = new ArrayList<>();
+        this.nextCodigoEstudio=1;
     }
 
     public int getPeticionID() {
@@ -28,29 +28,9 @@ public class Peticion {
         return estudios;
     }
 
-    public void addEstudio(Estudio estudio) {
-        this.estudios.add(estudio);
+    public void addEstudio(Practica practica, float valorResultado, String descripcionResultado) {
+        this.estudios.add(new Estudio(nextCodigoEstudio++, practica, valorResultado, descripcionResultado));
     }
-
-//    public List<Resultado> getResultados() {
-//        return resultados;
-//    }
-//
-//    public void addResultado(float valorResultado, String descripcionResultado, Practica practica) {
-//        this.resultados.add(new Resultado(valorResultado, descripcionResultado, practica));
-//    }
-
-//    public List<Practica> getPracticas() {
-//        return practicas;
-//    }
-//
-//    public void addPractica(Practica practica) {
-//        practicas.add(practica);
-//    }
-//
-//    public boolean tieneResultados() {
-//        return !resultados.isEmpty();
-//    }
 
     public PeticionDTO toDTO(){
         List<EstudioDTO> estudioDTOS = new ArrayList<>();
@@ -62,9 +42,6 @@ public class Peticion {
         PeticionDTO peticionDTO = new PeticionDTO(this.peticionID, estudioDTOS);
         return peticionDTO;
     }
-
-
-
 }
 
 

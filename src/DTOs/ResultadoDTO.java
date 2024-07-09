@@ -10,4 +10,12 @@ public class ResultadoDTO {
         this.valorResultado = valorResultado;
         this.descripcionResultado = descripcionResultado;
     }
+
+    public float getValorResultado() {
+        return valorResultado;
+    }
+
+    public String getDescripcionResultado() {
+        return descripcionResultado;
+    }
 }

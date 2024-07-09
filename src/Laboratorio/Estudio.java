@@ -1,6 +1,7 @@
 package Laboratorio;
 
 import DTOs.EstudioDTO;
+import DTOs.ObraSocialDTO;
 import DTOs.PracticaDTO;
 import DTOs.ResultadoDTO;
 
@@ -71,7 +72,13 @@ public class Estudio {
 
     public EstudioDTO toDTO(){
         PracticaDTO practicaDTO = practica.toDTO();
-        ResultadoDTO resultadoDTO = resultado.toDTO();
+        ResultadoDTO resultadoDTO;
+
+        if (resultado == null){
+            resultadoDTO= new ResultadoDTO(0, null);
+        } else {
+            resultadoDTO= this.resultado.toDTO();
+        }
 
 
         EstudioDTO estudioDTO = new EstudioDTO(this.codigoEstudio, practicaDTO, resultadoDTO);

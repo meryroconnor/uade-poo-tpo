@@ -1,9 +1,6 @@
 package vista;
 
-import DTOs.PacienteDTO;
-import DTOs.PeticionDTO;
-import DTOs.PracticaDTO;
-import DTOs.SucursalDTO;
+import DTOs.*;
 import Laboratorio.Peticion;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
@@ -102,7 +99,9 @@ public class RegisterPetitionDialog extends JDialog {
 
                 for (int i = 0; i < practicaListModel.size(); i++) {
                     PracticaDTO practicaDTO =  getPractica(practicaListModel.getElementAt(i));
-                    controladorAtencion.addPracticaToPeticion(practicaDTO,peticionDTO);
+                    ResultadoDTO resultadoDTO = new ResultadoDTO(0,null);
+                    EstudioDTO estudioDTO = new EstudioDTO(0, practicaDTO, resultadoDTO);
+                    controladorAtencion.addEstudioToPeticion(estudioDTO,peticionDTO);
                 }
 
                 controladorPaciente.addPeticionToPaciente(pacienteDTO, peticionDTO);
