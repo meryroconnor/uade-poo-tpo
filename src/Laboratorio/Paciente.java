@@ -71,9 +71,12 @@ public class Paciente {
 
     public boolean tieneResultadosFinalizados() {
         for (Peticion peticion : peticiones) {
-            if (peticion.tieneResultados()) {
-                return true;
+            for (Estudio estudio : peticion.getEstudios()){
+                if (estudio.tieneResultado()) {
+                    return true;
+                }
             }
+
         }
         return false;
     }

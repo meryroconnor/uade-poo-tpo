@@ -4,26 +4,21 @@ import java.util.List;
 
 public class PeticionDTO {
     private int peticionID;
-    private List<ResultadoDTO> resultadosDTO;
-    private List<PracticaDTO> practicasDTO;
+    private List<EstudioDTO> estudiosDTO;
 
-    public PeticionDTO(int peticionID, List<ResultadoDTO> resultadosDTO, List<PracticaDTO> practicasDTOs){
+    public PeticionDTO(int peticionID, List<EstudioDTO> estudiosDTO){
         this.peticionID = peticionID;
-        this.resultadosDTO = resultadosDTO;
-        this.practicasDTO = practicasDTOs;
+        this.estudiosDTO = estudiosDTO;
     }
 
     public int getPeticionID() {
         return peticionID;
     }
 
-    public List<PracticaDTO> getPracticasDTO() {
-        return practicasDTO;
+    public List<EstudioDTO> getEstudiosDTO() {
+        return estudiosDTO;
     }
 
-    public List<ResultadoDTO> getResultadosDTO() {
-        return resultadosDTO;
-    }
 
 
 }
