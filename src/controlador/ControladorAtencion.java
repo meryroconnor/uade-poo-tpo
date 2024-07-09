@@ -283,27 +283,22 @@ public class ControladorAtencion {
         return peticionesCriticas;
     }
 
-//    public void showResultados(int peticionID) {
-//        Peticion peticionBuscada = null;
-//        for (Peticion peticion : peticiones) {
-//            if (peticion.getPeticionID() == peticionID) {
-//                peticionBuscada = peticion;
-//                for (Resultado resultado: peticion.getResultados()){
-//                    System.out.println("RESULTADOS PETICION #"+ peticionID);
-//                    if(resultado.isResultadoReservado()){
-//                        System.out.println("Practica #" +resultado.getPractica().getCodigoPractica() + "= RETIRAR POR SUCURSAL");
-//                    } else {
-//                        System.out.println("Practica #" +resultado.getPractica().getCodigoPractica()+ "=" + resultado.getDescripcionResultado() + resultado.getValorResultado());
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//        if (peticionBuscada == null) {
-//            System.out.println("La peticion solicitada no existe.");
-//        }
-//
-//    }
+    public String showResultados(int peticionID, int codigoEstudio) {
+        Estudio estudioBuscado = findEstudioInPeticion(peticionID,codigoEstudio);
+        if (!estudioBuscado.tieneResultado()){
+            return "No disponible";
+        }else {
+            if (estudioBuscado.isResultadoReservado()){
+                return "Retirar por sucursal";
+            } else if (estudioBuscado.isResultadoCritico()) {
+                return "Resultado Critico contactar Paciente";
+            }else {
+                String descripcion = estudioBuscado.getResultado().getDescripcionResultado();
+                Float valor = estudioBuscado.getResultado().getValorResultado();
+                return descripcion==null ? Objects.toString(valor) : descripcion;
+            }
+        }
+    }
 
     // Método para obtener la lista de sucursales (opcional)
     public List<SucursalDTO> getSucursales() {
@@ -360,18 +355,56 @@ public class ControladorAtencion {
         return  sucursalEncontrada;
     }
 
-//    public void addResultadoToPeticion(PeticionDTO peticionDTO, PracticaDTO practicaDTO, float valorResultado, String descripcionResultado){
-//        int peticionID = peticionDTO.getPeticionID();
-//        Peticion peticionEncontrada = findPeticion(peticionID);
-//        Practica practicaEncontrada = findPracticaInPeticion(peticionEncontrada, practicaDTO.getCodigoPractica());
-//        if (peticionEncontrada != null && practicaEncontrada != null){
-//
-//            peticionEncontrada.addResultado(valorResultado, descripcionResultado, practicaEncontrada);
-//
-//            System.out.println(String.format("PeticionID: %d >>> PracticaID: %d --> Agregado Resultado >>> valorResultado: %f, descripcionResultado: %s", peticionID, practicaDTO.getCodigoPractica(), valorResultado, descripcionResultado));
-//        }
-//
-//    }
+    private Estudio findEstudioInPeticion(int peticionID, int codigoEstudio){
+        Peticion peticionEncontrada = findPeticion(peticionID);
+        Estudio estudioEncontrado = null;
+
+        for(Estudio estudio : peticionEncontrada.getEstudios()){
+            if (codigoEstudio == estudio.getCodigoEstudio()){
+                estudioEncontrado = estudio;
+                break;
+            }
+        }
+        return  estudioEncontrado;
+    }
+
+    private Estudio findEstudioFromPractica(Peticion peticion, int codigoPractica){
+        Estudio estudioEncontrado = null;
+
+        for(Estudio estudio : peticion.getEstudios()){
+            if (estudio.getPractica().getCodigoPractica() == codigoPractica){
+                estudioEncontrado = estudio;
+                break;
+            }
+        }
+        return  estudioEncontrado;
+    }
+
+    public SucursalDTO obtenerSucursalOfPeticion(int peticionID){
+        SucursalDTO sucursalDTO = null;
+
+        for(Sucursal sucursal : sucursales){
+            for (Peticion peticion : sucursal.getPeticiones()){
+                if (peticion.getPeticionID() == peticionID){
+                    sucursalDTO = sucursal.toDTO();
+                    return sucursalDTO;
+                }
+            }
+        }
+        return  sucursalDTO;
+    }
+
+    public void addResultadoToEstudio(int peticionID, int codigoPractica, float valorResultado, String descripcionResultado){
+        Peticion peticionEncontrada = findPeticion(peticionID);
+        Estudio estudioEncontrado = findEstudioFromPractica(peticionEncontrada, codigoPractica);
+        if (peticionEncontrada != null && estudioEncontrado != null){
+
+            estudioEncontrado.setResultado(valorResultado, descripcionResultado);
+
+            System.out.println(String.format("PeticionID: %d >>> PracticaID: %d --> Agregado Resultado >>> valorResultado: %f, descripcionResultado: %s", peticionID, codigoPractica, valorResultado, descripcionResultado));
+        }
+
+    }
 
     public void addEstudioToPeticion(EstudioDTO estudioDTO, PeticionDTO peticionDTO){
         int peticionID = peticionDTO.getPeticionID();

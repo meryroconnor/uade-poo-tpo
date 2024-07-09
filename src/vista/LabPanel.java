@@ -1,5 +1,11 @@
 package vista;
 
+import DTOs.EstudioDTO;
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
+import controlador.ControladorAtencion;
+import controlador.ControladorPaciente;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -8,6 +14,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Objects;
 
 public class LabPanel extends JPanel {
@@ -42,7 +49,7 @@ public class LabPanel extends JPanel {
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
-        String[] columnNames = {"Petición ID", "Práctica", "Resultado", "Retirar por sucursal"};
+        String[] columnNames = {"Petición ID", "Práctica", "Resultado"};
         Object[][] data = {}; // Data inicial vacía
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
@@ -84,36 +91,63 @@ public class LabPanel extends JPanel {
         // Configurar el botón de filtrado
         getAllButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                applyFilters();
+            public void actionPerformed(ActionEvent e) { actualizarTablaConBusquedaFiltrada();
             }
         });
     }
 
     private void createResult(Object petitionID, Object practiceID, Object result) {
-        // Llamar a la lógica de negocio o al controlador para manejar la creación de un nuevo resultado
+        // tenemos que convertir el nombre de la practica en su id
+        // tenemos que entener que cargo si valor o descripcion
+//        Float valorResultado;
+//        String descripcion;
+//
+//        Objects.toString(result);
+
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+        controladorAtencion.addResultadoToEstudio(petitionID, practiceID, valorResultado, descripcion);
+
         System.out.println("Crear resultado para Petición ID: " + petitionID + ", Práctica: " + practiceID + ", Resultado: " + result);
-        // Aquí puedes colocar el código que interactúa con la base de datos o el backend
-    }
-
-    private void applyFilters() {
-        // Implementación del filtrado según los inputs
-        String requestId = filterRequestId.getText().trim();
-
-        // Aquí deberías reemplazar estos datos con una consulta real
-        Object[][] newData = {
-                {requestId, "Análisis de Sangre", "Normal", "No"},
-                {requestId, "Rayos X", "Fractura detectada", "Sí"}
-        };
-
-        tableModel.setRowCount(0);
-        for (Object[] row : newData) {
-            tableModel.addRow(row);
-        }
     }
 
     public void addRow(Object[] rowData) {
         tableModel.addRow(rowData);
+    }
+
+    private void actualizarTablaConBusquedaFiltrada() {
+        try {
+            int peticionID = Integer.parseInt(filterRequestId.getText());
+
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
+            ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+
+            tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
+            for (PacienteDTO paciente : pacientes) {
+                if (paciente.getPeticionesDTO().size() != 0) {
+                    for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
+                        if (peticion.getPeticionID() == peticionID) {
+                            for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
+                                String resultado = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
+
+                                Object[] rowData = new Object[]{
+                                        peticion.getPeticionID(),
+                                        estudio.getPracticaDTO().getNombrePractica(),
+                                        resultado
+                                };
+                                tableModel.addRow(rowData);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch(Exception e) {
+            // Mostrar un mensaje de error si no se encuentra el paciente
+            JOptionPane.showMessageDialog(this,
+                    "Debe ingresar el ID de la Peticion!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
 
