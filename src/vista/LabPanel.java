@@ -104,13 +104,13 @@ public class LabPanel extends JPanel {
         Float valorResultado;
         String descripcion;
 
-        if (result instanceof Number) {
-            valorResultado = ((Number) result).floatValue();
+        try {
+            valorResultado = Float.parseFloat(result.toString());
             descripcion = null;
-        } else {
-            descripcion = result.toString();
-            valorResultado = 0f;
-        }
+        } catch(Exception e) {descripcion = result.toString();
+            valorResultado = 0f;}
+
+
 
         PracticaDTO practica = getPractica(nombrePractica);
         ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
