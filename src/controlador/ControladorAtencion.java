@@ -44,7 +44,7 @@ public class ControladorAtencion {
         Peticion peticion = new Peticion(nextPeticionID++);
         PeticionDTO peticionDTO = peticion.toDTO();
 
-        if (getPeticion(peticion.toDTO()) == null){
+        if (getPeticion(peticion.getPeticionID()) == null){
             peticiones.add(peticion);
             if (getPeticionFromDAO(peticion.toDTO()) == null){
                 savePeticionToDAO(peticion.toDTO());
@@ -73,16 +73,16 @@ public class ControladorAtencion {
         }
     }
 
-    public PeticionDTO getPeticion(PeticionDTO peticionParam){
+    public PeticionDTO getPeticion(int peticionID){
+        Peticion peticion = findPeticion(peticionID);
         PeticionDTO peticionEncontrada = null;
-        for (Peticion peticion : peticiones){
-            if(peticionParam.getPeticionID() == peticion.getPeticionID()){
-                peticionEncontrada = peticion.toDTO();
-                break;
-            }
+
+        if (peticion != null) {
+            peticionEncontrada = peticion.toDTO();
         }
-        return peticionEncontrada;
+            return peticionEncontrada;
     }
+
 
 
 
@@ -116,7 +116,7 @@ public class ControladorAtencion {
     public void cargarPeticion(int peticionID) {
         Peticion peticion = new Peticion(peticionID);
 
-        if (getPeticion(peticion.toDTO()) == null){
+        if (getPeticion(peticion.getPeticionID()) == null){
             peticiones.add(peticion);
             if (getPeticionFromDAO(peticion.toDTO()) == null){
                 savePeticionToDAO(peticion.toDTO());
@@ -400,6 +400,23 @@ public class ControladorAtencion {
         if (peticionEncontrada != null && estudioEncontrado != null){
 
             estudioEncontrado.setResultado(valorResultado, descripcionResultado);
+            try {
+                PeticionDAO peticionDAO = new PeticionDAO();
+                peticionDAO.actualizarPeticion(peticionEncontrada.toDTO());
+
+                ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                Paciente paciente = controladorPaciente.getPacienteFromPeticion(peticionID);
+
+                PacienteDAO pacienteDAO = new PacienteDAO();
+                pacienteDAO.actualizarPaciente(paciente.toDTO());
+
+                SucursalDAO sucursalDAO = new SucursalDAO();
+                sucursalDAO.actualizarSucursal(obtenerSucursalOfPeticion(peticionID));
+
+            } catch (Exception e) {
+                System.out.println("Error ocurrido: " + e);
+            }
+
 
             System.out.println(String.format("PeticionID: %d >>> PracticaID: %d --> Agregado Resultado >>> valorResultado: %f, descripcionResultado: %s", peticionID, codigoPractica, valorResultado, descripcionResultado));
         }

@@ -3,8 +3,10 @@ package vista;
 import DTOs.EstudioDTO;
 import DTOs.PacienteDTO;
 import DTOs.PeticionDTO;
+import DTOs.PracticaDTO;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
+import controlador.ControladorPractica;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -81,9 +83,10 @@ public class LabPanel extends JPanel {
                     int row = e.getFirstRow();
                     int column = e.getColumn();
                     Object data = tableModel.getValueAt(row, column);
-                    Object petitionID = tableModel.getValueAt(row, 0); // la Petición ID está en la columna 0
-                    Object practiceID = tableModel.getValueAt(row, 1); // la Práctica está en la columna 2
-                    createResult(petitionID, practiceID, data);
+                    int peticionID = Integer.parseInt(tableModel.getValueAt(row, 0).toString()); // la Petición ID está en la columna 0
+                    String nombrePractica = tableModel.getValueAt(row, 1).toString(); // la Práctica está en la columna 2
+
+                    createResult(peticionID, nombrePractica, data);
                 }
             }
         });
@@ -91,23 +94,31 @@ public class LabPanel extends JPanel {
         // Configurar el botón de filtrado
         getAllButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) { actualizarTablaConBusquedaFiltrada();
+            public void actionPerformed(ActionEvent e) {
+                actualizarTablaConBusquedaFiltrada();
             }
         });
     }
 
-    private void createResult(Object petitionID, Object practiceID, Object result) {
-        // tenemos que convertir el nombre de la practica en su id
-        // tenemos que entener que cargo si valor o descripcion
-//        Float valorResultado;
-//        String descripcion;
-//
-//        Objects.toString(result);
+    private void createResult(int petitionID, String nombrePractica, Object result) {
+        Float valorResultado;
+        String descripcion;
 
+        if (result instanceof Number) {
+            valorResultado = ((Number) result).floatValue();
+            descripcion = null;
+        } else {
+            descripcion = result.toString();
+            valorResultado = 0f;
+        }
+
+        PracticaDTO practica = getPractica(nombrePractica);
         ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
-        controladorAtencion.addResultadoToEstudio(petitionID, practiceID, valorResultado, descripcion);
+        controladorAtencion.addResultadoToEstudio(petitionID, practica.getCodigoPractica(), valorResultado, descripcion);
 
-        System.out.println("Crear resultado para Petición ID: " + petitionID + ", Práctica: " + practiceID + ", Resultado: " + result);
+
+
+        System.out.println("Crear resultado para Petición ID: " + petitionID + ", Práctica: " + nombrePractica + ", Resultado: " + result);
     }
 
     public void addRow(Object[] rowData) {
@@ -144,10 +155,23 @@ public class LabPanel extends JPanel {
         } catch(Exception e) {
             // Mostrar un mensaje de error si no se encuentra el paciente
             JOptionPane.showMessageDialog(this,
-                    "Debe ingresar el ID de la Peticion!",
+                    e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private PracticaDTO getPractica(String nombrePractica){
+        ControladorPractica controladorPractica = ControladorPractica.getInstance();
+        List<PracticaDTO> practicas = controladorPractica.getPracticas();
+        PracticaDTO practicaEncontrada = null;
+
+        for (PracticaDTO practica : practicas){
+            if (Objects.equals(practica.getNombrePractica(), nombrePractica)) {
+                practicaEncontrada = practica;
+            }
+        }
+        return practicaEncontrada;
     }
 }
 

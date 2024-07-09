@@ -207,6 +207,19 @@ public class ControladorPaciente {
         return  pacienteEncontrado;
     }
 
+    protected Paciente getPacienteFromPeticion(int peticionID){
+        Paciente pacienteEncontrado = null;
+        for (Paciente paciente : pacientes){
+            for (Peticion peticion : paciente.getPeticiones()) {
+                if (peticion.getPeticionID() == peticionID){
+                    pacienteEncontrado = paciente;
+                    return  pacienteEncontrado;
+                }
+            }
+        }
+        return  pacienteEncontrado;
+    }
+
     // Método para agregar un paciente existente (si se requiere)
     public void addPaciente(Paciente paciente) {
         pacientes.add(paciente);
