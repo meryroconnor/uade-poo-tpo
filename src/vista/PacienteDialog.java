@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class PacienteDialog extends JDialog {
-    private JTextField dniField, nombreField, emailField, fechaNacimientoField, nroAfiliadoField;
+    private JTextField dniField, nombreField, emailField, edadField, domicilioField, nroAfiliadoField;
     private JComboBox<String> sexoComboBox, obraSocialComboBox;
     private JButton guardarButton, cancelButton;
 
     public PacienteDialog(Frame owner) {
         super(owner, "Agregar Paciente", true);
         setLayout(new BorderLayout());
-        setSize(350, 450);
+        setSize(350, 480);
 
         // Panel de título
         JPanel titlePanel = new JPanel();
@@ -48,9 +48,13 @@ public class PacienteDialog extends JDialog {
         emailField = new JTextField();
         contentPanel.add(emailField);
 
-        contentPanel.add(new JLabel("Fecha de Nacimiento:"));
-        fechaNacimientoField = new JTextField();
-        contentPanel.add(fechaNacimientoField);
+        contentPanel.add(new JLabel("Edad:"));
+        edadField = new JTextField();
+        contentPanel.add(edadField);
+
+        contentPanel.add(new JLabel("Domicilio:"));
+        domicilioField = new JTextField();
+        contentPanel.add(domicilioField);
 
         contentPanel.add(new JLabel("Sexo:"));
         sexoComboBox = new JComboBox<>(new String[]{"F", "M"});
