@@ -220,13 +220,16 @@ public class ControladorAtencion {
 
             if (peticionesActivas.isEmpty()) {
                 // No tiene peticiones activas, eliminar sucursal directamente
-                sucursales.remove(sucursalAEliminar);
+                eliminarSucursalDelSistema(sucursalAEliminar);
+
                 System.out.println("*** Sucursal eliminada. ***");
                 return "** Sucursal ID "+sucursalID+" fue eliminada. **";
             } else if (sucursales.size() > 1) {
                 // Tiene peticiones activas y hay otras sucursales disponibles
                 transferirPeticionesActivas(sucursalAEliminar, peticionesActivas);
-                sucursales.remove(sucursalAEliminar);
+
+                eliminarSucursalDelSistema(sucursalAEliminar);
+
                 System.out.println("*** Sucursal eliminada. ***");
                 return "** La sucursal ID "+sucursalID+" fue eliminada. ** \nSus peticiones activas transferidas.";
             } else {
@@ -234,6 +237,61 @@ public class ControladorAtencion {
             }
         } else {
             return "Sucursal ID"+sucursalID+ " no se encuentra en el sistema.";
+        }
+    }
+
+    private void eliminarSucursalDelSistema(Sucursal sucursalAEliminar) {
+        sucursales.remove(sucursalAEliminar);
+        List<Peticion> peticionesInactivas = getPeticionesInactivas(sucursalAEliminar);
+
+        for (Peticion peticion: peticionesInactivas) {
+            this.peticiones.remove(peticion);
+            deletePeticionFromDAO(peticion.toDTO());
+            PacienteDTO pacienteDTO = getPacienteInPeticion(peticion.getPeticionID());
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            Paciente paciente = controladorPaciente.findPaciente(pacienteDTO.getPacienteID());
+            paciente.removePeticion(peticion);
+
+            try {
+                PacienteDAO pacienteDAO = new PacienteDAO();
+                pacienteDAO.actualizarPaciente(paciente.toDTO());
+            } catch (Exception e) {
+                System.out.println("Error: "+e.getMessage());
+            }
+        }
+        deleteSucursalFromDAO(sucursalAEliminar.toDTO());
+    }
+
+    private PacienteDTO getPacienteInPeticion(int peticionID) {
+        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+        List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
+        PacienteDTO pacienteEncontrado = null;
+        for (PacienteDTO paciente: pacientes) {
+            for(PeticionDTO peticion : paciente.getPeticionesDTO()){
+                if(peticionID == peticion.getPeticionID()) {
+                    pacienteEncontrado = paciente;
+                    break;
+                }
+            }
+        }
+        return pacienteEncontrado;
+    }
+
+    private void deleteSucursalFromDAO(SucursalDTO sucursalDTO){
+        try {
+            SucursalDAO sucursalDAO = new SucursalDAO();
+            sucursalDAO.borrarSucursal(sucursalDTO);
+        } catch (Exception e) {
+            System.out.println("Error ocurrido: " + e.getMessage());
+        }
+    }
+
+    private void deletePeticionFromDAO(PeticionDTO peticionDTO){
+        try {
+            PeticionDAO peticionDAO = new PeticionDAO();
+            peticionDAO.borrarPeticion(peticionDTO);
+        } catch (Exception e) {
+            System.out.println("Error ocurrido: " + e.getMessage());
         }
     }
 
@@ -250,12 +308,32 @@ public class ControladorAtencion {
         return peticionesActivas;
     }
 
+    // Método para obtener las peticiones inactivas de una sucursal
+    private List<Peticion> getPeticionesInactivas(Sucursal sucursal) {
+        List<Peticion> peticionesInctivas = new ArrayList<>();
+        for (Peticion peticion : sucursal.getPeticiones()) {
+            for (Estudio estudio : peticion.getEstudios()) {
+                if (!estudio.tieneResultado()) {
+                    peticionesInctivas.add(peticion);
+                }
+            }
+        }
+        return peticionesInctivas;
+    }
+
     // Método para transferir peticiones activas a otra sucursal aleatoria
     private void transferirPeticionesActivas(Sucursal sucursalAEliminar, List<Peticion> peticionesActivas) {
         Sucursal sucursalDestino = getRandomSucursal(sucursalAEliminar);
         for (Peticion peticion : peticionesActivas) {
             sucursalAEliminar.getPeticiones().remove(peticion);
             sucursalDestino.addPeticion(peticion);
+            try {
+                SucursalDAO sucursalDAO = new SucursalDAO();
+                sucursalDAO.actualizarSucursal(sucursalDestino.toDTO());
+            } catch(Exception e) {
+                System.out.println("Error ocurrido: " + e.getMessage());
+            }
+
             System.out.println(">> Peticion " + peticion.getPeticionID() + " transferida a " + sucursalDestino.getDireccion());
         }
     }
@@ -300,6 +378,12 @@ public class ControladorAtencion {
                 return descripcion==null ? Objects.toString(valor) : descripcion;
             }
         }
+    }
+
+    public ResultadoDTO getResultado(int peticionID, int codigoEstudio) {
+        Estudio estudio = findEstudioInPeticion(peticionID, codigoEstudio);
+        ResultadoDTO resultadoDTO = estudio.getResultado().toDTO();
+        return resultadoDTO;
     }
 
     // Método para obtener la lista de sucursales (opcional)

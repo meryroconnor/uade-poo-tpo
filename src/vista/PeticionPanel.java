@@ -19,6 +19,8 @@ public class PeticionPanel extends JPanel {
     private JTextField filterRequestId;
     private JButton filterButton;
     private JButton getAllButton;
+
+    private JButton getPeticionesCriticasButton;
     private JButton settingsButton;
     private JButton deleteButton;
     private JButton updateButton;
@@ -54,6 +56,13 @@ public class PeticionPanel extends JPanel {
         getAllButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
         getAllButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/search1.png"))));
         filterPanel.add(getAllButton);
+
+        filterPanel.add(new JLabel());
+        getPeticionesCriticasButton = new JButton("Ver Peticiones Criticas");
+        getPeticionesCriticasButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        getPeticionesCriticasButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/alarm.png"))));
+        filterPanel.add(getPeticionesCriticasButton);
+
 
         add(filterPanel, BorderLayout.NORTH);
 
@@ -120,6 +129,12 @@ public class PeticionPanel extends JPanel {
         getAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {actualizarTablaConTodasLasPeticiones();}
+        });
+
+        // Configurar el botón de filtrar peticiones CRITICAS
+        getPeticionesCriticasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { actualizarTablaConPeticionesCriticas(); }
         });
 
         // Configurar el botón de creación
@@ -207,6 +222,42 @@ public class PeticionPanel extends JPanel {
                                     tableModel.addRow(rowData);
                                 }
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void actualizarTablaConPeticionesCriticas() {
+        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+        List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+
+        tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
+        for (PacienteDTO paciente : pacientes) {
+            if (paciente.getPeticionesDTO().size()!=0) {
+                for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
+                    for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
+                        String is_critico = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
+                        String sucursal = controladorAtencion.obtenerSucursalOfPeticion(peticion.getPeticionID()).getDireccion();
+                        if (is_critico.equals("Resultado Critico contactar Paciente")) {
+                            ResultadoDTO resultadoDTO = controladorAtencion.getResultado(peticion.getPeticionID(), estudio.getCodigoEstudio());
+                            String resultado;
+                            if (resultadoDTO.getDescripcionResultado() != null) {
+                                resultado = resultadoDTO.getDescripcionResultado();
+                            } else {
+                                resultado = Objects.toString(resultadoDTO.getValorResultado());
+                            }
+                            Object[] rowData = new Object[]{
+                                    peticion.getPeticionID(),
+                                    paciente.getNombreApellido(),
+                                    estudio.getPracticaDTO().getNombrePractica(),
+                                    resultado,
+                                    sucursal
+                            };
+                            tableModel.addRow(rowData);
                         }
                     }
                 }

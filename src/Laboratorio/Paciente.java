@@ -63,12 +63,13 @@ public class Paciente {
         }
     }
 
-
-
     public void addPeticion(Peticion peticion) {
         peticiones.add(peticion);
     }
 
+    public void removePeticion(Peticion peticion) {
+        peticiones.remove(peticion);
+    }
     public boolean tieneResultadosFinalizados() {
         for (Peticion peticion : peticiones) {
             for (Estudio estudio : peticion.getEstudios()){
