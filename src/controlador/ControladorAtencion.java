@@ -288,15 +288,16 @@ public class ControladorAtencion {
         if (!estudioBuscado.tieneResultado()){
             return "No disponible";
         }else {
-            /*if (estudioBuscado.isResultadoReservado()){
+            if (estudioBuscado.isResultadoReservado()){
                 return "Retirar por sucursal";
             } else if (estudioBuscado.isResultadoCritico()) {
                 return "Resultado Critico contactar Paciente";
-            }else {*/
+
+            }else {
                 String descripcion = estudioBuscado.getResultado().getDescripcionResultado();
                 Float valor = estudioBuscado.getResultado().getValorResultado();
                 return descripcion==null ? Objects.toString(valor) : descripcion;
-            /*}*/
+            }
         }
     }
 
