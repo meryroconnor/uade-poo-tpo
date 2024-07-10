@@ -1,16 +1,29 @@
 package vista;
 
+import DTOs.ObraSocialDTO;
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
+import DTOs.SucursalDTO;
+import controlador.ControladorAtencion;
+import controlador.ControladorPaciente;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class SucursalDialog extends JDialog {
     private JTextField nombreField, responsableField;
 
     private JButton guardarButton, cancelButton;
+    private  JComboBox sucursalCombo;
 
-    public SucursalDialog(Frame owner) {
+    public SucursalDialog(Frame owner, JComboBox sucursalCombo) {
         super(owner, "Agregar Sucursal", true);
+        this.sucursalCombo = sucursalCombo;
+
         setLayout(new BorderLayout());
         setSize(350, 230);
 
@@ -59,6 +72,22 @@ public class SucursalDialog extends JDialog {
 
     private void asociarEventos() {
         guardarButton.addActionListener(e -> {
+            String nombre = nombreField.getText();
+            int responsable = Integer.parseInt(responsableField.getText());
+            List<PeticionDTO> peticionesDTO = null;
+
+            SucursalDTO sucursalDTO = new SucursalDTO(0, nombre, responsable, peticionesDTO);
+
+            try{
+                ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+                controladorAtencion.createSucursal(sucursalDTO);
+
+                sucursalCombo.addItem(nombre);
+            } catch (Exception err){
+                System.out.println("Error ocurrido: " + err.getMessage());
+            }
+
+            dispose();
             // Aquí iría la lógica para guardar los datos del Sucursal
             dispose();
         });

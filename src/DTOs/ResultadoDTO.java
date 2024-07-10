@@ -5,11 +5,17 @@ import Laboratorio.Practica;
 public class ResultadoDTO {
     private float valorResultado;
     private String descripcionResultado;
-    private PracticaDTO practicaDTO;
 
-    public ResultadoDTO(float valorResultado, String descripcionResultado, PracticaDTO practicaDTO){
+    public ResultadoDTO(float valorResultado, String descripcionResultado){
         this.valorResultado = valorResultado;
         this.descripcionResultado = descripcionResultado;
-        this.practicaDTO = practicaDTO;
+    }
+
+    public float getValorResultado() {
+        return valorResultado;
+    }
+
+    public String getDescripcionResultado() {
+        return descripcionResultado;
     }
 }

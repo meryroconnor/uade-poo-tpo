@@ -1,9 +1,6 @@
 package vista;
 
-import DTOs.PacienteDTO;
-import DTOs.PeticionDTO;
-import DTOs.PracticaDTO;
-import DTOs.SucursalDTO;
+import DTOs.*;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 
@@ -22,6 +19,8 @@ public class PeticionPanel extends JPanel {
     private JTextField filterRequestId;
     private JButton filterButton;
     private JButton getAllButton;
+
+    private JButton getPeticionesCriticasButton;
     private JButton settingsButton;
     private JButton deleteButton;
     private JButton updateButton;
@@ -58,10 +57,17 @@ public class PeticionPanel extends JPanel {
         getAllButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/search1.png"))));
         filterPanel.add(getAllButton);
 
+        filterPanel.add(new JLabel());
+        getPeticionesCriticasButton = new JButton("Ver Peticiones Criticas");
+        getPeticionesCriticasButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
+        getPeticionesCriticasButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/alarm.png"))));
+        filterPanel.add(getPeticionesCriticasButton);
+
+
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
-        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Retirar por sucursal", "Sucursal"};
+        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Sucursal"};
         Object[][] data = {}; // Data inicial vacía
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
@@ -117,14 +123,18 @@ public class PeticionPanel extends JPanel {
         // Configurar el botón de filtrado
         filterButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                applyFilters();
-            }
+            public void actionPerformed(ActionEvent e) { actualizarTablaConBusquedaFiltrada(); }
         });
 
         getAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {actualizarTablaConTodasLasPeticiones();}
+        });
+
+        // Configurar el botón de filtrar peticiones CRITICAS
+        getPeticionesCriticasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { actualizarTablaConPeticionesCriticas(); }
         });
 
         // Configurar el botón de creación
@@ -151,20 +161,22 @@ public class PeticionPanel extends JPanel {
     private void actualizarTablaConTodasLasPeticiones() {
         ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
         List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
 
         tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
         for (PacienteDTO paciente : pacientes) {
             if (paciente.getPeticionesDTO().size()!=0) {
                 for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
-                    for (PracticaDTO practica : peticion.getPracticasDTO()) {
+                    for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
+                        String resultado = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
+                        String sucursal = controladorAtencion.obtenerSucursalOfPeticion(peticion.getPeticionID()).getDireccion();
 
                         Object[] rowData = new Object[]{
                                 peticion.getPeticionID(),
-                                paciente.getPacienteID(),
-                                practica.getNombrePractica(),
-                                "Resultado", // Ajustar manejo de los resultados
-                                "Retirar por sucursal", // Asumiendo que tienes algún flag o método para determinar esto
-                                "peticion.getSucursalID()" // Hay que reveer diseño
+                                paciente.getNombreApellido(),
+                                estudio.getPracticaDTO().getNombrePractica(),
+                                resultado,
+                                sucursal
                         };
                         tableModel.addRow(rowData);
                     }
@@ -173,20 +185,83 @@ public class PeticionPanel extends JPanel {
         }
     }
 
-    private void applyFilters() {
-        // Implementación del filtrado según los inputs
-        String patientId = filterPatientId.getText().trim();
-        String requestId = filterRequestId.getText().trim();
+    // Método para actualizar la tabla Busqueda filtrada de peticiones
+    //TODO: Permitir filtras solo por paciente o solo por peticion ... si ambos estan nulos informa error.
+    private void actualizarTablaConBusquedaFiltrada() {
+        if (filterPatientId.getText().equals("")  || filterRequestId.getText().equals("")) {
+            // Mostrar un mensaje de error si no se encuentra el paciente
+            JOptionPane.showMessageDialog(this,
+                    "Para la busqueda filtrada debe ingresar Paciente ID y Peticion!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            int pacienteID = Integer.parseInt(filterPatientId.getText());
+            int peticionID = Integer.parseInt(filterRequestId.getText());
 
-        // Aquí deberías reemplazar estos datos con una consulta real
-        Object[][] newData = {
-                {requestId, patientId, "Análisis de Sangre", "Normal", "No", "Barrio Norte"},
-                {requestId, patientId, "Rayos X", "Fractura detectada", "Sí", "Barrio Norte"}
-        };
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
+            ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
 
-        tableModel.setRowCount(0);
-        for (Object[] row : newData) {
-            tableModel.addRow(row);
+            tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
+            for (PacienteDTO paciente : pacientes) {
+                if (paciente.getPacienteID() == pacienteID) {
+                    if (paciente.getPeticionesDTO().size() != 0) {
+                        for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
+                            if (peticion.getPeticionID() == peticionID) {
+                                for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
+                                    String resultado = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
+                                    String sucursal = controladorAtencion.obtenerSucursalOfPeticion(peticion.getPeticionID()).getDireccion();
+
+                                    Object[] rowData = new Object[]{
+                                            peticion.getPeticionID(),
+                                            paciente.getNombreApellido(),
+                                            estudio.getPracticaDTO().getNombrePractica(),
+                                            resultado,
+                                            sucursal
+                                    };
+                                    tableModel.addRow(rowData);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void actualizarTablaConPeticionesCriticas() {
+        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+        List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+
+        tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
+        for (PacienteDTO paciente : pacientes) {
+            if (paciente.getPeticionesDTO().size()!=0) {
+                for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
+                    for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
+                        String is_critico = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
+                        String sucursal = controladorAtencion.obtenerSucursalOfPeticion(peticion.getPeticionID()).getDireccion();
+                        if (is_critico.equals("Resultado Critico contactar Paciente")) {
+                            ResultadoDTO resultadoDTO = controladorAtencion.getResultado(peticion.getPeticionID(), estudio.getCodigoEstudio());
+                            String resultado;
+                            if (resultadoDTO.getDescripcionResultado() != null) {
+                                resultado = resultadoDTO.getDescripcionResultado();
+                            } else {
+                                resultado = Objects.toString(resultadoDTO.getValorResultado());
+                            }
+                            Object[] rowData = new Object[]{
+                                    peticion.getPeticionID(),
+                                    paciente.getNombreApellido(),
+                                    estudio.getPracticaDTO().getNombrePractica(),
+                                    resultado,
+                                    sucursal
+                            };
+                            tableModel.addRow(rowData);
+                        }
+                    }
+                }
+            }
         }
     }
 

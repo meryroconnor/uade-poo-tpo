@@ -1,5 +1,13 @@
 package vista;
 
+import DTOs.EstudioDTO;
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
+import DTOs.PracticaDTO;
+import controlador.ControladorAtencion;
+import controlador.ControladorPaciente;
+import controlador.ControladorPractica;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -8,6 +16,9 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Objects;
 
 public class LabPanel extends JPanel {
@@ -25,13 +36,11 @@ public class LabPanel extends JPanel {
         filterRequestId = new JTextField();
         filterPanel.add(filterRequestId);
 
-
         filterPanel.add(new JLabel());
         getAllButton = new JButton("Buscar Petición");
         getAllButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
         getAllButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/search1.png"))));
         filterPanel.add(getAllButton);
-
 
         JLabel titleLabel = new JLabel("Carga Interactiva de Resultados:");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -42,13 +51,13 @@ public class LabPanel extends JPanel {
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
-        String[] columnNames = {"Petición ID", "Práctica", "Resultado", "Retirar por sucursal"};
+        String[] columnNames = {"Petición ID", "Práctica", "Resultado"};
         Object[][] data = {}; // Data inicial vacía
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Hacer que solo la columna "Resultado" sea editable
-                return column == 2; // Index 2 corresponde a la columna "Resultado"
+                // Deshabilitar edición en todas las columnas
+                return false;
             }
         };
         table = new JTable(tableModel);
@@ -66,17 +75,15 @@ public class LabPanel extends JPanel {
     }
 
     private void asociarEventos() {
-        // Agregar el TableModelListener
-        tableModel.addTableModelListener(new TableModelListener() {
+        // Agregar el MouseListener para detectar clics en la fila
+        table.addMouseListener(new MouseAdapter() {
             @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 2) { // Índice 2 para la columna "Resultado"
-                    int row = e.getFirstRow();
-                    int column = e.getColumn();
-                    Object data = tableModel.getValueAt(row, column);
-                    Object petitionID = tableModel.getValueAt(row, 0); // la Petición ID está en la columna 0
-                    Object practiceID = tableModel.getValueAt(row, 1); // la Práctica está en la columna 2
-                    createResult(petitionID, practiceID, data);
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Doble clic en una fila
+                    int row = table.getSelectedRow();
+                    int peticionID = Integer.parseInt(tableModel.getValueAt(row, 0).toString()); // Petición ID en la columna 0
+                    String nombrePractica = tableModel.getValueAt(row, 1).toString(); // Práctica en la columna 1
+                    mostrarModalResultado(peticionID, nombrePractica, row);
                 }
             }
         });
@@ -85,36 +92,87 @@ public class LabPanel extends JPanel {
         getAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                applyFilters();
+                actualizarTablaConBusquedaFiltrada();
             }
         });
     }
 
-    private void createResult(Object petitionID, Object practiceID, Object result) {
-        // Llamar a la lógica de negocio o al controlador para manejar la creación de un nuevo resultado
-        System.out.println("Crear resultado para Petición ID: " + petitionID + ", Práctica: " + practiceID + ", Resultado: " + result);
-        // Aquí puedes colocar el código que interactúa con la base de datos o el backend
+    private void mostrarModalResultado(int peticionID, String nombrePractica, int row) {
+        EditResultadoDialog dialog = new EditResultadoDialog(peticionID, nombrePractica, row, tableModel);
+        dialog.setVisible(true);
     }
 
-    private void applyFilters() {
-        // Implementación del filtrado según los inputs
-        String requestId = filterRequestId.getText().trim();
+    /*private void createResult(int petitionID, String nombrePractica, Object result) {
+        Float valorResultado;
+        String descripcion;
 
-        // Aquí deberías reemplazar estos datos con una consulta real
-        Object[][] newData = {
-                {requestId, "Análisis de Sangre", "Normal", "No"},
-                {requestId, "Rayos X", "Fractura detectada", "Sí"}
-        };
-
-        tableModel.setRowCount(0);
-        for (Object[] row : newData) {
-            tableModel.addRow(row);
+        try {
+            valorResultado = Float.parseFloat(result.toString());
+            descripcion = null;
+        } catch (Exception e) {
+            descripcion = result.toString();
+            valorResultado = 0f;
         }
-    }
+
+        PracticaDTO practica = getPractica(nombrePractica);
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+        controladorAtencion.addResultadoToEstudio(petitionID, practica.getCodigoPractica(), valorResultado, descripcion);
+
+        System.out.println("Crear resultado para Petición ID: " + petitionID + ", Práctica: " + nombrePractica + ", Resultado: " + result);
+    }*/
 
     public void addRow(Object[] rowData) {
         tableModel.addRow(rowData);
     }
+
+    private void actualizarTablaConBusquedaFiltrada() {
+        try {
+            int peticionID = Integer.parseInt(filterRequestId.getText());
+
+            ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+            List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
+            ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+
+            tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
+            for (PacienteDTO paciente : pacientes) {
+                if (paciente.getPeticionesDTO().size() != 0) {
+                    for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
+                        if (peticion.getPeticionID() == peticionID) {
+                            for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
+                                String resultado = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
+
+                                Object[] rowData = new Object[]{
+                                        peticion.getPeticionID(),
+                                        estudio.getPracticaDTO().getNombrePractica(),
+                                        resultado
+                                };
+                                tableModel.addRow(rowData);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Mostrar un mensaje de error si no se encuentra el paciente
+            JOptionPane.showMessageDialog(this,
+                    e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /*private PracticaDTO getPractica(String nombrePractica) {
+        ControladorPractica controladorPractica = ControladorPractica.getInstance();
+        List<PracticaDTO> practicas = controladorPractica.getPracticas();
+        PracticaDTO practicaEncontrada = null;
+
+        for (PracticaDTO practica : practicas) {
+            if (Objects.equals(practica.getNombrePractica(), nombrePractica)) {
+                practicaEncontrada = practica;
+            }
+        }
+        return practicaEncontrada;
+    }*/
 }
 
 
