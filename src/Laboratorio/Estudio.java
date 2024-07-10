@@ -18,7 +18,7 @@ public class Estudio {
         this.codigoEstudio = codigoEstudio;
         this.practica = practica; // tiene relacion de agregacion
 
-        if (descripcionResultado != null && valorResultado != 0) {
+        if (descripcionResultado != null || valorResultado != 0.0) {
             this.resultado = new Resultado(valorResultado,descripcionResultado);
         } else {
             this.resultado = null;
