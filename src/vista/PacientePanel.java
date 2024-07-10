@@ -134,7 +134,6 @@ public class PacientePanel extends JPanel {
                         outputArea.append("Nombre: " + pacienteDTO.getNombreApellido() + "\n");
                         outputArea.append("DNI: " + pacienteDTO.getDNI() + "\n");
                         outputArea.append("Mail: " + pacienteDTO.getEmail() + "\n");
-                        outputArea.append("Mail: " + pacienteDTO.getEmail() + "\n");
                         outputArea.append("Edad: " + pacienteDTO.getEdad() + "\n");
                         outputArea.append("Domicilio: " + pacienteDTO.getDomicilio() + "\n");
                         outputArea.append("Paciente ID: " + pacienteDTO.getPacienteID() + "\n");
