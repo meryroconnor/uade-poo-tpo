@@ -89,7 +89,7 @@ public class ControladorAtencion {
     // Método para crear una nueva Sucursal
     public void createSucursal(SucursalDTO sucursalParam) {
         Sucursal sucursal = new Sucursal(nextSucursalID++, sucursalParam.getDireccion(), sucursalParam.getResponsableMatricula());
-        if (getSucursal(sucursal.toDTO()) == null){
+        if (getSucursal(sucursal.getSucursalID()) == null){
             sucursales.add(sucursal);
             if (getSucursalFromDAO(sucursal.toDTO()) == null){
                 saveSucursalToDAO(sucursal.toDTO());
@@ -102,7 +102,7 @@ public class ControladorAtencion {
     // Método para cargar una Sucursal desde dao al sistema
     public void cargarSucursal(SucursalDTO sucursalParam) {
         Sucursal sucursal = new Sucursal(sucursalParam.getSucursalID(), sucursalParam.getDireccion(), sucursalParam.getResponsableMatricula());
-        if (getSucursal(sucursal.toDTO()) == null){
+        if (getSucursal(sucursal.getSucursalID()) == null){
             sucursales.add(sucursal);
             if (getSucursalFromDAO(sucursal.toDTO()) == null){
                 saveSucursalToDAO(sucursal.toDTO());
@@ -205,7 +205,7 @@ public class ControladorAtencion {
     }
 
     // Método para eliminar una sucursal por su ID
-    public void deleteSucursal(int sucursalID) {
+    public String deleteSucursal(int sucursalID) {
         Sucursal sucursalAEliminar = null;
         for (Sucursal sucursal : sucursales) {
             if (sucursal.getSucursalID() == sucursalID) {
@@ -222,16 +222,18 @@ public class ControladorAtencion {
                 // No tiene peticiones activas, eliminar sucursal directamente
                 sucursales.remove(sucursalAEliminar);
                 System.out.println("*** Sucursal eliminada. ***");
+                return "** Sucursal ID "+sucursalID+" fue eliminada. **";
             } else if (sucursales.size() > 1) {
                 // Tiene peticiones activas y hay otras sucursales disponibles
                 transferirPeticionesActivas(sucursalAEliminar, peticionesActivas);
                 sucursales.remove(sucursalAEliminar);
                 System.out.println("*** Sucursal eliminada. ***");
+                return "** La sucursal ID "+sucursalID+" fue eliminada. ** \nSus peticiones activas transferidas.";
             } else {
-                System.out.println("No se puede eliminar la sucursal. No hay otras sucursales disponibles para transferir las peticiones activas.");
+                return "No se puede eliminar la sucursal.\nNo hay otras sucursales disponibles para transferir las peticiones activas.";
             }
         } else {
-            System.out.println("Sucursal no encontrada.");
+            return "Sucursal ID"+sucursalID+ " no se encuentra en el sistema.";
         }
     }
 
@@ -248,7 +250,6 @@ public class ControladorAtencion {
         return peticionesActivas;
     }
 
-    // Método para transferir peticiones activas a otra sucursal aleatoria
     // Método para transferir peticiones activas a otra sucursal aleatoria
     private void transferirPeticionesActivas(Sucursal sucursalAEliminar, List<Peticion> peticionesActivas) {
         Sucursal sucursalDestino = getRandomSucursal(sucursalAEliminar);
@@ -321,8 +322,7 @@ public class ControladorAtencion {
 
 
 
-    public SucursalDTO getSucursal(SucursalDTO sucursalParam){ //Necesario porque la sucursal sufre actualizaciones
-        int sucursalID = sucursalParam.getSucursalID();
+    public SucursalDTO getSucursal(int sucursalID){ //Necesario porque la sucursal sufre actualizaciones
         SucursalDTO sucursalEncontrada = null;
 
         for (Sucursal sucursal : sucursales){
