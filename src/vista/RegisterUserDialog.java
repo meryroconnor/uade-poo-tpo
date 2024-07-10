@@ -8,7 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class RegisterUserDialog extends JDialog {
-    private JTextField dniField, nombreField, emailField, usernameField, passwordField;
+    private JTextField dniField, nombreField,fechaField, emailField, usernameField, passwordField;
     private JComboBox<String> rolComboBox;
     private JButton guardarButton, cancelButton;
 
@@ -38,6 +38,10 @@ public class RegisterUserDialog extends JDialog {
         contentPanel.add(new JLabel("Nombre:"));
         nombreField = new JTextField();
         contentPanel.add(nombreField);
+
+        contentPanel.add(new JLabel("Fecha de nacimiento:"));
+        fechaField = new JTextField();
+        contentPanel.add(fechaField);
 
         contentPanel.add(new JLabel("Email:"));
         emailField = new JTextField();
