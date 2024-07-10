@@ -16,6 +16,8 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,13 +36,11 @@ public class LabPanel extends JPanel {
         filterRequestId = new JTextField();
         filterPanel.add(filterRequestId);
 
-
         filterPanel.add(new JLabel());
         getAllButton = new JButton("Buscar Petición");
         getAllButton.setFont(new Font("Lucida Bright", Font.PLAIN, 13));
         getAllButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/search1.png"))));
         filterPanel.add(getAllButton);
-
 
         JLabel titleLabel = new JLabel("Carga Interactiva de Resultados:");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -56,8 +56,8 @@ public class LabPanel extends JPanel {
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Hacer que solo la columna "Resultado" sea editable
-                return column == 2; // Index 2 corresponde a la columna "Resultado"
+                // Deshabilitar edición en todas las columnas
+                return false;
             }
         };
         table = new JTable(tableModel);
@@ -75,18 +75,15 @@ public class LabPanel extends JPanel {
     }
 
     private void asociarEventos() {
-        // Agregar el TableModelListener
-        tableModel.addTableModelListener(new TableModelListener() {
+        // Agregar el MouseListener para detectar clics en la fila
+        table.addMouseListener(new MouseAdapter() {
             @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 2) { // Índice 2 para la columna "Resultado"
-                    int row = e.getFirstRow();
-                    int column = e.getColumn();
-                    Object data = tableModel.getValueAt(row, column);
-                    int peticionID = Integer.parseInt(tableModel.getValueAt(row, 0).toString()); // la Petición ID está en la columna 0
-                    String nombrePractica = tableModel.getValueAt(row, 1).toString(); // la Práctica está en la columna 2
-
-                    createResult(peticionID, nombrePractica, data);
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Doble clic en una fila
+                    int row = table.getSelectedRow();
+                    int peticionID = Integer.parseInt(tableModel.getValueAt(row, 0).toString()); // Petición ID en la columna 0
+                    String nombrePractica = tableModel.getValueAt(row, 1).toString(); // Práctica en la columna 1
+                    mostrarModalResultado(peticionID, nombrePractica, row);
                 }
             }
         });
@@ -100,26 +97,29 @@ public class LabPanel extends JPanel {
         });
     }
 
-    private void createResult(int petitionID, String nombrePractica, Object result) {
+    private void mostrarModalResultado(int peticionID, String nombrePractica, int row) {
+        EditResultadoDialog dialog = new EditResultadoDialog(peticionID, nombrePractica, row, tableModel);
+        dialog.setVisible(true);
+    }
+
+    /*private void createResult(int petitionID, String nombrePractica, Object result) {
         Float valorResultado;
         String descripcion;
 
         try {
             valorResultado = Float.parseFloat(result.toString());
             descripcion = null;
-        } catch(Exception e) {descripcion = result.toString();
-            valorResultado = 0f;}
-
-
+        } catch (Exception e) {
+            descripcion = result.toString();
+            valorResultado = 0f;
+        }
 
         PracticaDTO practica = getPractica(nombrePractica);
         ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
         controladorAtencion.addResultadoToEstudio(petitionID, practica.getCodigoPractica(), valorResultado, descripcion);
 
-
-
         System.out.println("Crear resultado para Petición ID: " + petitionID + ", Práctica: " + nombrePractica + ", Resultado: " + result);
-    }
+    }*/
 
     public void addRow(Object[] rowData) {
         tableModel.addRow(rowData);
@@ -152,7 +152,7 @@ public class LabPanel extends JPanel {
                     }
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             // Mostrar un mensaje de error si no se encuentra el paciente
             JOptionPane.showMessageDialog(this,
                     e.getMessage(),
@@ -161,18 +161,18 @@ public class LabPanel extends JPanel {
         }
     }
 
-    private PracticaDTO getPractica(String nombrePractica){
+    /*private PracticaDTO getPractica(String nombrePractica) {
         ControladorPractica controladorPractica = ControladorPractica.getInstance();
         List<PracticaDTO> practicas = controladorPractica.getPracticas();
         PracticaDTO practicaEncontrada = null;
 
-        for (PracticaDTO practica : practicas){
+        for (PracticaDTO practica : practicas) {
             if (Objects.equals(practica.getNombrePractica(), nombrePractica)) {
                 practicaEncontrada = practica;
             }
         }
         return practicaEncontrada;
-    }
+    }*/
 }
 
 
