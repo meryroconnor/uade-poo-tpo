@@ -48,7 +48,6 @@ public class PacienteDialog extends JDialog {
         emailField = new JTextField();
         contentPanel.add(emailField);
 
-        //TODO: Agregar logica en modelo, DTO y DAO de los campos Edad y Domicilio.
         contentPanel.add(new JLabel("Edad:"));
         edadField = new JTextField();
         contentPanel.add(edadField);
@@ -110,6 +109,8 @@ public class PacienteDialog extends JDialog {
             String nombre = nombreField.getText();
             String DNI = dniField.getText();
             String mail = emailField.getText();
+            int edad = Integer.parseInt(edadField.getText());
+            String domicilio = domicilioField.getText();
             String nroAfiliadoText = nroAfiliadoField.getText();
             String obraSocial = Objects.requireNonNull(obraSocialComboBox.getSelectedItem()).toString();
             String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
@@ -123,7 +124,7 @@ public class PacienteDialog extends JDialog {
             }
 
             List<PeticionDTO> peticionesDTO = new ArrayList<>();
-            PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail, peticionesDTO, obraSocialDTO);
+            PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail, edad, domicilio,peticionesDTO, obraSocialDTO);
 
             try{
                 ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
