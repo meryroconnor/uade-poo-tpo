@@ -48,9 +48,11 @@ public class PacienteDialog extends JDialog {
         emailField = new JTextField();
         contentPanel.add(emailField);
 
+        //TODO: Agregar logica en modelo, DTO y DAO de los campos Edad y Domicilio.
         contentPanel.add(new JLabel("Edad:"));
         edadField = new JTextField();
         contentPanel.add(edadField);
+
 
         contentPanel.add(new JLabel("Domicilio:"));
         domicilioField = new JTextField();
