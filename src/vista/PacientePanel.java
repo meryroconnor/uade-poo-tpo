@@ -139,7 +139,7 @@ public class PacientePanel extends JPanel {
                         outputArea.append("Paciente ID: " + pacienteDTO.getPacienteID() + "\n");
 
                         if (pacienteDTO.getObraSocialDTO().getObraSocial() != null) {
-                            outputArea.append("Paciente tiene Obra Social");
+                            outputArea.append("Paciente tiene Obra Social\n");
                             outputArea.append("Obra Social: " + pacienteDTO.getObraSocialDTO().getObraSocial() + "\n");
                             outputArea.append("Obra Social ID: " + pacienteDTO.getObraSocialDTO().getObraSocialID() + "\n\n");
                         } else {
