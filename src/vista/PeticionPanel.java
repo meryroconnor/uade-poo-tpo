@@ -67,7 +67,7 @@ public class PeticionPanel extends JPanel {
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
-        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Sucursal"};
+        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Sucursal", "Fecha de Carga"};
         Object[][] data = {}; // Data inicial vacía
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
@@ -178,7 +178,8 @@ public class PeticionPanel extends JPanel {
                                 paciente.getNombreApellido(),
                                 estudio.getPracticaDTO().getNombrePractica(),
                                 resultado,
-                                sucursal
+                                sucursal,
+                                peticion.getFechaCarga().toString()
                         };
                         tableModel.addRow(rowData);
                     }
