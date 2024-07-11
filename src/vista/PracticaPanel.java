@@ -80,8 +80,8 @@ public class PracticaPanel extends JPanel {
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //SucursalDialog dialog = new SucursalDialog(JOptionPane.getFrameForComponent(PracticaPanel.this), practicaComboBox);
-                //dialog.setVisible(true);
+                PracticaDialog dialog = new PracticaDialog(JOptionPane.getFrameForComponent(PracticaPanel.this), practicaComboBox);
+                dialog.setVisible(true);
             }
         });
 
