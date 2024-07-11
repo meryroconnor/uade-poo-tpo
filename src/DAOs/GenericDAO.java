@@ -1,13 +1,13 @@
 package DAOs;
 
-import LocalDateGsonAdapter.LocalDateAdapter;
+import LocalDateTimeAdapter.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public abstract class GenericDAO<T> {
         List<T> list = new ArrayList<T>();
         FileReader f = new FileReader(archivo);
         BufferedReader b = new BufferedReader(f);
-        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
         String line = "";
 
         try {
@@ -50,7 +50,7 @@ public abstract class GenericDAO<T> {
     }
 
     public void saveAll(List<T> list) throws Exception {
-        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
         String texto = "";
         for (Object obj : list) {
             texto = texto.concat(g.toJson(obj));
@@ -64,7 +64,7 @@ public abstract class GenericDAO<T> {
     }
 
     public void save(T obj) throws Exception {
-        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
         String texto = g.toJson(obj);
         texto = texto.concat(System.lineSeparator());
         FileWriter fileWriter = new FileWriter(archivo, true);
@@ -148,7 +148,7 @@ public abstract class GenericDAO<T> {
                     inputBuffer.append('\n');
                 } else {
                     // aca save updated obj
-                    Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+                    Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
                     String updated_obj = g.toJson(obj);
                     inputBuffer.append(updated_obj);
                     inputBuffer.append('\n');
@@ -178,7 +178,7 @@ public abstract class GenericDAO<T> {
             StringBuffer inputBuffer = new StringBuffer();
             String line;
             JsonParser parser = new JsonParser();
-            Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+            Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
 
             while ((line = b.readLine()) != null) {
                 JsonObject jsonObject = parser.parse(line).getAsJsonObject();
@@ -215,7 +215,7 @@ public abstract class GenericDAO<T> {
         BufferedReader b = new BufferedReader(new FileReader(archivo));
         String line;
         JsonParser parser = new JsonParser();
-        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
         Boolean flag = false;
 
         try {
@@ -243,7 +243,7 @@ public abstract class GenericDAO<T> {
         BufferedReader b = new BufferedReader(new FileReader(archivo));
         String line;
         JsonParser parser = new JsonParser();
-        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
         Boolean flag = false;
         try {
             while ((line = b.readLine()) != null && flag == false) {
@@ -269,7 +269,7 @@ public abstract class GenericDAO<T> {
         BufferedReader b = new BufferedReader(new FileReader(archivo));
         String line;
         JsonParser parser = new JsonParser();
-        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter()).create();
+        Gson g = new Gson().newBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
         Boolean flag = false;
         try {
             while ((line = b.readLine()) != null && flag == false) {
