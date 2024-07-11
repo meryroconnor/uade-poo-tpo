@@ -69,7 +69,7 @@ public class PeticionPanel extends JPanel {
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
-        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Sucursal", "Fecha de Carga", "Fecha de Terminacion Estimada"};
+        String[] columnNames = {"Petición ID", "Paciente ID", "Nombre Paciente", "Práctica", "Resultado", "Sucursal", "Fecha de Carga", "Fecha de Terminacion Estimada"};
         Object[][] data = {}; // Data inicial vacía
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
@@ -158,6 +158,40 @@ public class PeticionPanel extends JPanel {
                 System.out.println("Eliminar petición");
             }
         });
+
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean selected = Objects.nonNull(table.getSelectedRow());
+
+                if (selected == true){
+                    int row = table.getSelectedRow();
+                    int peticionID = Integer.parseInt(table.getValueAt(row, 0).toString());
+                    PeticionDTO peticionDTO = null;
+
+                    try{
+                        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+                        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                        peticionDTO = controladorAtencion.getPeticion(peticionID);
+                        JDialog dialog = new EditPeticionDialog(JOptionPane.getFrameForComponent(PeticionPanel.this), peticionDTO, controladorPaciente);
+                        dialog.setVisible(true);
+                    }catch (Exception err){
+                        System.out.println(err.getMessage());
+                    }
+
+
+                } else {
+                    JOptionPane.showMessageDialog(PeticionPanel.this,
+                            "Ninguna peticion seleccionada",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
+
+            }
+
+        });
+
     }
     // Método para actualizar la tabla con todas las peticiones
     private void actualizarTablaConTodasLasPeticiones() {
@@ -177,6 +211,7 @@ public class PeticionPanel extends JPanel {
 
                         Object[] rowData = new Object[]{
                                 peticion.getPeticionID(),
+                                paciente.getPacienteID(),
                                 paciente.getNombreApellido(),
                                 estudio.getPracticaDTO().getNombrePractica(),
                                 resultado,
@@ -220,6 +255,7 @@ public class PeticionPanel extends JPanel {
 
                                     Object[] rowData = new Object[]{
                                             peticion.getPeticionID(),
+                                            paciente.getPacienteID(),
                                             paciente.getNombreApellido(),
                                             estudio.getPracticaDTO().getNombrePractica(),
                                             resultado,
@@ -260,6 +296,7 @@ public class PeticionPanel extends JPanel {
                             }
                             Object[] rowData = new Object[]{
                                     peticion.getPeticionID(),
+                                    paciente.getPacienteID(),
                                     paciente.getNombreApellido(),
                                     estudio.getPracticaDTO().getNombrePractica(),
                                     resultado,
