@@ -171,6 +171,8 @@ public class PeticionPanel extends JPanel {
                         String resultado = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
                         String sucursal = controladorAtencion.obtenerSucursalOfPeticion(peticion.getPeticionID()).getDireccion();
 
+                        //TODO: Resolver que pasa si value es null: Cannot invoke "java.lang.Float.floatValue()" because the return value of "Laboratorio.IndiceReservado.getLowLimit()" is null
+
                         Object[] rowData = new Object[]{
                                 peticion.getPeticionID(),
                                 paciente.getNombreApellido(),
