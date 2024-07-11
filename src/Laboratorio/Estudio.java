@@ -59,7 +59,7 @@ public class Estudio {
     public boolean tieneResultado() { return resultado!=null; }
 
     public boolean isResultadoCritico() {
-        if ((this.resultado.getValorResultado() >= practica.getIndiceCritico().getLowLimit() &&
+        if ((this.resultado.getValorResultado() !=0 &&  this.resultado.getValorResultado() >= practica.getIndiceCritico().getLowLimit() &&
                 this.resultado.getValorResultado() <= practica.getIndiceCritico().getHighLimit() ) ||
                 (this.resultado.getDescripcionResultado() !=null &&
                 this.resultado.getDescripcionResultado().equals(practica.getIndiceCritico().getValue()))) {
@@ -71,10 +71,7 @@ public class Estudio {
     public boolean isResultadoReservado() {
         IndiceReservado indiceReservado = practica.getIndiceReservado();
 
-        boolean q1 = this.resultado.getValorResultado() >= indiceReservado.getLowLimit();
-        boolean q2 = this.resultado.getValorResultado() <= indiceReservado.getHighLimit();
-
-        if ((this.resultado.getValorResultado() >= indiceReservado.getLowLimit() &&
+        if ((this.resultado.getValorResultado() !=0 && this.resultado.getValorResultado() >= indiceReservado.getLowLimit() &&
                 this.resultado.getValorResultado() <= indiceReservado.getHighLimit()) ||
                 (this.resultado.getDescripcionResultado() != null &&
                 this.resultado.getDescripcionResultado().equals(indiceReservado.getValue()))) {
