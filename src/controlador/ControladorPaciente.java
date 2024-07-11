@@ -196,6 +196,29 @@ public class ControladorPaciente {
         }
     }
 
+    public void updatePaciente(PacienteDTO pacienteDTOparam, String oldDNI, String oldSexo){
+        int idPacienteEncontrado = getPaciente(oldDNI, oldSexo).getPacienteID();
+        int idObraSocialEncontrada = getObraSocial(pacienteDTOparam.getObraSocialDTO()).getObraSocialID();
+        Paciente pacienteEncontrado = findPaciente(idPacienteEncontrado);
+        ObraSocial obraSocialEncontrada = findObraSocial(idObraSocialEncontrada);
+
+        pacienteEncontrado.setNombreApellido(pacienteDTOparam.getNombreApellido());
+        pacienteEncontrado.setDNI(pacienteDTOparam.getDNI());
+        pacienteEncontrado.setEmail(pacienteDTOparam.getEmail());
+        pacienteEncontrado.setSexo(pacienteDTOparam.getSexo());
+        pacienteEncontrado.setDomicilio(pacienteEncontrado.getDomicilio());
+        pacienteEncontrado.setEdad(pacienteEncontrado.getEdad());
+        pacienteEncontrado.setObraSocialObject(obraSocialEncontrada);
+
+        try{
+            PacienteDAO pacienteDAO = new PacienteDAO();
+            pacienteDAO.actualizarPaciente(pacienteEncontrado.toDTO());
+        } catch (Exception errr){
+            System.out.println(errr.getMessage());
+        }
+
+        System.out.println("Paciente Actualizado");
+    }
     public PacienteDTO getPaciente(String dni, String sexo){ //Necesario porque el paciente sufre actualizaciones
         PacienteDTO pacienteEncontrado = null;
         for (Paciente paciente : pacientes){

@@ -105,8 +105,8 @@ public class PacientePanel extends JPanel {
                     } else {
                         // Mostrar un mensaje de error si no se encuentra el paciente
                         JOptionPane.showMessageDialog(PacientePanel.this,
-                                "Para editar un paciente debe debe ingresar su DNI y Sexo!",
-                                "Error",
+                                "Para editar un paciente EXISTENTE debe debe ingresar su DNI y Sexo!",
+                                "Error - PACIENTE NO ENCONTRADO",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception err) {

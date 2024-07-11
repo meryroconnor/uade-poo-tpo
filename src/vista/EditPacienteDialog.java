@@ -7,6 +7,8 @@ package vista;
 
         import javax.swing.*;
         import javax.swing.border.EmptyBorder;
+        import javax.swing.event.DocumentEvent;
+        import javax.swing.event.DocumentListener;
         import java.awt.*;
         import java.util.ArrayList;
         import java.util.List;
@@ -17,8 +19,14 @@ public class EditPacienteDialog extends JDialog {
     private JComboBox<String> sexoComboBox, obraSocialComboBox;
     private JButton guardarButton, cancelButton;
 
+    // 2 variables globales a la vista por si el paciente cambia de genero o dni asi no busca con un valor nuevo
+    // que obviamente no existe en el sistema porque la busqueda es anterior a la actualizacion
+    private String oldDNI;
+    private String oldSexo;
+
+
     public EditPacienteDialog(Frame owner, PacienteDTO paciente) {
-        super(owner, "Agregar Paciente", true);
+        super(owner, "Editar Paciente", true);
 
         String DNI = paciente.getDNI();
         String sexo= paciente.getSexo();
@@ -30,6 +38,10 @@ public class EditPacienteDialog extends JDialog {
         String obraSocial = paciente.getObraSocialDTO().getObraSocial();
 
 
+        oldDNI = paciente.getDNI();
+        oldSexo = paciente.getSexo();
+
+
         setLayout(new BorderLayout());
         setSize(350, 480);
 
@@ -37,7 +49,7 @@ public class EditPacienteDialog extends JDialog {
         JPanel titlePanel = new JPanel();
         titlePanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         titlePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JLabel titleLabel = new JLabel("Registro de Paciente");
+        JLabel titleLabel = new JLabel("Edicion de Paciente");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Configura la fuente del título
         titlePanel.add(titleLabel);
         add(titlePanel, BorderLayout.NORTH);
@@ -48,28 +60,23 @@ public class EditPacienteDialog extends JDialog {
         contentPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Margins around the whole content panel
 
         contentPanel.add(new JLabel("DNI:"));
-        dniField = new JTextField();
-        dniField.setText(DNI);
+        dniField = new JTextField(DNI);
         contentPanel.add(dniField);
 
         contentPanel.add(new JLabel("Nombre:"));
-        nombreField = new JTextField();
-        nombreField.setText(nombre);
+        nombreField = new JTextField(nombre);
         contentPanel.add(nombreField);
 
         contentPanel.add(new JLabel("Email:"));
-        emailField = new JTextField();
-        emailField.setText(email);
+        emailField = new JTextField(email);
         contentPanel.add(emailField);
 
         contentPanel.add(new JLabel("Edad:"));
-        edadField = new JTextField();
-        edadField.setText(Objects.toString(edad));
+        edadField = new JTextField(Objects.toString(edad));
         contentPanel.add(edadField);
 
         contentPanel.add(new JLabel("Domicilio:"));
-        domicilioField = new JTextField();
-        domicilioField.setText(domicilio);
+        domicilioField = new JTextField(domicilio);
         contentPanel.add(domicilioField);
 
         contentPanel.add(new JLabel("Sexo:"));
@@ -79,12 +86,11 @@ public class EditPacienteDialog extends JDialog {
 
         contentPanel.add(new JLabel("Obra Social:"));
         obraSocialComboBox = new JComboBox<>(Objects.requireNonNull(obtenerObrasSociales()));
-        obraSocialComboBox.setSelectedItem(obraSocial);
+        obraSocialComboBox.setSelectedItem(Objects.requireNonNullElse(obraSocial, "Sin Obra Social"));
         contentPanel.add(obraSocialComboBox);
 
         contentPanel.add(new JLabel("Nro Afiliado:")); //sacar esto
-        nroAfiliadoField = new JTextField();
-        nroAfiliadoField.setText(Objects.toString(nroAfiliado));
+        nroAfiliadoField = new JTextField(Objects.toString(nroAfiliado));
         contentPanel.add(nroAfiliadoField);
 
         add(contentPanel, BorderLayout.CENTER);
@@ -125,35 +131,113 @@ public class EditPacienteDialog extends JDialog {
     }
     private void registrarPacienteEventos() {
 
-        nombreField.addActionListener( e -> {
+        nombreField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+        });
+
+        dniField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+        });
+
+        emailField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+        });
+
+        edadField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+        });
+
+        domicilioField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+        });
+
+        nroAfiliadoField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                guardarButton.setEnabled(true);
+            }
+        });
+
+        obraSocialComboBox.addActionListener(e -> {
             guardarButton.setEnabled(true);
         });
 
-        dniField.addActionListener( e -> {
-            guardarButton.setEnabled(true);
-        });
-
-        emailField.addActionListener( e -> {
-            guardarButton.setEnabled(true);
-        });
-
-        edadField.addActionListener( e -> {
-            guardarButton.setEnabled(true);
-        });
-
-        domicilioField.addActionListener( e -> {
-            guardarButton.setEnabled(true);
-        });
-
-        nroAfiliadoField.addActionListener( e -> {
-            guardarButton.setEnabled(true);
-        });
-
-        obraSocialComboBox.addActionListener( e -> {
-            guardarButton.setEnabled(true);
-        });
-
-        sexoComboBox.addActionListener( e -> {
+        sexoComboBox.addActionListener(e -> {
             guardarButton.setEnabled(true);
         });
 
@@ -177,11 +261,12 @@ public class EditPacienteDialog extends JDialog {
             }
 
             List<PeticionDTO> peticionesDTO = new ArrayList<>();
+
             PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail, edad, domicilio,peticionesDTO, obraSocialDTO);
 
             try{
                 ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
-                controladorPaciente.createPaciente(pacienteDTO);
+                controladorPaciente.updatePaciente(pacienteDTO, oldDNI, oldSexo);
             } catch (Exception err){
                 System.out.println("Error ocurrido: " + err.getMessage());
             }
