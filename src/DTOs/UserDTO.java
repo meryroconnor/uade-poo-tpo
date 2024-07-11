@@ -7,9 +7,11 @@ public class UserDTO {
     private String username;
     private String password;
     private String DNI;
+    private String domicilio;
+    private String fechaNacimiento;
     private String rol;
 
-    public UserDTO(int userID, String nombreApellido, String email, String username, String password, String DNI, String rol){
+    public UserDTO(int userID, String nombreApellido, String email, String username, String password, String DNI, String rol, String domicilio, String fechaNacimiento){
         this.userID = userID;
         this.nombreApellido = nombreApellido;
         this.email = email;
@@ -17,6 +19,8 @@ public class UserDTO {
         this.password = password;
         this.DNI = DNI;
         this.rol = rol;
+        this.domicilio = domicilio;
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public int getUserID() {
@@ -45,5 +49,13 @@ public class UserDTO {
 
     public String getRol() {
         return rol;
+    }
+
+    public String getDomicilio() {
+        return domicilio;
+    }
+
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
     }
 }

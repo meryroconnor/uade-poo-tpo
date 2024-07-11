@@ -8,7 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class RegisterUserDialog extends JDialog {
-    private JTextField dniField, nombreField,fechaField, emailField, usernameField, passwordField;
+    private JTextField dniField, nombreField,fechaField, emailField, usernameField, passwordField, domicilioField;
     private JComboBox<String> rolComboBox;
     private JButton guardarButton, cancelButton;
 
@@ -46,6 +46,10 @@ public class RegisterUserDialog extends JDialog {
         contentPanel.add(new JLabel("Email:"));
         emailField = new JTextField();
         contentPanel.add(emailField);
+
+        contentPanel.add(new JLabel("Domicilio:"));
+        domicilioField = new JTextField();
+        contentPanel.add(domicilioField);
 
         contentPanel.add(new JLabel("Username:"));
         usernameField = new JTextField();
@@ -96,12 +100,14 @@ public class RegisterUserDialog extends JDialog {
             String dni = dniField.getText();
             String nombre = nombreField.getText();
             String mail = emailField.getText();
+            String domicilio = domicilioField.getText();
+            String fechaNacimiento = fechaField.getText();
             String username = usernameField.getText();
             String rol = (String) rolComboBox.getSelectedItem();
             String password= passwordField.getText();
             System.out.println("Datos ingresados:" + dni + ", " + nombre + ", " + mail + ", " + username + ", " + rol + ", " + password);
 
-            UserDTO usuarioPropuesto = new UserDTO(0, nombre, mail, username, password, dni, rol);
+            UserDTO usuarioPropuesto = new UserDTO(0, nombre, mail, username, password, dni, rol, domicilio, fechaNacimiento);
             //El userID en las  operaciones de creacion es un placeholder que el controlador sobrescribe
 
             ControladorUsuario controladorUsuario = ControladorUsuario.getInstance();

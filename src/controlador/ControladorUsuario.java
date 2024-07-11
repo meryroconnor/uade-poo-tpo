@@ -28,7 +28,7 @@ public class ControladorUsuario {
     }
 
     public void crearUsuario(UserDTO userParam){
-        User user = new User(nextUserID++, userParam.getNombreApellido(), userParam.getDNI(), userParam.getEmail(), userParam.getUsername(), userParam.getPassword(), userParam.getRol());
+        User user = new User(nextUserID++, userParam.getNombreApellido(), userParam.getDNI(), userParam.getEmail(), userParam.getUsername(), userParam.getPassword(), userParam.getRol(), userParam.getDomicilio(), userParam.getFechaNacimiento());
         if (getUsuario(user.getUsername()) == null){
             usuarios.add(user);
             if (getUsuarioFromDAO(user.toDTO()) == null){ //significa que no existe en el DAO
