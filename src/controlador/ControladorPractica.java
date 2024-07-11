@@ -38,7 +38,7 @@ public class ControladorPractica {
 
     // Método para crear una nueva Practica
     public void createPractica(PracticaDTO practicaParam) {
-        Practica practica = new Practica(nextCodigoPractica++, practicaParam.getNombrePractica(), practicaParam.getIndiceCriticoDTO().getValue(),practicaParam.getIndiceCriticoDTO().getLowLimit(),practicaParam.getIndiceCriticoDTO().getHighLimit(),practicaParam.getIndiceReservadoDTO().getValue(), practicaParam.getIndiceReservadoDTO().getLowLimit(), practicaParam.getIndiceReservadoDTO().getHighLimit());
+        Practica practica = new Practica(nextCodigoPractica++, practicaParam.getNombrePractica(), practicaParam.getIndiceCriticoDTO().getValue(),practicaParam.getIndiceCriticoDTO().getLowLimit(),practicaParam.getIndiceCriticoDTO().getHighLimit(),practicaParam.getIndiceReservadoDTO().getValue(), practicaParam.getIndiceReservadoDTO().getLowLimit(), practicaParam.getIndiceReservadoDTO().getHighLimit(), practicaParam.getCantidadHorasDemora());
 
         if (getPractica(practica.toDTO()) == null){
             practicas.add(practica);

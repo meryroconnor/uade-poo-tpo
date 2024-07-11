@@ -8,12 +8,14 @@ public class Practica {
     private String nombrePractica;
     private IndiceReservado indiceReservado;
     private IndiceCritico indiceCritico;
+    private int cantidadHorasDemora;
 
-    public Practica(int codigoPractica,  String nombrePractica, String valorCritico, Float lLimitCritico,Float hLCritico, String valorReservado, Float lLimitReservado, Float hLReservado) {
+    public Practica(int codigoPractica,  String nombrePractica, String valorCritico, Float lLimitCritico,Float hLCritico, String valorReservado, Float lLimitReservado, Float hLReservado, int cantidadHorasDemora) {
         this.codigoPractica = codigoPractica;
         this.nombrePractica= nombrePractica;
         this.indiceCritico = new IndiceCritico(valorCritico, lLimitCritico, hLCritico);
         this.indiceReservado = new IndiceReservado(valorReservado, lLimitReservado, hLReservado);
+        this.cantidadHorasDemora = cantidadHorasDemora;
     }
 
     public int getCodigoPractica() {
@@ -31,8 +33,13 @@ public class Practica {
         return indiceCritico;
     }
 
+
+    public int getCantidadHorasDemora() {
+        return cantidadHorasDemora;
+    }
+
     public PracticaDTO toDTO(){
-        PracticaDTO practicaDTO = new PracticaDTO(this.codigoPractica, this.nombrePractica ,this.indiceReservado.toDTO(), this.indiceCritico.toDTO());
+        PracticaDTO practicaDTO = new PracticaDTO(this.codigoPractica, this.nombrePractica ,this.indiceReservado.toDTO(), this.indiceCritico.toDTO(), this.cantidadHorasDemora);
         return practicaDTO;
     }
 }
