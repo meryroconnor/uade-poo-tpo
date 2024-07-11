@@ -1,8 +1,6 @@
 package vista;
 
-import DTOs.PacienteDTO;
 import DTOs.PracticaDTO;
-import DTOs.SucursalDTO;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 import controlador.ControladorPractica;
@@ -22,8 +20,6 @@ public class PracticaPanel extends JPanel {
     private JButton agregarButton;
     private JButton eliminarButton;
     private JTextArea outputArea;
-    private JPanel inputPanel;
-    private JPanel sendPanel;
 
     public PracticaPanel() {
         setLayout(new BorderLayout());
@@ -100,7 +96,7 @@ public class PracticaPanel extends JPanel {
                     ControladorPractica controladorPractica = ControladorPractica.getInstance();
                     String output = controladorPractica.deletePractica(practicaID);
 
-                    outputArea.append("##Solicitud de Eliminación: Practica "+practica+ "##\n");
+                    outputArea.append("#### Solicitud de Eliminación: Practica "+practica+ " ####\n");
                     outputArea.append(output+"\n\n");
                     if (output.contains("fue eliminada")) {
                         practicaComboBox.removeItem(practica);
@@ -137,7 +133,7 @@ public class PracticaPanel extends JPanel {
                         if(practicaDTO.getIndiceReservadoDTO().getValue()!= null) {
                             outputArea.append(">> Valor: " + practicaDTO.getIndiceReservadoDTO().getValue() +"\n\n");
                         } else {
-                            outputArea.append(">> Rango: " + practicaDTO.getIndiceReservadoDTO().getLowLimit() + "-" + practicaDTO.getIndiceReservadoDTO().getHighLimit() + "\n");
+                            outputArea.append(">> Rango: " + practicaDTO.getIndiceReservadoDTO().getLowLimit() + "-" + practicaDTO.getIndiceReservadoDTO().getHighLimit() + "\n\n");
                         }
 
                     } else {

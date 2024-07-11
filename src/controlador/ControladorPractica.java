@@ -1,10 +1,16 @@
 package controlador;
 
+import DAOs.PacienteDAO;
+import DAOs.PeticionDAO;
 import DAOs.PracticaDAO;
 import DTOs.EstudioDTO;
+import DTOs.PacienteDTO;
 import DTOs.PeticionDTO;
 import DTOs.PracticaDTO;
+import Laboratorio.Paciente;
+import Laboratorio.Peticion;
 import Laboratorio.Practica;
+import Laboratorio.Sucursal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +66,18 @@ public class ControladorPractica {
                return "La práctica tiene peticiones, NO PUEDE SER ELIMINADA.";
            }
        }
+       practicas.remove(practica);
+       deletePracticaFromDAO(practica.toDTO());
        return "La práctica fue eliminada!";
+    }
+
+    private void deletePracticaFromDAO(PracticaDTO practicaDTO){
+        try {
+            PracticaDAO practicaDAO = new PracticaDAO();
+            practicaDAO.borrarPractica(practicaDTO);
+        } catch (Exception e) {
+            System.out.println("Error ocurrido: " + e.getMessage());
+        }
     }
 
     private boolean practicaTienePeticionesAsociadas(Practica practica) {
