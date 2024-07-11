@@ -169,6 +169,15 @@ public class ControladorAtencion {
         }
 
     }
+    public SucursalDTO getSucursalFromDireccion(String direccion){
+        SucursalDTO sucursalEncontrada = null;
+        for (Sucursal sucursal : sucursales){
+            if (Objects.equals(sucursal.getDireccion(), direccion)) {
+                sucursalEncontrada = sucursal.toDTO();
+            }
+        }
+        return sucursalEncontrada;
+    }
 
     private List<SucursalDTO> getSucursalesFromDAO(){
         List<SucursalDTO> sucursalDTOS = null;
@@ -192,8 +201,6 @@ public class ControladorAtencion {
         return  sucursalEncontrada;
     }
 
-
-
     private void saveSucursalToDAO(SucursalDTO sucursalParam){
         try{
             SucursalDAO sucursalDAO = new SucursalDAO();
@@ -202,6 +209,27 @@ public class ControladorAtencion {
             System.out.println("Error Ocurrido: " + e);
         }
     }
+
+    public void updateSucursal(SucursalDTO sucursalDTOParam, String direccionOld){
+        int sucursalEncontradaID = getSucursalFromDireccion(direccionOld).getSucursalID();
+        Sucursal sucursalEncontrada = findSucursal(sucursalEncontradaID);
+
+        sucursalEncontrada.setDireccion(sucursalDTOParam.getDireccion());
+        sucursalEncontrada.setResponsableMatricula(sucursalDTOParam.getResponsableMatricula());
+
+        try {
+            SucursalDAO sucursalDAO = new SucursalDAO();
+            sucursalDAO.actualizarSucursal(sucursalEncontrada.toDTO());
+            System.out.println("Sucursal Actualizada");
+        }catch (Exception err){
+            System.out.println(err.getMessage());
+        }
+
+
+    }
+
+
+
 
     // Método para eliminar una sucursal por su ID
     public String deleteSucursal(int sucursalID) {

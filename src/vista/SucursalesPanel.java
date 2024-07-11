@@ -1,9 +1,7 @@
 package vista;
 
-import DTOs.PacienteDTO;
 import DTOs.SucursalDTO;
 import controlador.ControladorAtencion;
-import controlador.ControladorPaciente;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -88,6 +86,31 @@ public class SucursalesPanel extends JPanel {
 
     private void asociarEventos() {
         // Action listener for "Agregar Sucursal" button
+        editarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String nombreSucursal = sucursalComboBox.getSelectedItem().toString();
+
+                try {
+                    ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+                    SucursalDTO sucursalDTO = controladorAtencion.getSucursalFromDireccion(nombreSucursal);
+
+                    if (sucursalDTO != null){
+                        EditSucursalDialog dialog = new EditSucursalDialog(JOptionPane.getFrameForComponent(SucursalesPanel.this), sucursalDTO);
+                        dialog.setVisible(true);
+
+                        List<SucursalDTO> sucursales = controladorAtencion.getSucursales();
+                        sucursalComboBox.removeAllItems();
+                        for (int i = 0; i < sucursales.size(); i++){
+                            sucursalComboBox.addItem(sucursales.get(i).getDireccion());
+                        }
+                    }
+                } catch (Exception err){
+                    System.out.println(err.getMessage());
+                }
+            }
+        });
+
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,10 +124,10 @@ public class SucursalesPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String sucursal = (String) sucursalComboBox.getSelectedItem();
-                int sucursalID = getSucursal(sucursal).getSucursalID();
 
                 try {
                     ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+                    int sucursalID = controladorAtencion.getSucursalFromDireccion(sucursal).getSucursalID();
                     String output = controladorAtencion.deleteSucursal(sucursalID);
 
                     outputArea.append("##Solicitud de Eliminacion: Sucursal "+sucursal+ "##\n");
@@ -125,10 +148,9 @@ public class SucursalesPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String sucursal = (String) sucursalComboBox.getSelectedItem();
-                int sucursalID = getSucursal(sucursal).getSucursalID();
-
                 try {
                     ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+                    int sucursalID = controladorAtencion.getSucursalFromDireccion(sucursal).getSucursalID();
                     SucursalDTO sucursalDTO = controladorAtencion.getSucursal(sucursalID);
 
                     if (sucursalDTO != null) {
@@ -161,16 +183,22 @@ public class SucursalesPanel extends JPanel {
         return vectorSucursales;
     }
 
-    private SucursalDTO getSucursal(String direccion){
-        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
-        List<SucursalDTO> sucursales = controladorAtencion.getSucursales();
-        SucursalDTO sucursalEncontrada = null;
 
-        for (SucursalDTO sucursal : sucursales){
-            if (Objects.equals(sucursal.getDireccion(), direccion)) {
-                sucursalEncontrada = sucursal;
-            }
-        }
-        return sucursalEncontrada;
+
+
+//    metodo de controlador: implementado!
+//    private SucursalDTO getSucursal(String direccion){
+//        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+//        List<SucursalDTO> sucursales = controladorAtencion.getSucursales();
+//        SucursalDTO sucursalEncontrada = null;
+//
+//        for (SucursalDTO sucursal : sucursales){
+//            if (Objects.equals(sucursal.getDireccion(), direccion)) {
+//                sucursalEncontrada = sucursal;
+//            }
+//        }
+//        return sucursalEncontrada;
+//    }
+
+
     }
-}
