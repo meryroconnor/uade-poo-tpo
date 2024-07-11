@@ -1,6 +1,5 @@
 package vista;
 
-import DTOs.ObraSocialDTO;
 import DTOs.PacienteDTO;
 import controlador.ControladorPaciente;
 
@@ -9,7 +8,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.Objects;
 
 public class PacientePanel extends JPanel {
@@ -136,11 +134,12 @@ public class PacientePanel extends JPanel {
                         outputArea.append("Nombre: " + pacienteDTO.getNombreApellido() + "\n");
                         outputArea.append("DNI: " + pacienteDTO.getDNI() + "\n");
                         outputArea.append("Mail: " + pacienteDTO.getEmail() + "\n");
-                        outputArea.append("Sexo: " + pacienteDTO.getSexo() + "\n");
+                        outputArea.append("Edad: " + pacienteDTO.getEdad() + "\n");
+                        outputArea.append("Domicilio: " + pacienteDTO.getDomicilio() + "\n");
                         outputArea.append("Paciente ID: " + pacienteDTO.getPacienteID() + "\n");
 
                         if (pacienteDTO.getObraSocialDTO().getObraSocial() != null) {
-                            outputArea.append("Paciente tiene Obra Social");
+                            outputArea.append("Paciente tiene Obra Social\n");
                             outputArea.append("Obra Social: " + pacienteDTO.getObraSocialDTO().getObraSocial() + "\n");
                             outputArea.append("Obra Social ID: " + pacienteDTO.getObraSocialDTO().getObraSocialID() + "\n\n");
                         } else {

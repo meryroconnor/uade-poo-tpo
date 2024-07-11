@@ -5,7 +5,6 @@ import DAOs.PacienteDAO;
 import DTOs.ObraSocialDTO;
 import DTOs.PacienteDTO;
 import DTOs.PeticionDTO;
-import DTOs.PracticaDTO;
 import Laboratorio.ObraSocial;
 import Laboratorio.Paciente;
 import Laboratorio.Peticion;
@@ -156,7 +155,7 @@ public class ControladorPaciente {
     // Método para crear un nuevo Paciente
     public void createPaciente(PacienteDTO pacienteParam) {
         ObraSocialDTO obraSocialDTO = pacienteParam.getObraSocialDTO();
-        Paciente paciente = new Paciente(nextPacienteID++, pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
+        Paciente paciente = new Paciente(nextPacienteID++, pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), pacienteParam.getEdad(), pacienteParam.getDomicilio(), obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
 
         if (getPaciente(paciente.getDNI(), paciente.getSexo()) == null){
             pacientes.add(paciente);
@@ -173,7 +172,7 @@ public class ControladorPaciente {
     // Método para Cargar Paciente (solo se ejecuta en la carga dao->sistema)
     private void loadPaciente(PacienteDTO pacienteParam) {
         ObraSocialDTO obraSocialDTO = pacienteParam.getObraSocialDTO();
-        Paciente paciente = new Paciente(pacienteParam.getPacienteID(), pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
+        Paciente paciente = new Paciente(pacienteParam.getPacienteID(), pacienteParam.getNombreApellido(),pacienteParam.getSexo(), pacienteParam.getDNI(), pacienteParam.getEmail(), pacienteParam.getEdad(), pacienteParam.getDomicilio(), obraSocialDTO.getObraSocial(), obraSocialDTO.getObraSocialID());
 
         if (getPaciente(paciente.getDNI(), paciente.getSexo()) == null){
             pacientes.add(paciente);

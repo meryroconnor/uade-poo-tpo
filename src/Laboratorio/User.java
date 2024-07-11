@@ -10,7 +10,9 @@ public class User {
     private String password;
     private String DNI;
     private String rol;
-    public User(int userID, String nombreApellido, String DNI, String email, String username, String password, String rol) {
+    private String domicilio;
+    private String fechaNacimiento;
+    public User(int userID, String nombreApellido, String DNI, String email, String username, String password, String rol, String domicilio, String fechaNacimiento) {
         this.userID = userID;
         this.email = email;
         this.username = username;
@@ -18,6 +20,8 @@ public class User {
         this.nombreApellido = nombreApellido;
         this.DNI = DNI;
         this.rol = rol;
+        this.domicilio = domicilio;
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public int getUserID() {
@@ -56,6 +60,23 @@ public class User {
     public void setDNI(String DNI) {
         this.DNI = DNI;
     }
+
+    public String getDomicilio() {
+        return domicilio;
+    }
+
+    public void setDomicilio(String domicilio) {
+        this.domicilio = domicilio;
+    }
+
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
     public String getRol() {
         return this.rol;
     }
@@ -63,7 +84,7 @@ public class User {
         this.rol = rol;
     }
     public UserDTO toDTO(){
-        UserDTO userDTO = new UserDTO(this.userID, this.nombreApellido, this.email, this.username, this.password, this.DNI, this.rol);
+        UserDTO userDTO = new UserDTO(this.userID, this.nombreApellido, this.email, this.username, this.password, this.DNI, this.rol, this.domicilio, this.fechaNacimiento);
         return  userDTO;
     }
 }

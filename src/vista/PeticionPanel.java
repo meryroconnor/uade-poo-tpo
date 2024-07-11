@@ -11,6 +11,8 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,7 +69,7 @@ public class PeticionPanel extends JPanel {
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
-        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Sucursal"};
+        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Sucursal", "Fecha de Carga", "Fecha de Terminacion Estimada"};
         Object[][] data = {}; // Data inicial vacía
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
@@ -171,12 +173,16 @@ public class PeticionPanel extends JPanel {
                         String resultado = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
                         String sucursal = controladorAtencion.obtenerSucursalOfPeticion(peticion.getPeticionID()).getDireccion();
 
+                        //TODO: Resolver que pasa si value es null: Cannot invoke "java.lang.Float.floatValue()" because the return value of "Laboratorio.IndiceReservado.getLowLimit()" is null
+
                         Object[] rowData = new Object[]{
                                 peticion.getPeticionID(),
                                 paciente.getNombreApellido(),
                                 estudio.getPracticaDTO().getNombrePractica(),
                                 resultado,
-                                sucursal
+                                sucursal,
+                                peticion.getFechaCarga().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)),
+                                peticion.getFechaTerminacionEstimada().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))
                         };
                         tableModel.addRow(rowData);
                     }
@@ -217,7 +223,9 @@ public class PeticionPanel extends JPanel {
                                             paciente.getNombreApellido(),
                                             estudio.getPracticaDTO().getNombrePractica(),
                                             resultado,
-                                            sucursal
+                                            sucursal,
+                                            peticion.getFechaCarga().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)),
+                                            peticion.getFechaTerminacionEstimada().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))
                                     };
                                     tableModel.addRow(rowData);
                                 }
@@ -255,7 +263,9 @@ public class PeticionPanel extends JPanel {
                                     paciente.getNombreApellido(),
                                     estudio.getPracticaDTO().getNombrePractica(),
                                     resultado,
-                                    sucursal
+                                    sucursal,
+                                    peticion.getFechaCarga().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)),
+                                    peticion.getFechaTerminacionEstimada().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT))
                             };
                             tableModel.addRow(rowData);
                         }

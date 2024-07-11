@@ -52,6 +52,7 @@ public class PacienteDialog extends JDialog {
         edadField = new JTextField();
         contentPanel.add(edadField);
 
+
         contentPanel.add(new JLabel("Domicilio:"));
         domicilioField = new JTextField();
         contentPanel.add(domicilioField);
@@ -108,6 +109,8 @@ public class PacienteDialog extends JDialog {
             String nombre = nombreField.getText();
             String DNI = dniField.getText();
             String mail = emailField.getText();
+            int edad = Integer.parseInt(edadField.getText());
+            String domicilio = domicilioField.getText();
             String nroAfiliadoText = nroAfiliadoField.getText();
             String obraSocial = Objects.requireNonNull(obraSocialComboBox.getSelectedItem()).toString();
             String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
@@ -121,7 +124,7 @@ public class PacienteDialog extends JDialog {
             }
 
             List<PeticionDTO> peticionesDTO = new ArrayList<>();
-            PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail, peticionesDTO, obraSocialDTO);
+            PacienteDTO pacienteDTO = new PacienteDTO(0, nombre, sexo, DNI, mail, edad, domicilio,peticionesDTO, obraSocialDTO);
 
             try{
                 ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();

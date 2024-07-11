@@ -13,15 +13,19 @@ public class Paciente {
     private String DNI;
     private String sexo;
     private String email;
+    private int edad;
+    private String domicilio;
     private ObraSocial obraSocial;
     private List<Peticion> peticiones;
 
-    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email, String nombreObraSocial, int obraSocialID) {
+    public Paciente(int pacienteID, String nombreApellido, String sexo, String DNI, String email, int edad, String domicilio, String nombreObraSocial, int obraSocialID) {
         this.pacienteID = pacienteID;
         this.nombreApellido = nombreApellido;
         this.sexo = sexo;
         this.DNI = DNI;
         this.email= email;
+        this.edad = edad;
+        this.domicilio = domicilio;
         this.peticiones = new ArrayList<>();
 
         // Permitir que obraSocial sea nulo
@@ -46,6 +50,12 @@ public class Paciente {
     }
     public String getEmail() {
         return email;
+    }
+    public int getEdad() {
+        return edad;
+    }
+    public String getDomicilio() {
+        return domicilio;
     }
     public ObraSocial getObraSocial() {
         return obraSocial;
@@ -99,7 +109,7 @@ public class Paciente {
         } else {
             obraSocialDTO= this.obraSocial.toDTO();
         }
-        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email, peticionesDTO, obraSocialDTO);
+        PacienteDTO pacienteDTO = new PacienteDTO(this.pacienteID, this.nombreApellido, this.sexo, this.DNI, this.email, this.edad, this.domicilio, peticionesDTO, obraSocialDTO);
         return pacienteDTO;
     }
 }

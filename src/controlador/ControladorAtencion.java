@@ -2,7 +2,6 @@ package controlador;
 
 import DAOs.PacienteDAO;
 import DAOs.PeticionDAO;
-import DAOs.PracticaDAO;
 import DAOs.SucursalDAO;
 import DTOs.*;
 import Laboratorio.*;
@@ -245,9 +244,9 @@ public class ControladorAtencion {
         List<Peticion> peticionesInactivas = getPeticionesInactivas(sucursalAEliminar);
 
         for (Peticion peticion: peticionesInactivas) {
+            PacienteDTO pacienteDTO = getPacienteInPeticion(peticion.getPeticionID());
             this.peticiones.remove(peticion);
             deletePeticionFromDAO(peticion.toDTO());
-            PacienteDTO pacienteDTO = getPacienteInPeticion(peticion.getPeticionID());
             ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
             Paciente paciente = controladorPaciente.findPaciente(pacienteDTO.getPacienteID());
             paciente.removePeticion(peticion);
