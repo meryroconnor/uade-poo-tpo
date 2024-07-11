@@ -87,6 +87,35 @@ public class PacientePanel extends JPanel {
 
     }
     private void asociarEventos() {
+
+        editarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String dni = dniField.getText();
+                String sexo = Objects.requireNonNull(sexoComboBox.getSelectedItem()).toString();
+
+                try {
+                    ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                    PacienteDTO pacienteDTO = controladorPaciente.getPaciente(dni, sexo);
+
+                    if (pacienteDTO != null) {
+
+                        EditPacienteDialog dialog = new EditPacienteDialog(JOptionPane.getFrameForComponent(PacientePanel.this), pacienteDTO);
+                        dialog.setVisible(true);
+                    } else {
+                        // Mostrar un mensaje de error si no se encuentra el paciente
+                        JOptionPane.showMessageDialog(PacientePanel.this,
+                                "Para editar un paciente debe debe ingresar su DNI y Sexo!",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception err) {
+                    outputArea.append("Error al buscar el paciente: " + err.getMessage() + "\n\n");
+                    err.printStackTrace();
+                }
+            }
+        });
+
         // Action listener for "Agregar Paciente" button
         agregarButton.addActionListener(new ActionListener() {
             @Override
