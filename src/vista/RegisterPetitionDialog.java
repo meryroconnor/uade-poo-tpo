@@ -1,7 +1,6 @@
 package vista;
 
 import DTOs.*;
-import Laboratorio.Peticion;
 import controlador.ControladorAtencion;
 import controlador.ControladorPaciente;
 import controlador.ControladorPractica;
@@ -100,7 +99,9 @@ public class RegisterPetitionDialog extends JDialog {
                 for (int i = 0; i < practicaListModel.size(); i++) {
                     PracticaDTO practicaDTO =  getPractica(practicaListModel.getElementAt(i));
                     ResultadoDTO resultadoDTO = new ResultadoDTO(0,null);
-                    EstudioDTO estudioDTO = new EstudioDTO(0, practicaDTO, resultadoDTO);
+                    EstudioDTO estudioDTO = new EstudioDTO(0, practicaDTO, resultadoDTO, null, null);
+                    // ese DTO solo es para pasar info de que estudio se adiciona a la peticion las fechas no importan ya que
+                    // se usaran las del objeto del modelo
                     controladorAtencion.addEstudioToPeticion(estudioDTO,peticionDTO);
                 }
 
