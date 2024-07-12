@@ -6,7 +6,10 @@ import DAOs.SucursalDAO;
 import DTOs.*;
 import Laboratorio.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 public class ControladorAtencion {
     private static ControladorAtencion instance;
@@ -159,6 +162,8 @@ public class ControladorAtencion {
 //            }
 //        }
 
+        peticionOriginal.setFechaAproxTerminacion(); //recalcular tiempos de entrega
+
         try{
             PeticionDAO peticionDAO = new PeticionDAO();
             PacienteDAO pacienteDAO = new PacienteDAO();
@@ -184,7 +189,6 @@ public class ControladorAtencion {
         }
         return false;
     }
-
 
     private List<PeticionDTO> getPeticionesFromDAO(){
         List<PeticionDTO> peticionDTOS = null;

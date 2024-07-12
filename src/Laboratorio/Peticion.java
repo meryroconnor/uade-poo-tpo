@@ -52,7 +52,7 @@ public class Peticion {
         return fechaAproxTerminacion;
     }
 
-    private void setFechaAproxTerminacion() {
+    public void setFechaAproxTerminacion() {
         LocalDateTime fechaTerminacion = estudios.get(0).getFechaEntregaEstimada(); //agarro la primera asi no queda null
         for (Estudio estudio : estudios){
             LocalDateTime fechaTerminacionSingular = estudio.getFechaEntregaEstimada(); //busco la que mas tarde
