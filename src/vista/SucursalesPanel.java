@@ -132,7 +132,9 @@ public class SucursalesPanel extends JPanel {
 
                     outputArea.append("##Solicitud de Eliminacion: Sucursal "+sucursal+ "##\n");
                     outputArea.append(output+"\n\n");
-                    sucursalComboBox.removeItem(sucursal);
+                    if (output.contains("eliminada")) {
+                        sucursalComboBox.removeItem(sucursal);
+                    }
 
 
 

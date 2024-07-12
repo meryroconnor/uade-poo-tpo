@@ -3,3 +3,4 @@
 {"codigoPractica":3,"nombrePractica":"Rayos X Columna","indiceReservadoDTO":{"value":"Escoliosis","lowLimit":0.0,"highLimit":0.0},"indiceCriticoDTO":{"value":"Necrosis","lowLimit":0.0,"highLimit":0.0},"cantidadHorasDemora":24}
 {"codigoPractica":4,"nombrePractica":"Colesterol Total","indiceReservadoDTO":{"lowLimit":300.0,"highLimit":600.0},"indiceCriticoDTO":{"lowLimit":1000.0,"highLimit":5000.0},"cantidadHorasDemora":48}
 {"codigoPractica":5,"nombrePractica":"Bilirrubina Total","indiceReservadoDTO":{"lowLimit":12.5,"highLimit":30.5},"indiceCriticoDTO":{"lowLimit":35.89,"highLimit":100.0},"cantidadHorasDemora":59}
+{"codigoPractica":6,"nombrePractica":"COVID","indiceReservadoDTO":{"value":"INCONCLUSO","lowLimit":0.0,"highLimit":0.0},"indiceCriticoDTO":{"value":"POSITIVO","lowLimit":0.0,"highLimit":0.0},"cantidadHorasDemora":50}

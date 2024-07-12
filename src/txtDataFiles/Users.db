@@ -1,1 +1,3 @@
 {"userID":1,"nombreApellido":"Maria Rivas","email":"maria@mail.com","username":"maria","password":"123","DNI":"39644881","domicilio":"Riobamba 7985","fechaNacimiento":"21-06-1996","rol":"admin"}
+{"userID":2,"nombreApellido":"Sofia Martinez","email":"sofia@labs.com","username":"sofia","password":"123","DNI":"48789512","domicilio":"Pueyrredon 456","fechaNacimiento":"01/01/2000","rol":"recepcionista"}
+{"userID":3,"nombreApellido":"Pedro Puan","email":"pedro@labs.com","username":"pedro","password":"123","DNI":"28657419","domicilio":"Esmeralda 45","fechaNacimiento":"15/12/1980","rol":"laboratorista"}

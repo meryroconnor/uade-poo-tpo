@@ -431,7 +431,7 @@ public class ControladorAtencion {
         List<Peticion> peticionesActivas = new ArrayList<>();
         for (Peticion peticion : sucursal.getPeticiones()) {
             for (Estudio estudio : peticion.getEstudios()) {
-                if (estudio.tieneResultado()) {
+                if (estudio.tieneResultado() && !peticionesActivas.contains(peticion)) {
                     peticionesActivas.add(peticion);
                 }
             }
@@ -444,7 +444,7 @@ public class ControladorAtencion {
         List<Peticion> peticionesInctivas = new ArrayList<>();
         for (Peticion peticion : sucursal.getPeticiones()) {
             for (Estudio estudio : peticion.getEstudios()) {
-                if (!estudio.tieneResultado()) {
+                if (!estudio.tieneResultado() && !peticionesInctivas.contains(peticion)) {
                     peticionesInctivas.add(peticion);
                 }
             }
