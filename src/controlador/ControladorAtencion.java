@@ -239,6 +239,36 @@ public class ControladorAtencion {
         }
     }
 
+    public void deletePeticion(int peticionID){
+
+        for(Peticion peticion : peticiones){
+            if(peticion.getPeticionID() == peticionID){
+                PacienteDTO pacienteDTO = getPacienteInPeticion(peticion.getPeticionID());
+                Sucursal sucursal = getSucursalInPeticion(peticion.getPeticionID());
+                deletePeticionFromDAO(peticion.toDTO());
+                peticiones.remove(peticion);
+
+
+                ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                Paciente paciente = controladorPaciente.findPaciente(pacienteDTO.getPacienteID());
+                paciente.removePeticion(peticion);
+
+                sucursal.removePeticion(peticion);
+
+                try {
+                    PacienteDAO pacienteDAO = new PacienteDAO();
+                    pacienteDAO.actualizarPaciente(paciente.toDTO());
+                    SucursalDAO sucursalDAO = new SucursalDAO();
+                    sucursalDAO.actualizarSucursal(sucursal.toDTO());
+                } catch (Exception e) {
+                    System.out.println("Error: "+e.getMessage());
+                }
+                break;
+            }
+        }
+
+    }
+
     private void eliminarSucursalDelSistema(Sucursal sucursalAEliminar) {
         sucursales.remove(sucursalAEliminar);
         List<Peticion> peticionesInactivas = getPeticionesInactivas(sucursalAEliminar);
@@ -274,6 +304,19 @@ public class ControladorAtencion {
             }
         }
         return pacienteEncontrado;
+    }
+
+    private Sucursal getSucursalInPeticion(int peticionID) {
+        Sucursal sucursalEncontrada = null;
+        for (Sucursal sucursal: sucursales) {
+            for(Peticion peticion : sucursal.getPeticiones()){
+                if(peticionID == peticion.getPeticionID()) {
+                    sucursalEncontrada = sucursal;
+                    break;
+                }
+            }
+        }
+        return sucursalEncontrada;
     }
 
     private void deleteSucursalFromDAO(SucursalDTO sucursalDTO){

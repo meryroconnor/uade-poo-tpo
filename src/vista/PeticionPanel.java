@@ -65,7 +65,6 @@ public class PeticionPanel extends JPanel {
         getPeticionesCriticasButton.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("resources/alarm.png"))));
         filterPanel.add(getPeticionesCriticasButton);
 
-
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
@@ -125,18 +124,24 @@ public class PeticionPanel extends JPanel {
         // Configurar el botón de filtrado
         filterButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) { actualizarTablaConBusquedaFiltrada(); }
+            public void actionPerformed(ActionEvent e) {
+                actualizarTablaConBusquedaFiltrada();
+            }
         });
 
         getAllButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {actualizarTablaConTodasLasPeticiones();}
+            public void actionPerformed(ActionEvent e) {
+                actualizarTablaConTodasLasPeticiones();
+            }
         });
 
         // Configurar el botón de filtrar peticiones CRITICAS
         getPeticionesCriticasButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) { actualizarTablaConPeticionesCriticas(); }
+            public void actionPerformed(ActionEvent e) {
+                actualizarTablaConPeticionesCriticas();
+            }
         });
 
         // Configurar el botón de creación
@@ -154,11 +159,13 @@ public class PeticionPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Lógica para eliminar una petición
-                System.out.println("Eliminar petición");
+                // Mostrar diálogo para eliminar una petición
+                EliminarPeticionDialog dialog = new EliminarPeticionDialog(JOptionPane.getFrameForComponent(PeticionPanel.this));
+                dialog.setVisible(true);
             }
         });
     }
+
     // Método para actualizar la tabla con todas las peticiones
     private void actualizarTablaConTodasLasPeticiones() {
         ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
@@ -167,13 +174,12 @@ public class PeticionPanel extends JPanel {
 
         tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
         for (PacienteDTO paciente : pacientes) {
-            if (paciente.getPeticionesDTO().size()!=0) {
+            if (paciente.getPeticionesDTO().size() != 0) {
                 for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
                     for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
                         String resultado = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
                         String sucursal = controladorAtencion.obtenerSucursalOfPeticion(peticion.getPeticionID()).getDireccion();
 
-                        //TODO: Resolver que pasa si value es null: Cannot invoke "java.lang.Float.floatValue()" because the return value of "Laboratorio.IndiceReservado.getLowLimit()" is null
 
                         Object[] rowData = new Object[]{
                                 peticion.getPeticionID(),
@@ -194,7 +200,7 @@ public class PeticionPanel extends JPanel {
     // Método para actualizar la tabla Busqueda filtrada de peticiones
     //TODO: Permitir filtras solo por paciente o solo por peticion ... si ambos estan nulos informa error.
     private void actualizarTablaConBusquedaFiltrada() {
-        if (filterPatientId.getText().equals("")  || filterRequestId.getText().equals("")) {
+        if (filterPatientId.getText().equals("") || filterRequestId.getText().equals("")) {
             // Mostrar un mensaje de error si no se encuentra el paciente
             JOptionPane.showMessageDialog(this,
                     "Para la busqueda filtrada debe ingresar Paciente ID y Peticion!",
@@ -237,7 +243,6 @@ public class PeticionPanel extends JPanel {
         }
     }
 
-
     private void actualizarTablaConPeticionesCriticas() {
         ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
         List<PacienteDTO> pacientes = controladorPaciente.getPacientes();
@@ -245,7 +250,7 @@ public class PeticionPanel extends JPanel {
 
         tableModel.setRowCount(0); // Limpia la tabla antes de agregar nuevas filas
         for (PacienteDTO paciente : pacientes) {
-            if (paciente.getPeticionesDTO().size()!=0) {
+            if (paciente.getPeticionesDTO().size() != 0) {
                 for (PeticionDTO peticion : paciente.getPeticionesDTO()) {
                     for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
                         String is_critico = controladorAtencion.showResultados(peticion.getPeticionID(), estudio.getCodigoEstudio());
@@ -278,6 +283,8 @@ public class PeticionPanel extends JPanel {
     public void addRow(Object[] rowData) {
         tableModel.addRow(rowData);
     }
+
+
 }
 
 
