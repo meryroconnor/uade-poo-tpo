@@ -229,6 +229,12 @@ public class ControladorPaciente {
         return  pacienteEncontrado;
     }
 
+    public PacienteDTO getPacienteFromPacienteID(int pacienteID){ //Necesario porque el paciente sufre actualizaciones
+        Paciente pacienteEncontrado = null;
+        pacienteEncontrado = findPaciente(pacienteID);
+        return  pacienteEncontrado.toDTO();
+    }
+
     protected Paciente getPacienteFromPeticion(int peticionID){
         Paciente pacienteEncontrado = null;
         for (Paciente paciente : pacientes){

@@ -125,6 +125,60 @@ public class ControladorAtencion {
         }
     }
 
+    public void updatePeticion(PeticionDTO peticionDTOPropuesta){
+        Peticion peticionOriginal = findPeticion(peticionDTOPropuesta.getPeticionID());
+
+        //relacionados con la peticion
+        PacienteDTO pacienteDTO = getPacienteInPeticion(peticionDTOPropuesta.getPeticionID());
+        SucursalDTO sucursalDTO = obtenerSucursalOfPeticion(peticionDTOPropuesta.getPeticionID());
+
+        List<Estudio> estudiosOriginales = peticionOriginal.getEstudios();
+
+        List<Estudio> estudiosPropuestos = new ArrayList<>();
+
+        for (EstudioDTO estudioDTO : peticionDTOPropuesta.getEstudiosDTO()){
+            int codigoEstudio = estudioDTO.getCodigoEstudio();
+            Estudio estudioPropuesto = findEstudioInPeticion(peticionDTOPropuesta.getPeticionID(), codigoEstudio);
+            estudiosPropuestos.add(estudioPropuesto);
+        }
+
+        //borrado de estudios de la original que no se encuentran en la propuesta
+        for (Estudio estudio : estudiosOriginales){
+            boolean existente = verificarExistencia(estudio, estudiosPropuestos);
+            if (!existente){
+                peticionOriginal.removeEstudio(estudio.getCodigoEstudio());
+            }
+        }
+
+        //agregado de estudios de la propuesta que no se encuentran en la original
+        for (Estudio estudio : estudiosPropuestos){
+            boolean existente = verificarExistencia(estudio, estudiosOriginales);
+            if (!existente){
+                peticionOriginal.addEstudio(estudio.getPractica(), estudio.getResultado().getValorResultado(), estudio.getResultado().getDescripcionResultado());
+            }
+        }
+
+
+
+        try{
+
+        }catch (Exception err){
+            System.out.println(err.getMessage());
+        }
+
+
+    }
+
+    private boolean verificarExistencia(Estudio estudioPickeado, List<Estudio> estudiosAComprobar){
+        boolean encontrado = false;
+        for (Estudio estudio : estudiosAComprobar){
+            if (estudio.getCodigoEstudio() == estudioPickeado.getCodigoEstudio()){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private List<PeticionDTO> getPeticionesFromDAO(){
         List<PeticionDTO> peticionDTOS = null;
@@ -227,9 +281,6 @@ public class ControladorAtencion {
 
 
     }
-
-
-
 
     // Método para eliminar una sucursal por su ID
     public String deleteSucursal(int sucursalID) {

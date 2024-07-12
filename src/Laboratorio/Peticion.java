@@ -39,6 +39,15 @@ public class Peticion {
         this.setFechaAproxTerminacion();
     }
 
+    public void removeEstudio(int codigoEstudio){
+        for (Estudio estudio : estudios){
+            if (estudio.getCodigoEstudio() == codigoEstudio){
+                this.estudios.remove(estudio);
+                break;
+            }
+        }
+    }
+
     public LocalDateTime getFechaAproxTerminacion() {
         return fechaAproxTerminacion;
     }

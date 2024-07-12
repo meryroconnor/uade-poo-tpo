@@ -164,19 +164,42 @@ public class PeticionPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 boolean selected = Objects.nonNull(table.getSelectedRow());
 
-                if (selected == true){
+                if (selected){
                     int row = table.getSelectedRow();
                     int peticionID = Integer.parseInt(table.getValueAt(row, 0).toString());
+                    int pacienteID = Integer.parseInt(table.getValueAt(row, 1).toString());
                     PeticionDTO peticionDTO = null;
+                    String DNI;
+                    String sexo;
+                    String sucursal;
 
                     try{
                         ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
                         ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+
                         peticionDTO = controladorAtencion.getPeticion(peticionID);
-                        JDialog dialog = new EditPeticionDialog(JOptionPane.getFrameForComponent(PeticionPanel.this), peticionDTO, controladorPaciente);
+                        PacienteDTO pacienteDTO = controladorPaciente.getPacienteFromPacienteID(pacienteID);
+                        SucursalDTO sucursalDTO = controladorAtencion.obtenerSucursalOfPeticion(peticionID);
+
+                        DNI = pacienteDTO.getDNI();
+                        sexo = pacienteDTO.getSexo();
+                        sucursal = sucursalDTO.getDireccion();
+
+                        List<EstudioDTO> estudioDTOS = peticionDTO.getEstudiosDTO();
+                        for (EstudioDTO estudio : estudioDTOS){
+                            if (estudio.getResultadoDTO().getDescripcionResultado() == null && estudio.getResultadoDTO().getValorResultado() == 0){
+                                throw new Exception("No puede modificar una peticion con resultados finalizados");
+                            }
+                        }
+
+
+                        JDialog dialog = new EditPeticionDialog(JOptionPane.getFrameForComponent(PeticionPanel.this), peticionDTO, DNI, sexo, sucursal);
                         dialog.setVisible(true);
                     }catch (Exception err){
-                        System.out.println(err.getMessage());
+                        JOptionPane.showMessageDialog(PeticionPanel.this,
+                                err.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
                     }
 
 
