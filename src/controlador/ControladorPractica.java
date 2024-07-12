@@ -1,8 +1,16 @@
 package controlador;
 
+import DAOs.PacienteDAO;
+import DAOs.PeticionDAO;
 import DAOs.PracticaDAO;
+import DTOs.EstudioDTO;
+import DTOs.PacienteDTO;
+import DTOs.PeticionDTO;
 import DTOs.PracticaDTO;
+import Laboratorio.Paciente;
+import Laboratorio.Peticion;
 import Laboratorio.Practica;
+import Laboratorio.Sucursal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +48,7 @@ public class ControladorPractica {
     public void createPractica(PracticaDTO practicaParam) {
         Practica practica = new Practica(nextCodigoPractica++, practicaParam.getNombrePractica(), practicaParam.getIndiceCriticoDTO().getValue(),practicaParam.getIndiceCriticoDTO().getLowLimit(),practicaParam.getIndiceCriticoDTO().getHighLimit(),practicaParam.getIndiceReservadoDTO().getValue(), practicaParam.getIndiceReservadoDTO().getLowLimit(), practicaParam.getIndiceReservadoDTO().getHighLimit(), practicaParam.getCantidadHorasDemora());
 
-        if (getPractica(practica.toDTO()) == null){
+        if (getPractica(practica.getCodigoPractica()) == null){
             practicas.add(practica);
             if (getPracticaFromDAO(practica.toDTO()) == null){
                 savePracticaToDAO(practica.toDTO());
@@ -49,6 +57,40 @@ public class ControladorPractica {
             practica = null;
             System.out.println("Practica Existente Cancelando Operacion");
         }
+    }
+
+    public String deletePractica(int codigoPractica) {
+       Practica practica = findPractica(codigoPractica);
+       if (practica!=null) {
+           if (practicaTienePeticionesAsociadas(practica)) {
+               return "La práctica tiene peticiones, NO PUEDE SER ELIMINADA.";
+           }
+       }
+       practicas.remove(practica);
+       deletePracticaFromDAO(practica.toDTO());
+       return "La práctica fue eliminada!";
+    }
+
+    private void deletePracticaFromDAO(PracticaDTO practicaDTO){
+        try {
+            PracticaDAO practicaDAO = new PracticaDAO();
+            practicaDAO.borrarPractica(practicaDTO);
+        } catch (Exception e) {
+            System.out.println("Error ocurrido: " + e.getMessage());
+        }
+    }
+
+    private boolean practicaTienePeticionesAsociadas(Practica practica) {
+        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+        List<PeticionDTO> peticiones = controladorAtencion.getPeticiones();
+        for (PeticionDTO peticion : peticiones) {
+            for (EstudioDTO estudio : peticion.getEstudiosDTO()) {
+                if (estudio.getPracticaDTO().getCodigoPractica() == practica.getCodigoPractica()){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private PracticaDTO getPracticaFromDAO(PracticaDTO practicaParam){
@@ -82,10 +124,10 @@ public class ControladorPractica {
         }
     }
 
-    public PracticaDTO getPractica(PracticaDTO practicaParam){
+    public PracticaDTO getPractica(int codigoPractica){
         PracticaDTO practicaEncontrada = null;
         for (Practica practica : practicas){
-            if(practicaParam.getCodigoPractica() == practica.getCodigoPractica()){
+            if(codigoPractica == practica.getCodigoPractica()){
                 practicaEncontrada = practica.toDTO();
                 break;
             }
