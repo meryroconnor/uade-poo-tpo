@@ -337,22 +337,27 @@ public class ControladorAtencion {
                 deletePeticionFromDAO(peticion.toDTO());
                 peticiones.remove(peticion);
 
-
-                ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
-                Paciente paciente = controladorPaciente.findPaciente(pacienteDTO.getPacienteID());
-                paciente.removePeticion(peticion);
-
-                sucursal.removePeticion(peticion);
-
-                try {
-                    PacienteDAO pacienteDAO = new PacienteDAO();
-                    pacienteDAO.actualizarPaciente(paciente.toDTO());
-                    SucursalDAO sucursalDAO = new SucursalDAO();
-                    sucursalDAO.actualizarSucursal(sucursal.toDTO());
-                } catch (Exception e) {
-                    System.out.println("Error: "+e.getMessage());
+                if(pacienteDTO != null) {
+                    ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+                    Paciente paciente = controladorPaciente.findPaciente(pacienteDTO.getPacienteID());
+                    paciente.removePeticion(peticion);
+                    try{
+                        PacienteDAO pacienteDAO = new PacienteDAO();
+                        pacienteDAO.actualizarPaciente(paciente.toDTO());
+                    }catch(Exception err){
+                        System.out.println("Error: " + err.getMessage());
+                    }
                 }
-                break;
+                    sucursal.removePeticion(peticion);
+
+                    try {
+                        SucursalDAO sucursalDAO = new SucursalDAO();
+                        sucursalDAO.actualizarSucursal(sucursal.toDTO());
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
+                    break;
+
             }
         }
 

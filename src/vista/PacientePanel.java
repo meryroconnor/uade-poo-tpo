@@ -136,7 +136,6 @@ public class PacientePanel extends JPanel {
                     ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
                     String output = controladorPaciente.deletePaciente(dni, sexo);
 
-
                     outputArea.append(output);
 
 
