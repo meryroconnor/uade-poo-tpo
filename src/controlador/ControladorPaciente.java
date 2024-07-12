@@ -10,6 +10,7 @@ import Laboratorio.Paciente;
 import Laboratorio.Peticion;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -273,6 +274,18 @@ public class ControladorPaciente {
         }
         if (pacienteAEliminar != null) {
             PacienteDTO pacienteDTO =  pacienteAEliminar.toDTO();
+
+
+            ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+
+            // Iterador Peticion
+            Iterator<Peticion> iterator = pacienteAEliminar.getPeticiones().iterator();
+            while (iterator.hasNext()) {
+                Peticion peticion = iterator.next();
+                iterator.remove();
+                controladorAtencion.deletePeticion(peticion.getPeticionID());
+
+            }
 
             pacientes.remove(pacienteAEliminar); // Elimino en sistema
             deletePacienteFromDAO(pacienteDTO); // Elimino en db
