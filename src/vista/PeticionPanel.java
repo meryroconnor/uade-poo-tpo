@@ -193,7 +193,7 @@ public class PeticionPanel extends JPanel {
 
                         List<EstudioDTO> estudioDTOS = peticionDTO.getEstudiosDTO();
                         for (EstudioDTO estudio : estudioDTOS){
-                            if (estudio.getResultadoDTO().getDescripcionResultado() == null && estudio.getResultadoDTO().getValorResultado() == 0){
+                            if (estudio.getResultadoDTO().getDescripcionResultado() != null || estudio.getResultadoDTO().getValorResultado() != 0){
                                 throw new Exception("No puede modificar una peticion con resultados finalizados");
                             }
                         }

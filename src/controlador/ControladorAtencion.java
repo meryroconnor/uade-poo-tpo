@@ -125,51 +125,53 @@ public class ControladorAtencion {
         }
     }
 
-    public void updatePeticion(PeticionDTO peticionDTOPropuesta){
-        Peticion peticionOriginal = findPeticion(peticionDTOPropuesta.getPeticionID());
+    public void updatePeticion(int peticionID, List<PracticaDTO> practicasPropuestas){
+        Peticion peticionOriginal = findPeticion(peticionID);
 
-        //relacionados con la peticion
-        PacienteDTO pacienteDTO = getPacienteInPeticion(peticionDTOPropuesta.getPeticionID());
-        SucursalDTO sucursalDTO = obtenerSucursalOfPeticion(peticionDTOPropuesta.getPeticionID());
+        // Instancias que voy a tener que actualizar:
+        PacienteDTO pacienteDTO = getPacienteInPeticion(peticionID);
+        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+        Paciente paciente = controladorPaciente.findPaciente(pacienteDTO.getPacienteID());
+        Sucursal sucursal = getSucursalInPeticion(peticionID);
+        ControladorPractica controladorPractica = ControladorPractica.getInstance();
 
-        List<Estudio> estudiosOriginales = peticionOriginal.getEstudios();
 
         List<Estudio> estudiosPropuestos = new ArrayList<>();
 
-        for (EstudioDTO estudioDTO : peticionDTOPropuesta.getEstudiosDTO()){
-            int codigoEstudio = estudioDTO.getCodigoEstudio();
-            Estudio estudioPropuesto = findEstudioInPeticion(peticionDTOPropuesta.getPeticionID(), codigoEstudio);
-            estudiosPropuestos.add(estudioPropuesto);
+        for (PracticaDTO practicaDTO : practicasPropuestas){
+            if (findEstudioFromPractica(peticionOriginal, practicaDTO.getCodigoPractica()) == null){
+                Practica practica = controladorPractica.findPractica(practicaDTO.getCodigoPractica());
+                peticionOriginal.addEstudio(practica, 0,null);
+
+            } else{
+                Estudio estudio = findEstudioFromPractica(peticionOriginal, practicaDTO.getCodigoPractica());
+                estudiosPropuestos.add(estudio);
+            }
         }
 
-        //borrado de estudios de la original que no se encuentran en la propuesta
-        for (Estudio estudio : estudiosOriginales){
-            boolean existente = verificarExistencia(estudio, estudiosPropuestos);
-            if (!existente){
+        for (Estudio estudio: peticionOriginal.getEstudios()){
+            if(!estudioExiste(estudio, estudiosPropuestos)) {
                 peticionOriginal.removeEstudio(estudio.getCodigoEstudio());
             }
         }
 
-        //agregado de estudios de la propuesta que no se encuentran en la original
-        for (Estudio estudio : estudiosPropuestos){
-            boolean existente = verificarExistencia(estudio, estudiosOriginales);
-            if (!existente){
-                peticionOriginal.addEstudio(estudio.getPractica(), estudio.getResultado().getValorResultado(), estudio.getResultado().getDescripcionResultado());
-            }
-        }
-
-
-
         try{
+            PeticionDAO peticionDAO = new PeticionDAO();
+            PacienteDAO pacienteDAO = new PacienteDAO();
+            SucursalDAO sucursalDAO = new SucursalDAO();
 
-        }catch (Exception err){
-            System.out.println(err.getMessage());
+            peticionDAO.actualizarPeticion(peticionOriginal.toDTO());
+            pacienteDAO.actualizarPaciente(paciente.toDTO());
+            sucursalDAO.actualizarSucursal(sucursal.toDTO());
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
 
 
     }
 
-    private boolean verificarExistencia(Estudio estudioPickeado, List<Estudio> estudiosAComprobar){
+    private boolean estudioExiste(Estudio estudioPickeado, List<Estudio> estudiosAComprobar){
         boolean encontrado = false;
         for (Estudio estudio : estudiosAComprobar){
             if (estudio.getCodigoEstudio() == estudioPickeado.getCodigoEstudio()){
