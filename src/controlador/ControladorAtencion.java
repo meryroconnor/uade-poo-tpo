@@ -6,10 +6,7 @@ import DAOs.SucursalDAO;
 import DTOs.*;
 import Laboratorio.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class ControladorAtencion {
     private static ControladorAtencion instance;
@@ -142,6 +139,7 @@ public class ControladorAtencion {
             if (findEstudioFromPractica(peticionOriginal, practicaDTO.getCodigoPractica()) == null){
                 Practica practica = controladorPractica.findPractica(practicaDTO.getCodigoPractica());
                 peticionOriginal.addEstudio(practica, 0,null);
+                estudiosPropuestos.add(findEstudioFromPractica(peticionOriginal, practicaDTO.getCodigoPractica()));
 
             } else{
                 Estudio estudio = findEstudioFromPractica(peticionOriginal, practicaDTO.getCodigoPractica());
@@ -149,11 +147,17 @@ public class ControladorAtencion {
             }
         }
 
-        for (Estudio estudio: peticionOriginal.getEstudios()){
-            if(!estudioExiste(estudio, estudiosPropuestos)) {
-                peticionOriginal.removeEstudio(estudio.getCodigoEstudio());
-            }
-        }
+        //manera segura de eliminacion de elementos en colecciones mientras se recorren
+        peticionOriginal.getEstudios().removeIf(estudio -> !estudioExiste(estudio, estudiosPropuestos));
+
+
+        //Genera Excepcion de modificacion concurrente (modificar una coleccion en posiciones mientra la recorres)
+
+//        for (Estudio estudio: peticionOriginal.getEstudios()){
+//            if(!estudioExiste(estudio, estudiosPropuestos)) {
+//                peticionOriginal.removeEstudio(estudio.getCodigoEstudio());
+//            }
+//        }
 
         try{
             PeticionDAO peticionDAO = new PeticionDAO();
