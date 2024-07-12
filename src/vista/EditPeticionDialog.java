@@ -110,22 +110,15 @@ public class EditPeticionDialog extends JDialog {
             try{
 
                 ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
-                ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
 
-                List<EstudioDTO> estudiosDTOPropuestos = new ArrayList<>();
+                List<PracticaDTO> practicasDTOS = new ArrayList<>();
 
                 for (int i = 0; i < practicaListModel.size(); i++) {
                     PracticaDTO practicaDTO =  getPractica(practicaListModel.getElementAt(i));
-                    ResultadoDTO resultadoDTO = new ResultadoDTO(0,null);
-                    EstudioDTO estudioDTO = new EstudioDTO(0, practicaDTO, resultadoDTO, null, null);
-                    // ese DTO solo es para pasar info de que estudio se adiciona a la peticion las fechas no importan ya que
-                    // se usaran las del objeto del modelo
-                    estudiosDTOPropuestos.add(estudioDTO);
+                    practicasDTOS.add(practicaDTO);
                 }
 
-                PeticionDTO peticionDTOPropuesta = new PeticionDTO(peticionID, estudiosDTOPropuestos, null, null);
-
-                controladorAtencion.updatePeticion(peticionDTOPropuesta);
+                controladorAtencion.updatePeticion(peticionID, practicasDTOS);
 
                 dispose();
 
