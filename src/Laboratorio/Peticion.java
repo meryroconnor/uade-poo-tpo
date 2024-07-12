@@ -39,11 +39,20 @@ public class Peticion {
         this.setFechaAproxTerminacion();
     }
 
+    public void removeEstudio(int codigoEstudio){
+        for (Estudio estudio : estudios){
+            if (estudio.getCodigoEstudio() == codigoEstudio){
+                this.estudios.remove(estudio);
+                break;
+            }
+        }
+    }
+
     public LocalDateTime getFechaAproxTerminacion() {
         return fechaAproxTerminacion;
     }
 
-    private void setFechaAproxTerminacion() {
+    public void setFechaAproxTerminacion() {
         LocalDateTime fechaTerminacion = estudios.get(0).getFechaEntregaEstimada(); //agarro la primera asi no queda null
         for (Estudio estudio : estudios){
             LocalDateTime fechaTerminacionSingular = estudio.getFechaEntregaEstimada(); //busco la que mas tarde

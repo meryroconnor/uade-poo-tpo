@@ -10,7 +10,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame(String rol) {
         setTitle("Gestión de Laboratorio");
-        setSize(800, 600);
+        setSize(1200, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -20,14 +20,15 @@ public class MainFrame extends JFrame {
         tabbedPane.add("Pacientes", new PacientePanel());
         tabbedPane.add("Consultar Peticiones", new PeticionPanel());
 
+        if (Objects.equals(rol, "admin") || Objects.equals(rol, "laboratorista")) {
+            tabbedPane.add("Laboratorio", new LabPanel());
+        }
+
         if (Objects.equals(rol, "admin")) {
             tabbedPane.add("Sucursales", new SucursalesPanel());
             tabbedPane.add("Prácticas", new PracticaPanel());
         }
 
-        if (Objects.equals(rol, "admin") || Objects.equals(rol, "laboratorista")) {
-            tabbedPane.add("Laboratorio", new LabPanel());
-        }
 
         add(tabbedPane, BorderLayout.CENTER);
     }

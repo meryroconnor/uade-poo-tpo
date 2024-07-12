@@ -125,6 +125,70 @@ public class ControladorAtencion {
         }
     }
 
+    public void updatePeticion(int peticionID, List<PracticaDTO> practicasPropuestas){
+        Peticion peticionOriginal = findPeticion(peticionID);
+
+        // Instancias que voy a tener que actualizar:
+        PacienteDTO pacienteDTO = getPacienteInPeticion(peticionID);
+        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+        Paciente paciente = controladorPaciente.findPaciente(pacienteDTO.getPacienteID());
+        Sucursal sucursal = getSucursalInPeticion(peticionID);
+        ControladorPractica controladorPractica = ControladorPractica.getInstance();
+
+
+        List<Estudio> estudiosPropuestos = new ArrayList<>();
+
+        for (PracticaDTO practicaDTO : practicasPropuestas){
+            if (findEstudioFromPractica(peticionOriginal, practicaDTO.getCodigoPractica()) == null){
+                Practica practica = controladorPractica.findPractica(practicaDTO.getCodigoPractica());
+                peticionOriginal.addEstudio(practica, 0,null);
+                estudiosPropuestos.add(findEstudioFromPractica(peticionOriginal, practicaDTO.getCodigoPractica()));
+
+            } else{
+                Estudio estudio = findEstudioFromPractica(peticionOriginal, practicaDTO.getCodigoPractica());
+                estudiosPropuestos.add(estudio);
+            }
+        }
+
+        //manera segura de eliminacion de elementos en colecciones mientras se recorren
+        peticionOriginal.getEstudios().removeIf(estudio -> !estudioExiste(estudio, estudiosPropuestos));
+
+
+        //Genera Excepcion de modificacion concurrente (modificar una coleccion en posiciones mientra la recorres)
+
+//        for (Estudio estudio: peticionOriginal.getEstudios()){
+//            if(!estudioExiste(estudio, estudiosPropuestos)) {
+//                peticionOriginal.removeEstudio(estudio.getCodigoEstudio());
+//            }
+//        }
+
+        peticionOriginal.setFechaAproxTerminacion(); //recalcular tiempos de entrega
+
+        try{
+            PeticionDAO peticionDAO = new PeticionDAO();
+            PacienteDAO pacienteDAO = new PacienteDAO();
+            SucursalDAO sucursalDAO = new SucursalDAO();
+
+            peticionDAO.actualizarPeticion(peticionOriginal.toDTO());
+            pacienteDAO.actualizarPaciente(paciente.toDTO());
+            sucursalDAO.actualizarSucursal(sucursal.toDTO());
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+
+    }
+
+    private boolean estudioExiste(Estudio estudioPickeado, List<Estudio> estudiosAComprobar){
+        boolean encontrado = false;
+        for (Estudio estudio : estudiosAComprobar){
+            if (estudio.getCodigoEstudio() == estudioPickeado.getCodigoEstudio()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     private List<PeticionDTO> getPeticionesFromDAO(){
         List<PeticionDTO> peticionDTOS = null;
@@ -169,6 +233,15 @@ public class ControladorAtencion {
         }
 
     }
+    public SucursalDTO getSucursalFromDireccion(String direccion){
+        SucursalDTO sucursalEncontrada = null;
+        for (Sucursal sucursal : sucursales){
+            if (Objects.equals(sucursal.getDireccion(), direccion)) {
+                sucursalEncontrada = sucursal.toDTO();
+            }
+        }
+        return sucursalEncontrada;
+    }
 
     private List<SucursalDTO> getSucursalesFromDAO(){
         List<SucursalDTO> sucursalDTOS = null;
@@ -192,8 +265,6 @@ public class ControladorAtencion {
         return  sucursalEncontrada;
     }
 
-
-
     private void saveSucursalToDAO(SucursalDTO sucursalParam){
         try{
             SucursalDAO sucursalDAO = new SucursalDAO();
@@ -201,6 +272,24 @@ public class ControladorAtencion {
         } catch (Exception e){
             System.out.println("Error Ocurrido: " + e);
         }
+    }
+
+    public void updateSucursal(SucursalDTO sucursalDTOParam, String direccionOld){
+        int sucursalEncontradaID = getSucursalFromDireccion(direccionOld).getSucursalID();
+        Sucursal sucursalEncontrada = findSucursal(sucursalEncontradaID);
+
+        sucursalEncontrada.setDireccion(sucursalDTOParam.getDireccion());
+        sucursalEncontrada.setResponsableMatricula(sucursalDTOParam.getResponsableMatricula());
+
+        try {
+            SucursalDAO sucursalDAO = new SucursalDAO();
+            sucursalDAO.actualizarSucursal(sucursalEncontrada.toDTO());
+            System.out.println("Sucursal Actualizada");
+        }catch (Exception err){
+            System.out.println(err.getMessage());
+        }
+
+
     }
 
     // Método para eliminar una sucursal por su ID

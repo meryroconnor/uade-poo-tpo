@@ -11,6 +11,8 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
@@ -68,7 +70,7 @@ public class PeticionPanel extends JPanel {
         add(filterPanel, BorderLayout.NORTH);
 
         // Modelo de la tabla
-        String[] columnNames = {"Petición ID", "Paciente ID", "Práctica", "Resultado", "Sucursal", "Fecha de Carga", "Fecha de Terminacion Estimada"};
+        String[] columnNames = {"Petición ID", "Paciente ID", "Nombre Paciente", "Práctica", "Resultado", "Sucursal", "Fecha de Carga", "Fecha de Terminacion Estimada"};
         Object[][] data = {}; // Data inicial vacía
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
@@ -116,6 +118,8 @@ public class PeticionPanel extends JPanel {
         menuPanel.add(deleteButton);
         menuPanel.add(updateButton);
 
+        updateButton.setEnabled(false);
+
         this.asociarEventos();
         add(menuPanel, BorderLayout.SOUTH);
     }
@@ -125,6 +129,7 @@ public class PeticionPanel extends JPanel {
         filterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateButton.setEnabled(false);
                 actualizarTablaConBusquedaFiltrada();
             }
         });
@@ -132,6 +137,7 @@ public class PeticionPanel extends JPanel {
         getAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateButton.setEnabled(false);
                 actualizarTablaConTodasLasPeticiones();
             }
         });
@@ -140,6 +146,7 @@ public class PeticionPanel extends JPanel {
         getPeticionesCriticasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                updateButton.setEnabled(false);
                 actualizarTablaConPeticionesCriticas();
             }
         });
@@ -162,8 +169,78 @@ public class PeticionPanel extends JPanel {
                 // Mostrar diálogo para eliminar una petición
                 EliminarPeticionDialog dialog = new EliminarPeticionDialog(JOptionPane.getFrameForComponent(PeticionPanel.this));
                 dialog.setVisible(true);
+                updateButton.setEnabled(false);
             }
         });
+
+        table.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                updateButton.setEnabled(true);
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+            }
+        });
+
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean selected = Objects.nonNull(table.getSelectedRow());
+
+                if (selected){
+                    int row = table.getSelectedRow();
+                    int peticionID = Integer.parseInt(table.getValueAt(row, 0).toString());
+                    int pacienteID = Integer.parseInt(table.getValueAt(row, 1).toString());
+                    PeticionDTO peticionDTO = null;
+                    String DNI;
+                    String sexo;
+                    String sucursal;
+
+                    try{
+                        ControladorAtencion controladorAtencion = ControladorAtencion.getInstance();
+                        ControladorPaciente controladorPaciente = ControladorPaciente.getInstance();
+
+                        peticionDTO = controladorAtencion.getPeticion(peticionID);
+                        PacienteDTO pacienteDTO = controladorPaciente.getPacienteFromPacienteID(pacienteID);
+                        SucursalDTO sucursalDTO = controladorAtencion.obtenerSucursalOfPeticion(peticionID);
+
+                        DNI = pacienteDTO.getDNI();
+                        sexo = pacienteDTO.getSexo();
+                        sucursal = sucursalDTO.getDireccion();
+
+                        List<EstudioDTO> estudioDTOS = peticionDTO.getEstudiosDTO();
+                        for (EstudioDTO estudio : estudioDTOS){
+                            if (estudio.getResultadoDTO().getDescripcionResultado() != null || estudio.getResultadoDTO().getValorResultado() != 0){
+                                throw new Exception("No puede modificar una peticion con resultados finalizados");
+                            }
+                        }
+
+
+                        JDialog dialog = new EditPeticionDialog(JOptionPane.getFrameForComponent(PeticionPanel.this), peticionDTO, DNI, sexo, sucursal);
+                        dialog.setVisible(true);
+                    }catch (Exception err){
+                        JOptionPane.showMessageDialog(PeticionPanel.this,
+                                err.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+
+
+                } else {
+                    JOptionPane.showMessageDialog(PeticionPanel.this,
+                            "Ninguna peticion seleccionada",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
+
+            }
+
+        });
+
     }
 
     // Método para actualizar la tabla con todas las peticiones
@@ -183,6 +260,7 @@ public class PeticionPanel extends JPanel {
 
                         Object[] rowData = new Object[]{
                                 peticion.getPeticionID(),
+                                paciente.getPacienteID(),
                                 paciente.getNombreApellido(),
                                 estudio.getPracticaDTO().getNombrePractica(),
                                 resultado,
@@ -226,6 +304,7 @@ public class PeticionPanel extends JPanel {
 
                                     Object[] rowData = new Object[]{
                                             peticion.getPeticionID(),
+                                            paciente.getPacienteID(),
                                             paciente.getNombreApellido(),
                                             estudio.getPracticaDTO().getNombrePractica(),
                                             resultado,
@@ -265,6 +344,7 @@ public class PeticionPanel extends JPanel {
                             }
                             Object[] rowData = new Object[]{
                                     peticion.getPeticionID(),
+                                    paciente.getPacienteID(),
                                     paciente.getNombreApellido(),
                                     estudio.getPracticaDTO().getNombrePractica(),
                                     resultado,

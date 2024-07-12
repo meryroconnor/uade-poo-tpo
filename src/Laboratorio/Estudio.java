@@ -82,7 +82,7 @@ public class Estudio {
 
     private LocalDateTime calcularFechaEntregaAprox(Practica practica){
         int cantidadHorasDemora = practica.getCantidadHorasDemora();
-        LocalDateTime fechaEntregaAprox = this.fechaCarga.plusHours(cantidadHorasDemora);
+        LocalDateTime fechaEntregaAprox = LocalDateTime.now().plusHours(cantidadHorasDemora);
         return fechaEntregaAprox;
     }
 

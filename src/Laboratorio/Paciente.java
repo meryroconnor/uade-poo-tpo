@@ -73,6 +73,34 @@ public class Paciente {
         }
     }
 
+    public void setNombreApellido(String nombreApellido) {
+        this.nombreApellido = nombreApellido;
+    }
+
+    public void setDNI(String DNI) {
+        this.DNI = DNI;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    public void setDomicilio(String domicilio) {
+        this.domicilio = domicilio;
+    }
+
+    public void setObraSocialObject(ObraSocial obraSocial) {
+        this.obraSocial = obraSocial;
+    }
+
     public void addPeticion(Peticion peticion) {
         peticiones.add(peticion);
     }
