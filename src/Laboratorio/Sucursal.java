@@ -39,7 +39,9 @@ public class Sucursal {
     public void addPeticion(Peticion peticion) {
         peticiones.add(peticion);
     }
-
+    public void removePeticion(Peticion peticion) {
+        peticiones.remove(peticion);
+    }
     public void setSucursalID(int sucursalID) {
         this.sucursalID = sucursalID;
     }

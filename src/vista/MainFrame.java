@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
 
         if (Objects.equals(rol, "admin")) {
             tabbedPane.add("Sucursales", new SucursalesPanel());
+            tabbedPane.add("Prácticas", new PracticaPanel());
         }
 
         if (Objects.equals(rol, "admin") || Objects.equals(rol, "laboratorista")) {
